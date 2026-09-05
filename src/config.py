@@ -42,10 +42,14 @@ FORECAST_WEIGHT_STEP = 0.05
 FORECAST_SHORT_WINDOW = 24
 FORECAST_DAILY_LAGS = 7
 
-# These mathematical settings must be confirmed by the modeling team.
-WAIT_NORMALIZATION_EPSILON: float | None = None
-SERVICE_DEGRADATION_DELTA: float | None = None
-PEAK_HOUR_SCOPE: str | None = None
+# Mathematical settings confirmed by the modeling team.
+WAIT_NORMALIZATION_EPSILON = 1e-6
+SERVICE_DEGRADATION_DELTA = 0.05
+PEAK_HOUR_SCOPE = "resource"
+
+# Solver stopping rules; these affect runtime and reported precision, not the model.
+SOLVER_MIP_GAP = 0.001
+SOLVER_TIME_LIMIT = 300.0
 
 
 RAW_DATA_FILES: dict[str, str] = {

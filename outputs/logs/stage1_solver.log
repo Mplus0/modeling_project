@@ -1,0 +1,17 @@
+presolving (11 rounds: 11 fast, 6 medium, 6 exhaustive):
+ 1120 deleted vars, 224 deleted constraints, 0 added constraints, 7 tightened bounds, 0 added holes, 11 changed sides, 11 changed coefficients
+ 0 implications, 2131 cliques, 0 implied integral variables (0 bin, 0 int, 0 cont)
+presolved problem has 33109 variables (33109 bin, 0 int, 0 cont) and 854 constraints
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+p 1.0s|     1 |     0 |    59 |     - |   locks|   0 |  33k| 855 | 854 |   0 |  0 |   0 |   0 | 0.000000e+00 | 1.417766e+02 |    Inf | unknown
+p 1.0s|     1 |     0 |    59 |     - | vbounds|   0 |  33k| 855 | 854 |   0 |  0 |   0 |   0 | 0.000000e+00 | 1.371032e+02 |    Inf | unknown
+r 2.0s|     1 |     0 |  1485 |     - |shifting|   0 |  33k| 865 | 959 | 105 |  8 |  10 |   0 | 0.000000e+00 | 0.000000e+00 |   0.00%| unknown
+  2.0s|     1 |     0 |  1485 |     - |   376M |   0 |  33k| 865 | 959 | 105 |  8 |  10 |   0 | 0.000000e+00 | 0.000000e+00 |   0.00%| unknown
+
+SCIP Status        : problem is solved [optimal solution found]
+Solving Time (sec) : 2.00
+Solving Nodes      : 1
+Primal Bound       : +0.00000000000000e+00 (3 solutions)
+Dual Bound         : +0.00000000000000e+00
+Gap                : 0.00 %

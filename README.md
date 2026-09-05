@@ -228,13 +228,23 @@ python scripts/05_generate_report_outputs.py
 
 ### 正式调度运行
 
-ε、δ 和第二阶段峰值统计时段尚需建模手确认，因此没有默认值。确认后显式运行：
+正式参数已经确认并写入 `config.py`：
 
-```bash
-python scripts/04_run_schedule.py --epsilon <值> --delta <值> --peak-hours <evaluation或resource>
+```text
+epsilon = 1e-6
+delta = 0.05
+U_max 时段 = resource（2376–2405）
+SCIP MIPGap = 0.001（0.1%）
+单阶段 TimeLimit = 300 秒
 ```
 
-可选的 `--time-limit` 和 `--mip-gap` 仅控制求解过程。成功后生成：
+直接运行：
+
+```bash
+python scripts/04_run_schedule.py
+```
+
+`--time-limit` 和 `--mip-gap` 可覆盖默认求解停止条件，只控制求解过程。成功后生成：
 
 ```text
 outputs/schedule/stage1_solution.csv
@@ -251,16 +261,26 @@ outputs/logs/stage2_solver.log
 从原始数据完整复现第一问：
 
 ```bash
-python main.py --question 1 --epsilon <值> --delta <值> --peak-hours <evaluation或resource>
+python main.py --question 1
 ```
 
-### 待建模手确认
+命令行参数 `--epsilon`、`--delta` 和 `--peak-hours` 仍可用于显式复现实验对照，但不会自动改变配置文件。
 
-- 第一阶段等待率分母中的 `epsilon`；
-- 第二阶段允许服务目标恶化的 `delta`；
-- 第二阶段 `U_max` 使用 2376–2399 还是 2376–2405。
+### 本次正式运行结果
 
-对应配置项目前均为 `None`，调度入口缺少任一项都会直接停止，不会使用代码侧猜测值。
+- 调度任务数：538，完成率 100%；
+- 第一阶段：`OPTIMAL`，`J1* = 0`，所有任务等待时间均为 0；
+- 第二阶段：`GAPLIMIT`，`U_max = 0.562222`，最终 MIP Gap 为 0.0901%，满足预设的 0.1% 停止精度；
+- 独立验算：SLA、Deadline、终端时刻、GPU、IT 功率及设施功率违规数均为 0；
+- 2376–2405 时段内最大 GPU 利用率为 56.22%，最大 IT/设施功率利用率约为 99.97%。
+
+`GAPLIMIT` 表示 SCIP 已达到预设相对间隙并正常停止，不表示求解失败。详细结果见 `outputs/schedule`、`outputs/metrics`、`outputs/figures` 和 `outputs/logs`。
+
+### 已确认调度参数
+
+- 第一阶段等待率分母 `epsilon = 1e-6`；
+- 第二阶段服务目标允许恶化 `delta = 0.05`；
+- 第二阶段 `U_max` 按2376–2405统计。
 
 ## 第一问统一口径
 
@@ -280,7 +300,7 @@ python main.py --question 1 --epsilon <值> --delta <值> --peak-hours <evaluati
 3. 需求统计分析（核心模块已完成）
 4. 多时间尺度需求预测（核心模块已完成）
 5. 调度可行域与 Overlap（核心模块已完成）
-6. 两阶段 MILP 调度（SCIP 版本已完成，正式参数待确认）
+6. 两阶段 MILP 调度（SCIP 版本及正式参数均已完成）
 7. 独立结果验算、指标与图表模块（已完成）
 
 运行代码时请将工作目录切换到项目根目录。原始附件保留在 `data/raw`，生成结果统一写入 `outputs`。

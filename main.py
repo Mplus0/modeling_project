@@ -5,6 +5,14 @@ from pathlib import Path
 import subprocess
 import sys
 
+from src.config import (
+    PEAK_HOUR_SCOPE,
+    SERVICE_DEGRADATION_DELTA,
+    SOLVER_MIP_GAP,
+    SOLVER_TIME_LIMIT,
+    WAIT_NORMALIZATION_EPSILON,
+)
+
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 
@@ -12,13 +20,19 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 def main() -> int:
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--question", type=int, choices=(1,), default=1)
-    parser.add_argument("--epsilon", type=float, required=True)
-    parser.add_argument("--delta", type=float, required=True)
     parser.add_argument(
-        "--peak-hours", choices=("evaluation", "resource"), required=True
+        "--epsilon", type=float, default=WAIT_NORMALIZATION_EPSILON
     )
-    parser.add_argument("--time-limit", type=float)
-    parser.add_argument("--mip-gap", type=float)
+    parser.add_argument(
+        "--delta", type=float, default=SERVICE_DEGRADATION_DELTA
+    )
+    parser.add_argument(
+        "--peak-hours",
+        choices=("evaluation", "resource"),
+        default=PEAK_HOUR_SCOPE,
+    )
+    parser.add_argument("--time-limit", type=float, default=SOLVER_TIME_LIMIT)
+    parser.add_argument("--mip-gap", type=float, default=SOLVER_MIP_GAP)
     args = parser.parse_args()
 
     scripts = [

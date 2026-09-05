@@ -3,7 +3,9 @@
 from argparse import ArgumentParser, Namespace
 import json
 from pathlib import Path
+import shutil
 import sys
+import tempfile
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -17,6 +19,8 @@ from src.config import (  # noqa: E402
     RESOURCE_HOURS,
     SCHEDULE_OUTPUT_DIR,
     SERVICE_DEGRADATION_DELTA,
+    SOLVER_MIP_GAP,
+    SOLVER_TIME_LIMIT,
     WAIT_NORMALIZATION_EPSILON,
 )
 from src.data_loader import load_raw_data  # noqa: E402
@@ -45,8 +49,8 @@ def parse_args() -> Namespace:
         default=PEAK_HOUR_SCOPE,
         help="evaluation=2376-2399; resource=2376-2405",
     )
-    parser.add_argument("--time-limit", type=float)
-    parser.add_argument("--mip-gap", type=float)
+    parser.add_argument("--time-limit", type=float, default=SOLVER_TIME_LIMIT)
+    parser.add_argument("--mip-gap", type=float, default=SOLVER_MIP_GAP)
     args = parser.parse_args()
     if args.epsilon is None or args.delta is None or args.peak_hours is None:
         parser.error("epsilon, delta and peak-hours require modeling-team confirmation")
@@ -57,6 +61,16 @@ def write_json(path: Path, values: dict) -> None:
     path.write_text(
         json.dumps(values, ensure_ascii=False, indent=2), encoding="utf-8"
     )
+
+
+def prepare_log_path(filename: str) -> Path:
+    """Use an ASCII path because SCIP cannot open the Chinese project path."""
+
+    directory = Path(tempfile.gettempdir()) / "question1_scip_logs"
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / filename
+    path.unlink(missing_ok=True)
+    return path
 
 
 def main() -> int:
@@ -88,12 +102,14 @@ def main() -> int:
         active_options,
         args.epsilon,
     )
+    stage1_temp_log = prepare_log_path("stage1_solver.log")
     stage1_summary = solve_stage1(
         schedule_model,
         time_limit=args.time_limit,
         mip_gap=args.mip_gap,
-        log_file=str(LOG_OUTPUT_DIR / "stage1_solver.log"),
+        log_file=str(stage1_temp_log),
     )
+    shutil.copyfile(stage1_temp_log, LOG_OUTPUT_DIR / "stage1_solver.log")
     print(f"Stage 1: {stage1_summary.status_name}")
     if stage1_summary.status != "optimal":
         raise RuntimeError("Stage 1 must be optimal before stage 2 is configured")
@@ -106,7 +122,12 @@ def main() -> int:
     )
     write_json(
         SCHEDULE_OUTPUT_DIR / "stage1_summary.json",
-        {**stage1_summary.as_dict(), "epsilon": args.epsilon},
+        {
+            **stage1_summary.as_dict(),
+            "epsilon": args.epsilon,
+            "target_mip_gap": args.mip_gap,
+            "time_limit": args.time_limit,
+        },
     )
 
     peak_hours = EVALUATION_HOURS if args.peak_hours == "evaluation" else RESOURCE_HOURS
@@ -117,12 +138,14 @@ def main() -> int:
         args.delta,
         peak_hours,
     )
+    stage2_temp_log = prepare_log_path("stage2_solver.log")
     stage2_summary = solve_stage2(
         schedule_model,
         time_limit=args.time_limit,
         mip_gap=args.mip_gap,
-        log_file=str(LOG_OUTPUT_DIR / "stage2_solver.log"),
+        log_file=str(stage2_temp_log),
     )
+    shutil.copyfile(stage2_temp_log, LOG_OUTPUT_DIR / "stage2_solver.log")
     print(f"Stage 2: {stage2_summary.status_name}")
     if stage2_summary.solution_count == 0:
         raise RuntimeError("Stage 2 did not produce a feasible incumbent")
@@ -158,6 +181,8 @@ def main() -> int:
             **stage2_summary.as_dict(),
             "delta": args.delta,
             "peak_hour_scope": args.peak_hours,
+            "target_mip_gap": args.mip_gap,
+            "time_limit": args.time_limit,
             "stage1_objective_limit": (1 + args.delta)
             * stage1_summary.objective,
         },

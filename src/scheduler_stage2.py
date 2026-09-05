@@ -84,5 +84,7 @@ def solve_stage2(
         model.setRealParam("limits/gap", mip_gap)
     if log_file is not None:
         model.setLogfile(log_file)
+    model.setIntParam("display/verblevel", 3)
+    model.setIntParam("display/freq", 10000)
     model.optimize()
     return summarize_solution(model)

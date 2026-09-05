@@ -1,0 +1,13 @@
+{
+  "status": "gaplimit",
+  "status_name": "GAPLIMIT",
+  "objective": 0.5622222222222547,
+  "runtime": 16.0,
+  "mip_gap": 0.0009006749362209017,
+  "solution_count": 26,
+  "delta": 0.05,
+  "peak_hour_scope": "resource",
+  "target_mip_gap": 0.001,
+  "time_limit": 300.0,
+  "stage1_objective_limit": 0.0
+}

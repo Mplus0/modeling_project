@@ -1,0 +1,9 @@
+TotalTasks: 538
+ScheduledTasks: 538
+FinishRate: 1.0
+SLAViolations: 0
+DeadlineViolations: 0
+TerminalViolations: 0
+GPUOverloadCount: 0
+ITPowerOverloadCount: 0
+FacilityPowerOverloadCount: 0
