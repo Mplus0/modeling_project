@@ -29,8 +29,10 @@ modeling _project/
 │   ├── data_loader.py         六个工作簿的数据读取
 │   ├── data_validator.py      原始数据一致性检查
 │   ├── demand_builder.py      小时级 GPU 新增需求序列
+│   ├── feasible_domain.py     稀疏调度可行域
 │   ├── forecast.py            多时间尺度 GPU 需求预测
-│   └── metrics.py             需求与模型评价指标
+│   ├── metrics.py             需求与模型评价指标
+│   └── overlap.py             非整数持续时间重叠系数
 ├── 赛题及预设实现方案/          题面、附件说明和代码方案
 └── requirement.txt
 ```
@@ -153,6 +155,23 @@ outputs/metrics/forecast_metrics.csv
 
 `forecast_metrics.csv` 包含整体、区域、任务类型和区域任务组合共 28 行指标。某一分组的实际需求总和为 0 时，其 WAPE 记为空值，MAE 与 RMSE 仍正常计算。
 
+当前预测结果保留为 baseline。模型效果问题不作为代码错误，未经建模手确认不改变模型结构、权重口径、验证方式或参数选择指标。
+
+### 调度可行域与 Overlap
+
+`select_schedule_tasks()` 提取 2376–2399 小时实际到达的任务，并计算 `DurationHour` 和 `MaxDelayHour`。`build_feasible_domains()` 仅枚举同时满足网络时延、整点开工、任务时间窗、截止时刻和 2406 终端约束的 `(TargetRegion, StartHour)`。
+
+实时推理任务的 `StartHour` 固定为 `ArrivalHour`。批量推理和 AI 训练任务的最早开工时刻取 `max(ArrivalHour, EarliestStartHour)`。若任一任务的可行域为空，函数立即报出 `TaskID` 和原因。
+
+`precompute_overlaps()` 只保存大于 0 的小时重叠系数：
+
+```text
+overlaps[(TaskID, StartHour, Hour)]
+active_options[(Region, Hour)]
+```
+
+当前可行域不提前加入 GPU、IT 功率或设施功率筛选，这三类约束将在 MILP 中统一建立。
+
 ## 第一问统一口径
 
 - 训练数据：0–2351 小时。
@@ -170,7 +189,7 @@ outputs/metrics/forecast_metrics.csv
 2. GPU 需求序列构造（核心模块已完成）
 3. 需求统计分析（核心模块已完成）
 4. 多时间尺度需求预测（核心模块已完成）
-5. 调度可行域与 Overlap
+5. 调度可行域与 Overlap（核心模块已完成）
 6. 两阶段 MILP 调度
 7. 独立结果验算与图表输出
 
