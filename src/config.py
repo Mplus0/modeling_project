@@ -31,6 +31,7 @@ TERMINAL_TIME = 2406
 # A task may occupy [2405, 2406), but it must not occupy hour 2406.
 RESOURCE_HOURS: range = range(SCHEDULE_ARRIVAL_START, TERMINAL_TIME)
 EVALUATION_HOURS: range = range(FORECAST_START, FORECAST_END + 1)
+DEMAND_HOURS: range = range(TRAIN_START, FORECAST_END + 1)
 
 
 RAW_DATA_FILES: dict[str, str] = {
@@ -50,4 +51,3 @@ RAW_DATA_SHEETS: dict[str, str] = {
     "region_time": "region_time_data",
     "storage": "storage_information",
 }
-

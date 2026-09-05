@@ -4,11 +4,10 @@
 
 ## 环境配置
 
-建议使用 Python 3.11，并在独立 Conda 环境中安装依赖：
+当前使用 Python 3.11，Conda 环境名称为 `modeling_project`：
 
 ```bash
-conda create -n huashu2026 python=3.11
-conda activate huashu2026
+conda activate modeling_project
 python -m pip install -r requirement.txt
 ```
 
@@ -21,11 +20,13 @@ modeling _project/
 ├── data/
 │   └── raw/                    原始附件数据
 ├── outputs/                    预测、调度、指标和图表输出
-├── scripts/                    分步骤运行入口
+├── scripts/
+│   └── 01_check_data.py       数据读取与验证入口
 ├── src/
 │   ├── config.py              路径、区域和时间边界
 │   ├── data_loader.py         六个工作簿的数据读取
-│   └── data_validator.py      原始数据一致性检查
+│   ├── data_validator.py      原始数据一致性检查
+│   └── demand_builder.py      小时级 GPU 新增需求序列
 ├── 赛题及预设实现方案/          题面、附件说明和代码方案
 └── requirement.txt
 ```
@@ -68,12 +69,38 @@ report.raise_for_errors()
 
 `region_time_data.xlsx` 中的 `GPU_Utilization_Percent` 是附件给出的基准运行指标，不是 GPU 容量硬输入。大于 100% 的记录只生成 warning，并报告数量、最大值和示例位置。
 
+从项目根目录运行完整数据检查：
+
+```bash
+python scripts/01_check_data.py
+```
+
+也可不激活环境直接运行：
+
+```bash
+conda run -n modeling_project python scripts/01_check_data.py
+```
+
 后续优化结果必须根据任务调度重新计算：
 
 ```text
 GPU_Utilization = GPU_Used / Available_GPU
 GPU_Used <= Available_GPU
 ```
+
+### GPU 需求序列
+
+`build_demand_series()` 按任务到达时刻汇总 GPU 新增需求，并补齐没有任务的组合。结果固定包含 0–2399 小时、6 个区域和3类任务，共 43,200 行。
+
+```python
+from src.data_loader import load_raw_data
+from src.demand_builder import build_demand_series
+
+data = load_raw_data()
+demand = build_demand_series(data.tasks)
+```
+
+`aggregate_region_demand()` 和 `aggregate_system_demand()` 分别生成区域逐时总需求和系统逐时总需求。这里的需求是任务到达产生的原始新增 GPU 需求，不是调度后的 GPU 利用率。
 
 ## 第一问统一口径
 
@@ -89,7 +116,7 @@ GPU_Used <= Available_GPU
 ## 开发顺序
 
 1. 数据读取与验证（已完成）
-2. GPU 需求序列构造
+2. GPU 需求序列构造（核心模块已完成）
 3. 需求统计分析
 4. 多时间尺度需求预测
 5. 调度可行域与 Overlap
@@ -97,4 +124,3 @@ GPU_Used <= Available_GPU
 7. 独立结果验算与图表输出
 
 运行代码时请将工作目录切换到项目根目录。原始附件保留在 `data/raw`，生成结果统一写入 `outputs`。
-
