@@ -27,7 +27,8 @@ modeling _project/
 │   ├── config.py              路径、区域和时间边界
 │   ├── data_loader.py         六个工作簿的数据读取
 │   ├── data_validator.py      原始数据一致性检查
-│   └── demand_builder.py      小时级 GPU 新增需求序列
+│   ├── demand_builder.py      小时级 GPU 新增需求序列
+│   └── metrics.py             需求与模型评价指标
 ├── 赛题及预设实现方案/          题面、附件说明和代码方案
 └── requirement.txt
 ```
@@ -115,7 +116,10 @@ python scripts/02_build_demand.py
 outputs/forecast/demand_series.csv
 outputs/forecast/region_demand_series.csv
 outputs/forecast/system_demand_series.csv
+outputs/metrics/demand_statistics.csv
 ```
+
+需求统计表共 28 行，包括系统、6 个区域、3 类任务和 18 个区域任务组合。每行基于对应的完整 2400 小时序列计算 `count`、`mean`、`std`、`min`、`median`、`max`、`sum` 和 `zero_ratio`，其中 `std` 为总体标准差。
 
 ## 第一问统一口径
 
@@ -132,7 +136,7 @@ outputs/forecast/system_demand_series.csv
 
 1. 数据读取与验证（已完成）
 2. GPU 需求序列构造（核心模块已完成）
-3. 需求统计分析
+3. 需求统计分析（核心模块已完成）
 4. 多时间尺度需求预测
 5. 调度可行域与 Overlap
 6. 两阶段 MILP 调度
