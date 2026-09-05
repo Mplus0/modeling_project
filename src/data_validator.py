@@ -239,15 +239,8 @@ def _validate_region_time(
             f"({int(invalid_load.sum())} rows)"
         )
 
-    baseline_overload = region_time["GPU_Utilization_Percent"] > 100
-    if baseline_overload.any():
-        overloaded = region_time.loc[
-            baseline_overload, ["Hour", "Region", "GPU_Utilization_Percent"]
-        ].copy()
-        overloaded["ExcelRow"] = overloaded.index + 2
-        overloaded = overloaded.sort_values(
-            "GPU_Utilization_Percent", ascending=False
-        )
+    overloaded = get_baseline_gpu_overloads(region_time)
+    if not overloaded.empty:
         examples = "; ".join(
             f"row {row.ExcelRow}: Hour={row.Hour}, Region={row.Region}, "
             f"value={row.GPU_Utilization_Percent:.6f}%"
@@ -260,6 +253,20 @@ def _validate_region_time(
             f"examples=[{examples}]. This is a baseline result field and is not "
             "used as a hard GPU-capacity input."
         )
+
+
+def get_baseline_gpu_overloads(region_time: pd.DataFrame) -> pd.DataFrame:
+    """Return baseline GPU-utilization warnings without changing the source table."""
+
+    columns = ["ExcelRow", "Hour", "Region", "GPU_Utilization_Percent"]
+    overloaded = region_time.loc[
+        region_time["GPU_Utilization_Percent"] > 100,
+        ["Hour", "Region", "GPU_Utilization_Percent"],
+    ].copy()
+    overloaded.insert(0, "ExcelRow", overloaded.index + 2)
+    return overloaded.sort_values(
+        "GPU_Utilization_Percent", ascending=False
+    ).reset_index(drop=True)[columns]
 
 
 def validate_data(data: RawDataBundle) -> ValidationReport:
@@ -283,4 +290,3 @@ def validate_data(data: RawDataBundle) -> ValidationReport:
         _check_region_table(data.storage, "storage", report)
 
     return report
-

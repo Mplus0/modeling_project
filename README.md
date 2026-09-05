@@ -88,6 +88,15 @@ report.raise_for_errors()
 python scripts/01_check_data.py
 ```
 
+检查完成后会生成：
+
+```text
+outputs/metrics/raw_data_validation_report.txt
+outputs/metrics/baseline_gpu_overload_warnings.csv
+```
+
+前者记录六张原始表的规模、错误和警告，后者列出全部基准GPU利用率超限记录及其原Excel行号。两个文件仅用于审计，不删除、截断或覆盖原始数据。
+
 后续优化结果必须根据任务调度重新计算：
 
 ```text
