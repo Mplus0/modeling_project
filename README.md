@@ -21,7 +21,8 @@ modeling _project/
 │   └── raw/                    原始附件数据
 ├── outputs/                    预测、调度、指标和图表输出
 ├── scripts/
-│   └── 01_check_data.py       数据读取与验证入口
+│   ├── 01_check_data.py       数据读取与验证入口
+│   └── 02_build_demand.py     构造并导出 GPU 需求序列
 ├── src/
 │   ├── config.py              路径、区域和时间边界
 │   ├── data_loader.py         六个工作簿的数据读取
@@ -101,6 +102,20 @@ demand = build_demand_series(data.tasks)
 ```
 
 `aggregate_region_demand()` 和 `aggregate_system_demand()` 分别生成区域逐时总需求和系统逐时总需求。这里的需求是任务到达产生的原始新增 GPU 需求，不是调度后的 GPU 利用率。
+
+由你运行需求序列导出：
+
+```bash
+python scripts/02_build_demand.py
+```
+
+脚本通过原始数据验证后生成：
+
+```text
+outputs/forecast/demand_series.csv
+outputs/forecast/region_demand_series.csv
+outputs/forecast/system_demand_series.csv
+```
 
 ## 第一问统一口径
 

@@ -9,6 +9,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RAW_DATA_DIR = PROJECT_ROOT / "data" / "raw"
 OUTPUT_DIR = PROJECT_ROOT / "outputs"
+FORECAST_OUTPUT_DIR = OUTPUT_DIR / "forecast"
 
 REGIONS: tuple[str, ...] = tuple(f"Region{letter}" for letter in "ABCDEF")
 TASK_TYPES: tuple[str, ...] = (
