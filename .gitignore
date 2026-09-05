@@ -1,8 +1,15 @@
-# Office临时文件
+# Office 临时文件
 ~$*
-*.tmp
-*.~lock
-
-# excel临时文件
+*.docx~
+*.xlsx~
 **/~$*.xlsx
 **/~$*.xls
+**/~$*.pptx
+
+# python缓存
+__pycache__/
+*.pyc
+
+# 系统文件
+.DS_Store
+Thumbs.db
