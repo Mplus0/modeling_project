@@ -1,0 +1,8 @@
+# Office临时文件
+~$*
+*.tmp
+*.~lock
+
+# excel临时文件
+**/~$*.xlsx
+**/~$*.xls
