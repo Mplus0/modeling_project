@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import numpy as np
 import pandas as pd
 
 from .config import REGIONS, TASK_TYPES
@@ -9,6 +10,29 @@ from .demand_builder import aggregate_region_demand, aggregate_system_demand
 
 
 STAT_COLUMNS = ["count", "mean", "std", "min", "median", "max", "sum", "zero_ratio"]
+
+
+def calculate_forecast_metrics(
+    actual: pd.Series | np.ndarray,
+    predicted: pd.Series | np.ndarray,
+) -> dict[str, float]:
+    """Calculate WAPE, MAE and RMSE for one forecast."""
+
+    actual_values = np.asarray(actual, dtype=float)
+    predicted_values = np.asarray(predicted, dtype=float)
+    if actual_values.shape != predicted_values.shape:
+        raise ValueError("Actual and predicted arrays must have the same shape")
+
+    absolute_error = np.abs(actual_values - predicted_values)
+    denominator = np.abs(actual_values).sum()
+    if denominator == 0:
+        raise ValueError("WAPE is undefined when total actual demand is zero")
+
+    return {
+        "WAPE": float(absolute_error.sum() / denominator),
+        "MAE": float(absolute_error.mean()),
+        "RMSE": float(np.sqrt(np.mean((actual_values - predicted_values) ** 2))),
+    }
 
 
 def _describe(values: pd.Series) -> dict[str, float | int]:
@@ -84,4 +108,3 @@ def build_demand_statistics(demand: pd.DataFrame) -> pd.DataFrame:
 
     columns = ["Level", "Region", "TaskType", *STAT_COLUMNS]
     return pd.DataFrame(rows, columns=columns)
-
