@@ -1,6 +1,6 @@
 # 华数杯 C 题建模代码
 
-本项目用于实现 C 题“面向算电协同的多目标调度优化研究”。当前按模块逐步开发第一问，已完成原始数据读取与一致性验证。
+本项目用于实现 C 题“面向算电协同的多目标调度优化研究”。第一问的数据、预测、两阶段调度、独立验算和结果生成模块均已实现。
 
 ## 环境配置
 
@@ -11,7 +11,7 @@ conda activate modeling_project
 python -m pip install -r requirement.txt
 ```
 
-`gurobipy` 用于后续 MILP 调度模型。安装 Python 包不等于获得求解许可，正式求解前需确认本机 Gurobi License 可用。
+调度模型使用开源的 SCIP 求解器及其 Python 接口 `pyscipopt`，不需要申请 Gurobi 许可证。依赖只安装在 `modeling_project` 虚拟环境中。
 
 ## 项目结构
 
@@ -23,7 +23,9 @@ modeling _project/
 ├── scripts/
 │   ├── 01_check_data.py       数据读取与验证入口
 │   ├── 02_build_demand.py     构造并导出 GPU 需求序列
-│   └── 03_run_forecast.py     参数选择与最终预测入口
+│   ├── 03_run_forecast.py     参数选择与最终预测入口
+│   ├── 04_run_schedule.py     两阶段调度与结果验算
+│   └── 05_generate_report_outputs.py  指标与图表生成
 ├── src/
 │   ├── config.py              路径、区域和时间边界
 │   ├── data_loader.py         六个工作簿的数据读取
@@ -32,7 +34,12 @@ modeling _project/
 │   ├── feasible_domain.py     稀疏调度可行域
 │   ├── forecast.py            多时间尺度 GPU 需求预测
 │   ├── metrics.py             需求与模型评价指标
-│   └── overlap.py             非整数持续时间重叠系数
+│   ├── overlap.py             非整数持续时间重叠系数
+│   ├── result_validator.py    调度结果独立验算
+│   ├── scheduler_stage1.py    第一阶段调度模型
+│   ├── scheduler_stage2.py    第二阶段峰值优化
+│   └── visualization.py       预测与调度图表
+├── main.py                    第一问完整复现入口
 ├── 赛题及预设实现方案/          题面、附件说明和代码方案
 └── requirement.txt
 ```
@@ -79,12 +86,6 @@ report.raise_for_errors()
 
 ```bash
 python scripts/01_check_data.py
-```
-
-也可不激活环境直接运行：
-
-```bash
-conda run -n modeling_project python scripts/01_check_data.py
 ```
 
 后续优化结果必须根据任务调度重新计算：
@@ -151,11 +152,15 @@ outputs/forecast/forecast_2376_2399.csv
 outputs/forecast/forecast_parameters.json
 outputs/forecast/validation_weight_search.csv
 outputs/metrics/forecast_metrics.csv
+outputs/metrics/forecast_component_diagnostics.csv
+outputs/metrics/forecast_series_diagnostics.csv
 ```
 
 `forecast_metrics.csv` 包含整体、区域、任务类型和区域任务组合共 28 行指标。某一分组的实际需求总和为 0 时，其 WAPE 记为空值，MAE 与 RMSE 仍正常计算。
 
 当前预测结果保留为 baseline。模型效果问题不作为代码错误，未经建模手确认不改变模型结构、权重口径、验证方式或参数选择指标。
+
+两个诊断文件分别记录 LongTerm-only、ShortTerm-only、DailyPattern-only 的验证指标，以及18条 `Region × TaskType` 序列的验证 WAPE/MAE/RMSE、训练段 `zero_ratio`、均值、总体标准差和 lag=24/168 自相关。诊断结果不参与模型选择，也不修改 baseline。
 
 ### 调度可行域与 Overlap
 
@@ -171,6 +176,91 @@ active_options[(Region, Hour)]
 ```
 
 当前可行域不提前加入 GPU、IT 功率或设施功率筛选，这三类约束将在 MILP 中统一建立。
+
+### 最小调度 MILP
+
+`build_minimal_schedule_model()` 只为可行域中的 `(TaskID, TargetRegion, StartHour)` 建立二元变量，并加入：
+
+```text
+每个任务恰好选择一个调度方案
+每个 Region-Hour 的 GPU_Used <= Available_GPU
+```
+
+GPU 占用按 `GPU_Demand × Overlap` 计算，资源约束覆盖 2376–2405 小时。`add_power_constraints()` 在此基础上加入：
+
+```text
+NonAI_IT_Load_MW + AI_IT_Power <= Max_IT_Power_MW
+PUE × Total_IT_Power <= Max_Facility_Power_MW
+```
+
+AI IT 功率严格使用 `power_mapping.xlsx` 的任务类型单位 GPU 功率。`add_waiting_objective()` 按方案建立归一化等待率目标，`build_stage1_model()` 组合全部硬约束与第一阶段目标。`solve_stage1()` 输出状态、目标值、运行时间和 MIPGap，`decode_schedule_solution()` 将二元决策解码为任务调度表。
+
+### 第二阶段调度
+
+`configure_stage2()` 在第一阶段最优解上加入：
+
+```text
+J1 <= (1 + delta) × J1_star
+GPU_Used / Available_GPU <= U_max
+```
+
+随后以第一阶段解作为 Warm Start，并最小化 `U_max`。峰值约束时段可显式选择 `evaluation`（2376–2399）或 `resource`（2376–2405），代码不自行决定口径。
+
+### 调度结果独立验算
+
+`validate_schedule()` 不读取 SCIP 模型，直接根据最终任务表重新检查唯一调度、整点开工、到达时刻、实时任务、网络 SLA、Deadline 和 2406 终端约束，并重新计算完整的 180 条 Region-Hour 资源记录。
+
+验算结果包含任务级与资源级 violations、汇总计数，以及 `GPU_Used`、GPU利用率、AI IT功率、总IT功率和设施功率明细。优化结果只有在 violations 为空时才允许进入正式结果输出。
+
+### 指标与图表
+
+`build_schedule_metrics()` 计算区域平均/峰值GPU利用率、全局峰值与P95利用率、等待时间、按时完成率、迁移率及区域流入流出数量。GPU利用率在指标表中以 0–1 比例保存。
+
+`visualization.py` 实现方案中编号01–10的全部图表：4张预测图可直接由 baseline 输出生成，6张调度图在正式调度结果通过独立验算后生成。
+
+预测结果已经存在时，可单独生成当前可用的指标和图表：
+
+```bash
+python scripts/05_generate_report_outputs.py
+```
+
+若尚无正式调度结果，该脚本只生成4张预测图；调度完成后会继续生成 `schedule_metrics.csv` 和6张调度图。
+
+### 正式调度运行
+
+ε、δ 和第二阶段峰值统计时段尚需建模手确认，因此没有默认值。确认后显式运行：
+
+```bash
+python scripts/04_run_schedule.py --epsilon <值> --delta <值> --peak-hours <evaluation或resource>
+```
+
+可选的 `--time-limit` 和 `--mip-gap` 仅控制求解过程。成功后生成：
+
+```text
+outputs/schedule/stage1_solution.csv
+outputs/schedule/stage2_solution.csv
+outputs/schedule/task_schedule.csv
+outputs/schedule/region_hour_resource.csv
+outputs/schedule/stage1_summary.json
+outputs/schedule/stage2_summary.json
+outputs/metrics/validation_report.txt
+outputs/logs/stage1_solver.log
+outputs/logs/stage2_solver.log
+```
+
+从原始数据完整复现第一问：
+
+```bash
+python main.py --question 1 --epsilon <值> --delta <值> --peak-hours <evaluation或resource>
+```
+
+### 待建模手确认
+
+- 第一阶段等待率分母中的 `epsilon`；
+- 第二阶段允许服务目标恶化的 `delta`；
+- 第二阶段 `U_max` 使用 2376–2399 还是 2376–2405。
+
+对应配置项目前均为 `None`，调度入口缺少任一项都会直接停止，不会使用代码侧猜测值。
 
 ## 第一问统一口径
 
@@ -190,7 +280,7 @@ active_options[(Region, Hour)]
 3. 需求统计分析（核心模块已完成）
 4. 多时间尺度需求预测（核心模块已完成）
 5. 调度可行域与 Overlap（核心模块已完成）
-6. 两阶段 MILP 调度
-7. 独立结果验算与图表输出
+6. 两阶段 MILP 调度（SCIP 版本已完成，正式参数待确认）
+7. 独立结果验算、指标与图表模块（已完成）
 
 运行代码时请将工作目录切换到项目根目录。原始附件保留在 `data/raw`，生成结果统一写入 `outputs`。

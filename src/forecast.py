@@ -172,3 +172,65 @@ def select_forecast_weights(
         float(best["alpha"]), float(best["beta"]), float(best["gamma"])
     )
     return best_weights, score_table
+
+
+def build_forecast_diagnostics(
+    demand: pd.DataFrame,
+    baseline_weights: ForecastWeights,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Diagnose validation components and the 18 underlying series."""
+
+    components = _build_components(
+        demand, TRAIN_START, TRAIN_END, VALID_START, VALID_END
+    )
+    component_rows = []
+    for name, weights in (
+        ("LongTerm", ForecastWeights(1, 0, 0)),
+        ("ShortTerm", ForecastWeights(0, 1, 0)),
+        ("DailyPattern", ForecastWeights(0, 0, 1)),
+    ):
+        forecast = _apply_weights(components, weights)
+        component_rows.append(
+            {
+                "Component": name,
+                **calculate_forecast_metrics(
+                    forecast["Actual_GPU"], forecast["Predicted_GPU"]
+                ),
+            }
+        )
+
+    baseline = _apply_weights(components, baseline_weights)
+    history = demand[demand["Hour"].between(TRAIN_START, TRAIN_END)]
+    series_rows = []
+    for region in REGIONS:
+        for task_type in TASK_TYPES:
+            validation_part = baseline[
+                baseline["Region"].eq(region)
+                & baseline["TaskType"].eq(task_type)
+            ]
+            history_values = (
+                history[
+                    history["Region"].eq(region)
+                    & history["TaskType"].eq(task_type)
+                ]
+                .sort_values("Hour")["GPU_Demand"]
+                .reset_index(drop=True)
+            )
+            series_rows.append(
+                {
+                    "Region": region,
+                    "TaskType": task_type,
+                    **calculate_forecast_metrics(
+                        validation_part["Actual_GPU"],
+                        validation_part["Predicted_GPU"],
+                    ),
+                    "zero_ratio": float(history_values.eq(0).mean()),
+                    "mean": float(history_values.mean()),
+                    "std": float(history_values.std(ddof=0)),
+                    "autocorrelation_lag24": float(history_values.autocorr(lag=24)),
+                    "autocorrelation_lag168": float(
+                        history_values.autocorr(lag=168)
+                    ),
+                }
+            )
+    return pd.DataFrame(component_rows), pd.DataFrame(series_rows)

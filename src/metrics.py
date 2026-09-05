@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from .config import REGIONS, TASK_TYPES
+from .config import EVALUATION_HOURS, REGIONS, TASK_TYPES
 from .demand_builder import aggregate_region_demand, aggregate_system_demand
 
 
@@ -139,3 +139,54 @@ def build_demand_statistics(demand: pd.DataFrame) -> pd.DataFrame:
 
     columns = ["Level", "Region", "TaskType", *STAT_COLUMNS]
     return pd.DataFrame(rows, columns=columns)
+
+
+def build_schedule_metrics(
+    schedule: pd.DataFrame,
+    resources: pd.DataFrame,
+) -> pd.DataFrame:
+    """Build the scheduling metrics used by the report."""
+
+    schedule = schedule.copy()
+    schedule["WaitHour"] = schedule["StartHour"] - schedule["ArrivalHour"]
+    schedule["Migrated"] = schedule["SourceRegion"] != schedule["TargetRegion"]
+    main_resources = resources[resources["Hour"].isin(EVALUATION_HOURS)]
+    rows: list[dict[str, str | float]] = []
+
+    def add(metric: str, scope: str, value: float) -> None:
+        rows.append({"Metric": metric, "Scope": scope, "Value": float(value)})
+
+    utilization = main_resources["GPU_Utilization"]
+    add("global_peak_gpu_utilization", "overall", utilization.max())
+    add("mean_gpu_utilization", "overall", utilization.mean())
+    add("p95_gpu_utilization", "overall", utilization.quantile(0.95))
+    add("mean_wait_hour", "overall", schedule["WaitHour"].mean())
+    add(
+        "on_time_finish_rate",
+        "overall",
+        (schedule["FinishHour"] <= schedule["LatestFinishHour"]).mean(),
+    )
+    add("task_migration_rate", "overall", schedule["Migrated"].mean())
+
+    for region in REGIONS:
+        region_resources = main_resources[main_resources["Region"].eq(region)]
+        add("average_gpu_utilization", region, region_resources["GPU_Utilization"].mean())
+        add("peak_gpu_utilization", region, region_resources["GPU_Utilization"].max())
+        add(
+            "region_inflow_count",
+            region,
+            ((schedule["TargetRegion"].eq(region)) & schedule["Migrated"]).sum(),
+        )
+        add(
+            "region_outflow_count",
+            region,
+            ((schedule["SourceRegion"].eq(region)) & schedule["Migrated"]).sum(),
+        )
+
+    for task_type in TASK_TYPES:
+        selected = schedule[schedule["TaskType"].eq(task_type)]
+        add("mean_wait_hour", task_type, selected["WaitHour"].mean())
+        add("max_wait_hour", task_type, selected["WaitHour"].max())
+        add("migration_rate", task_type, selected["Migrated"].mean())
+
+    return pd.DataFrame(rows)

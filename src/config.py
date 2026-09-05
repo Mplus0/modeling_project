@@ -11,6 +11,9 @@ RAW_DATA_DIR = PROJECT_ROOT / "data" / "raw"
 OUTPUT_DIR = PROJECT_ROOT / "outputs"
 FORECAST_OUTPUT_DIR = OUTPUT_DIR / "forecast"
 METRICS_OUTPUT_DIR = OUTPUT_DIR / "metrics"
+FIGURE_OUTPUT_DIR = OUTPUT_DIR / "figures"
+SCHEDULE_OUTPUT_DIR = OUTPUT_DIR / "schedule"
+LOG_OUTPUT_DIR = OUTPUT_DIR / "logs"
 
 REGIONS: tuple[str, ...] = tuple(f"Region{letter}" for letter in "ABCDEF")
 TASK_TYPES: tuple[str, ...] = (
@@ -38,6 +41,11 @@ DEMAND_HOURS: range = range(TRAIN_START, FORECAST_END + 1)
 FORECAST_WEIGHT_STEP = 0.05
 FORECAST_SHORT_WINDOW = 24
 FORECAST_DAILY_LAGS = 7
+
+# These mathematical settings must be confirmed by the modeling team.
+WAIT_NORMALIZATION_EPSILON: float | None = None
+SERVICE_DEGRADATION_DELTA: float | None = None
+PEAK_HOUR_SCOPE: str | None = None
 
 
 RAW_DATA_FILES: dict[str, str] = {

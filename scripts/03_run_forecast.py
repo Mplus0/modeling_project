@@ -20,7 +20,11 @@ from src.config import (  # noqa: E402
 from src.data_loader import load_raw_data  # noqa: E402
 from src.data_validator import validate_data  # noqa: E402
 from src.demand_builder import build_demand_series  # noqa: E402
-from src.forecast import forecast_demand, select_forecast_weights  # noqa: E402
+from src.forecast import (  # noqa: E402
+    build_forecast_diagnostics,
+    forecast_demand,
+    select_forecast_weights,
+)
 from src.metrics import (  # noqa: E402
     build_forecast_metrics,
     calculate_forecast_metrics,
@@ -55,6 +59,9 @@ def main() -> int:
 
     final_forecast = forecast_demand(demand, weights)
     final_metrics = build_forecast_metrics(final_forecast)
+    component_diagnostics, series_diagnostics = build_forecast_diagnostics(
+        demand, weights
+    )
 
     FORECAST_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     METRICS_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -63,10 +70,20 @@ def main() -> int:
     search_path = FORECAST_OUTPUT_DIR / "validation_weight_search.csv"
     parameters_path = FORECAST_OUTPUT_DIR / "forecast_parameters.json"
     metrics_path = METRICS_OUTPUT_DIR / "forecast_metrics.csv"
+    component_diagnostics_path = (
+        METRICS_OUTPUT_DIR / "forecast_component_diagnostics.csv"
+    )
+    series_diagnostics_path = METRICS_OUTPUT_DIR / "forecast_series_diagnostics.csv"
 
     final_forecast.to_csv(forecast_path, index=False, encoding="utf-8-sig")
     search_scores.to_csv(search_path, index=False, encoding="utf-8-sig")
     final_metrics.to_csv(metrics_path, index=False, encoding="utf-8-sig")
+    component_diagnostics.to_csv(
+        component_diagnostics_path, index=False, encoding="utf-8-sig"
+    )
+    series_diagnostics.to_csv(
+        series_diagnostics_path, index=False, encoding="utf-8-sig"
+    )
 
     parameters = {
         "alpha": weights.alpha,
@@ -84,11 +101,17 @@ def main() -> int:
 
     print(f"Selected weights: {weights}")
     print(f"Validation metrics: {validation_metrics}")
-    for path in (forecast_path, search_path, parameters_path, metrics_path):
+    for path in (
+        forecast_path,
+        search_path,
+        parameters_path,
+        metrics_path,
+        component_diagnostics_path,
+        series_diagnostics_path,
+    ):
         print(f"Saved {path}")
     return 0
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

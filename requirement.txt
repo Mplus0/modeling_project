@@ -4,5 +4,5 @@ openpyxl
 matplotlib
 scipy
 
-# MILP solver; solving requires a valid Gurobi license.
-gurobipy
+# Open-source MILP solver.
+pyscipopt
