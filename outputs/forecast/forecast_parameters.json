@@ -1,0 +1,10 @@
+{
+  "alpha": 1.0,
+  "beta": 0.0,
+  "gamma": 0.0,
+  "weight_search_step": 0.05,
+  "validation_method": "direct_24_hour",
+  "validation_WAPE": 0.727773718798401,
+  "validation_MAE": 23.811004031242128,
+  "validation_RMSE": 45.85194935797013
+}

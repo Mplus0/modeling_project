@@ -22,7 +22,8 @@ modeling _project/
 ├── outputs/                    预测、调度、指标和图表输出
 ├── scripts/
 │   ├── 01_check_data.py       数据读取与验证入口
-│   └── 02_build_demand.py     构造并导出 GPU 需求序列
+│   ├── 02_build_demand.py     构造并导出 GPU 需求序列
+│   └── 03_run_forecast.py     参数选择与最终预测入口
 ├── src/
 │   ├── config.py              路径、区域和时间边界
 │   ├── data_loader.py         六个工作簿的数据读取
@@ -134,6 +135,23 @@ forecast = forecast_demand(demand, weights)
 ```
 
 当前模块只实现点预测。预测区间与风险裕度尚无明确数学定义，因此未自行加入。
+
+由你运行预测流程：
+
+```bash
+python scripts/03_run_forecast.py
+```
+
+脚本将生成：
+
+```text
+outputs/forecast/forecast_2376_2399.csv
+outputs/forecast/forecast_parameters.json
+outputs/forecast/validation_weight_search.csv
+outputs/metrics/forecast_metrics.csv
+```
+
+`forecast_metrics.csv` 包含整体、区域、任务类型和区域任务组合共 28 行指标。某一分组的实际需求总和为 0 时，其 WAPE 记为空值，MAE 与 RMSE 仍正常计算。
 
 ## 第一问统一口径
 

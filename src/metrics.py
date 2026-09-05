@@ -25,14 +25,45 @@ def calculate_forecast_metrics(
 
     absolute_error = np.abs(actual_values - predicted_values)
     denominator = np.abs(actual_values).sum()
-    if denominator == 0:
-        raise ValueError("WAPE is undefined when total actual demand is zero")
-
     return {
-        "WAPE": float(absolute_error.sum() / denominator),
+        "WAPE": float(absolute_error.sum() / denominator) if denominator else np.nan,
         "MAE": float(absolute_error.mean()),
         "RMSE": float(np.sqrt(np.mean((actual_values - predicted_values) ** 2))),
     }
+
+
+def build_forecast_metrics(forecast: pd.DataFrame) -> pd.DataFrame:
+    """Calculate forecast errors at four aggregation levels."""
+
+    required = {"Region", "TaskType", "Actual_GPU", "Predicted_GPU"}
+    missing = required - set(forecast.columns)
+    if missing:
+        raise ValueError(f"Missing forecast columns: {sorted(missing)}")
+
+    def metric_row(level: str, region: str | None, task_type: str | None) -> dict:
+        selected = forecast
+        if region is not None:
+            selected = selected[selected["Region"].eq(region)]
+        if task_type is not None:
+            selected = selected[selected["TaskType"].eq(task_type)]
+        return {
+            "Level": level,
+            "Region": region,
+            "TaskType": task_type,
+            **calculate_forecast_metrics(
+                selected["Actual_GPU"], selected["Predicted_GPU"]
+            ),
+        }
+
+    rows = [metric_row("overall", None, None)]
+    rows.extend(metric_row("region", region, None) for region in REGIONS)
+    rows.extend(metric_row("task_type", None, task_type) for task_type in TASK_TYPES)
+    rows.extend(
+        metric_row("region_task_type", region, task_type)
+        for region in REGIONS
+        for task_type in TASK_TYPES
+    )
+    return pd.DataFrame(rows)
 
 
 def _describe(values: pd.Series) -> dict[str, float | int]:

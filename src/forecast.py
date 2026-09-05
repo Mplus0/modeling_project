@@ -133,8 +133,10 @@ def select_forecast_weights(
 ) -> tuple[ForecastWeights, pd.DataFrame]:
     """Select alpha, beta and gamma by validation WAPE."""
 
+    if step <= 0:
+        raise ValueError("Weight step must be positive")
     units = round(1 / step)
-    if step <= 0 or not np.isclose(units * step, 1.0):
+    if not np.isclose(units * step, 1.0):
         raise ValueError("Weight step must divide 1 exactly")
 
     components = _build_components(
