@@ -3,6 +3,7 @@ numpy
 openpyxl
 matplotlib
 scipy
+scikit-learn
 
 # Open-source MILP solver.
 pyscipopt
