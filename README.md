@@ -2,7 +2,7 @@
 
 本仓库用于 2026 全国大学生数学建模竞赛 C 题“微网与外部电网电力调控策略”的建模、编程、实验、结果整理与团队协作。
 
-当前项目已完成赛题资料归档、C 题原始附件整理和共用的初始数据审计流程。此阶段仅检查官方数据，不生成清洗数据或建模结果。
+当前项目已完成赛题资料归档、C 题原始附件整理、共用的只读数据审计及标准化预处理。预处理只展开表格、解析已明确的时间标签并派生电量列，尚未实现预测或优化。
 
 ## 项目结构
 
@@ -35,11 +35,16 @@ modeling _project/
 │   │       ├── result4-2.xlsx
 │   │       └── result4-3.xlsx
 │   └── processed/
-│       └── .gitkeep
+│       ├── q1_input.csv
+│       ├── historical_power.csv
+│       ├── pv_forecast_hourly.csv
+│       └── electricity_price.csv
 ├── src/
-│   └── .gitkeep
-├── scripts/
+│   └── common/                 # 加载、审计、时间解析和标准化预处理
+├── scripts/                    # 01_check_data.py、02_preprocess.py
+├── tests/                      # 审计和预处理测试
 ├── outputs/
+│   ├── data_quality/           # 审计报告和预处理摘要
 │   ├── figures/
 │   │   └── .gitkeep
 │   ├── forecast/
@@ -143,8 +148,8 @@ python -m pip install -r requirement.txt
 从项目根目录运行，使用已有的 `pandas` 和 `openpyxl` 依赖：
 
 ```bash
-python scripts/01_check_data.py
-python -m unittest discover -s tests -v
+conda run -n modeling_project python scripts/01_check_data.py
+conda run -n modeling_project python -m unittest discover -s tests -v
 ```
 
 可通过 `--raw-dir 路径` 指定另一份只读附件目录。默认递归检查 `data/raw/` 中的全部 9 个官方工作簿（包括附件 5 模板），跳过 Excel 锁文件。输出固定保存到 `outputs/data_quality/`，再次运行会更新报告，不写入原始附件或 `data/processed/`。旧版 `.xls` 会报告不支持，且返回失败，不自动转换。
@@ -164,6 +169,34 @@ python -m unittest discover -s tests -v
 时间检查使用明确标示的参考间隔：点序列 10 分钟、日期 1 天、预报发布 6 小时、预报步长 1 小时。缺口只比较可解析时间轴首尾内的参考网格，不推断边界外记录。`0:00+1`、`24:00` 按显式跨日标记解析；按源日期和自然日分别报告记录数。数值单元格空白不等同于时间标签缺失。没有日期的单日序列报告未注明日期的记录数。
 
 `TODO: 需建模手确认`：参考间隔及覆盖范围、缺失/重复/负值/零值的业务处理、区间标签索引端点和跨日后缀含义。附件 3 的空白日期不前向填充，因此仅对同一行显式日期与预报时刻构建发布时刻；未解析行另列。目标时间仅报告“显式发布时刻 + 表头小时数”的候选结构，点值或区间语义待确认。显式发布轴的缺口不代表预报数值行缺失。所有待确认项仅报告，不填充、删除、插值、裁剪、归一化或覆盖官方数据。
+
+## 标准化数据预处理
+
+从项目根目录使用 `modeling_project` Conda 环境运行，不需修改 shell 配置或安装新增依赖：
+
+```bash
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/02_preprocess.py
+conda run -n modeling_project python -m unittest discover -s tests -v
+```
+
+`src/common/preprocessing.py` 复用现有 `data_loader.py`、`data_validator.py`、`time_utils.py`，实现附件 1–4 的结构检查及标准化；`scripts/02_preprocess.py` 为入口；`tests/test_preprocessing.py` 包含官方数据集成验证和错误结构拒绝测试。输入固定为 `data/raw/附件1.xlsx` 至 `附件4.xlsx`，附件 5 只纳入原文件哈希检查，不加载或预处理模板。
+
+运行命令的 `--no-capture-output` 和 `-X utf8` 用于避免 Windows 下 Conda 捕获中文日志的编码错误，只影响本次进程，不修改 shell 配置或全局环境变量。
+
+| 输出（`data/processed/`） | 行数 | 列及口径 |
+| --- | ---: | --- |
+| `q1_input.csv` | 144 | `slot`（1..144）、`source_time`、`price_yuan_per_kwh`、`load_kw`、`pv_forecast_kw`、`load_kwh`、`pv_forecast_kwh`。保留官方时刻标签，不生成区间标签。 |
+| `historical_power.csv` | 52560 | `datetime`、`source_date`、`source_time`、`load_kw`、`pv_actual_kw`、`load_kwh`、`pv_actual_kwh`。两张宽表时间标签逐位置验证一致后组合。 |
+| `pv_forecast_hourly.csv` | 35040 | `issue_datetime`、`target_datetime`、`horizon_hour`、`pv_forecast_kw`。1460 个发布时刻，每次 24 个小时预报。 |
+| `electricity_price.csv` | 52560 | `datetime`、`source_date`、`source_time`、`price_yuan_per_kwh`。电价保持原值，不乘 10 分钟换算系数。 |
+
+CSV 使用 UTF-8，无额外索引列，日期时间采用 `YYYY-MM-DD HH:MM:SS`，源日期采用 `YYYY-MM-DD`。官方源时间字符串（包括 `0:00+1`）原样保留；Excel `time` 对象序列化为 `HH:MM:SS`。`0:00+1` 解释为源日期次日 00:00，保留最后一天对应的跨年终点。新增电量列均为相应功率乘以 `10/60` 小时；原始功率、电价和小时预报数值不改动。
+
+附件 3 先验证全表为 365 个连续、唯一的四行日组：组首须有有效日期，时刻须依次为 00:00、06:00、12:00、18:00，组内显式日期须与组首一致。只有全部验证通过后，才为组内展示用空白日期推导日期，且不修改原始表或加载所得的 DataFrame。目标时间等于发布时刻加 `horizon_hour` 小时；发布/目标组合唯一，同一目标被多个发布时刻预报是允许的。不做小时到十分钟的重采样或插值。
+
+输入尺寸、表头、数值缺失、非数值或非有限值、日期分组、时间连续性或表间对齐任一检查失败即停止并报错，不静默修复。所有输出验证通过后才写出四份 CSV；再次成功运行会替换这些派生文件。报告 `outputs/data_quality/preprocessing_summary.md` 记录输入/输出行数、分辨率、缺失状态、日期补全规则和数量，以及全部 9 个官方工作簿前后的 SHA-256。不会写入 `data/raw/`，不会删除样本、裁剪、归一化、训练模型或求解优化问题。
+
+全套测试共 12 项（原审计 4 项、预处理 8 项），覆盖输出数量、CSV 数值往返、时间唯一性及跨日边界、10 分钟电量换算、每日发布结构和每次 24 条预报、错误结构拒绝、无意外缺失、原文件和模板哈希不变。上述标准化规则已明确，本阶段无未解决的 `TODO: 需建模手确认`。此前审计报告保持其只读口径不变。
 
 ## 许可证
 
