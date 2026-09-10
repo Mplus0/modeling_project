@@ -7,12 +7,12 @@ import pandas as pd
 
 from src.common.data_loader import discover_workbooks, file_hash, load_sheets
 from src.common.data_validator import validate_sheet
-from src.common.time_utils import TODO, audit_axis, clock_seconds, epoch, is_blank, parse_date
+from src.common.time_utils import audit_axis, clock_seconds, epoch, is_blank, parse_date
 
 
 def require(condition, message):
     if not condition:
-        raise ValueError(f"{message}。{TODO}；未自动修复数据")
+        raise ValueError(f"{message}；预处理已停止，未自动修复数据")
 
 
 def check_axis(values, step, name):
@@ -168,7 +168,7 @@ def run_preprocessing(raw_dir, processed_dir, report_path):
              f"SHA-256 完整性：{'通过' if unchanged else '失败'}（全部 {len(sources)} 个官方工作簿处理前后对比）。", "",
              "| 原始文件 | 处理前 SHA-256 | 处理后 SHA-256 |", "|---|---|---|"]
     lines.extend(f"| {p.relative_to(raw_dir)} | {before[p]} | {after[p]} |" for p in sources)
-    lines.extend(["", "未解决 TODO: 需建模手确认：无（仅执行本阶段已明确的标准化规则）。", ""])
+    lines.extend(["", "未解决的建模确认事项：无（仅执行本阶段已明确的标准化规则）。", ""])
     # 原子替换报告，不经由已有文件链接写入其他文件。
     with TemporaryDirectory(prefix=".preprocess-report-", dir=report_path.parent) as temporary:
         staged = Path(temporary) / "summary.md"

@@ -28,4 +28,4 @@ SHA-256 完整性：通过（全部 9 个官方工作簿处理前后对比）。
 | 附件5\result4-2.xlsx | 1c26494cfc6d754e0bd9bff7e13e1126a73d2d2da6c5336eb251d89b9a1a1a47 | 1c26494cfc6d754e0bd9bff7e13e1126a73d2d2da6c5336eb251d89b9a1a1a47 |
 | 附件5\result4-3.xlsx | c59da470cabd0be23f602c95c8aa9d11ec224a0cdac216b3e1f218e65d006bdc | c59da470cabd0be23f602c95c8aa9d11ec224a0cdac216b3e1f218e65d006bdc |
 
-未解决 TODO: 需建模手确认：无（仅执行本阶段已明确的标准化规则）。
+未解决的建模确认事项：无（仅执行本阶段已明确的标准化规则）。

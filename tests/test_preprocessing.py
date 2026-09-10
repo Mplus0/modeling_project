@@ -95,7 +95,7 @@ class PreprocessingTests(unittest.TestCase):
             with self.subTest(row=row, column=column, value=value):
                 sheet = deepcopy(self.books[3][0])
                 sheet["frame"].iat[row, column] = value
-                with self.assertRaisesRegex(ValueError, "TODO: 需建模手确认"):
+                with self.assertRaisesRegex(ValueError, "附件 3"):
                     preprocess_forecast(sheet)
         sheet = deepcopy(self.books[3][0])
         sheet["frame"] = sheet["frame"].iloc[:-1]

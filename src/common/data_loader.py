@@ -26,7 +26,7 @@ def file_hash(path):
 
 def load_sheets(path):
     if Path(path).suffix.lower() == ".xls":
-        raise ValueError("不支持旧版 .xls；未转换文件。TODO: 需建模手确认")
+        raise ValueError("不支持旧版 .xls 格式；未转换文件")
     # 保留公式文本，避免把没有缓存值的公式误报为空白；从不调用 save。
     workbook = load_workbook(path, read_only=True, data_only=False)
     try:
