@@ -2,7 +2,7 @@
 
 本仓库用于 2026 全国大学生数学建模竞赛 C 题“微网与外部电网电力调控策略”的建模、编程、实验、结果整理与团队协作。
 
-当前项目已完成赛题资料归档、C 题原始附件整理、共用的只读数据审计及标准化预处理。预处理只展开表格、解析已明确的时间标签并派生电量列，尚未实现预测或优化。
+当前项目已完成赛题资料归档、只读数据审计、标准化预处理和问题一两阶段线性规划。预处理已冻结；问题一完整调度、指标及按已确认 slot 行序填写的官方结果副本已输出。尚未实现预测或问题二至四的优化。
 
 ## 项目结构
 
@@ -40,9 +40,10 @@ modeling _project/
 │       ├── pv_forecast_hourly.csv
 │       └── electricity_price.csv
 ├── src/
-│   └── common/                 # 加载、审计、时间解析和标准化预处理
-├── scripts/                    # 01_check_data.py、02_preprocess.py
-├── tests/                      # 审计和预处理测试
+│   ├── common/                 # 加载、审计、时间解析和标准化预处理（已冻结）
+│   └── q1/                     # optimizer.py、result_writer.py
+├── scripts/                    # 01_check_data.py、02_preprocess.py、03_run_q1.py
+├── tests/                      # 审计、预处理和 Q1 测试
 ├── outputs/
 │   ├── data_quality/           # 审计报告和预处理摘要
 │   ├── figures/
@@ -197,6 +198,39 @@ CSV 使用 UTF-8，无额外索引列，日期时间采用 `YYYY-MM-DD HH:MM:SS`
 输入尺寸、表头、数值缺失、非数值或非有限值、日期分组、时间连续性或表间对齐任一检查失败即停止并报错，不静默修复。所有输出验证通过后才写出四份 CSV；再次成功运行会替换这些派生文件。报告 `outputs/data_quality/preprocessing_summary.md` 记录输入/输出行数、分辨率、缺失状态、日期补全规则和数量，以及全部 9 个官方工作簿前后的 SHA-256。不会写入 `data/raw/`，不会删除样本、裁剪、归一化、训练模型或求解优化问题。
 
 全套测试共 12 项（原审计 4 项、预处理 8 项），覆盖输出数量、CSV 数值往返、时间唯一性及跨日边界、10 分钟电量换算、每日发布结构和每次 24 条预报、错误结构拒绝、无意外缺失、原文件和模板哈希不变。上述标准化规则已明确，本阶段没有未解决的建模确认事项。文件结构不符是验证错误，不支持旧版 `.xls` 是软件格式限制，均通过明确的 `ValueError` 报错，不标为建模决策。此前审计报告及通用语义提示保持其只读口径不变。
+
+## 问题一确定性调度
+
+在项目根目录运行：
+
+```bash
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/03_run_q1.py
+conda run --no-capture-output -n modeling_project python -X utf8 -m unittest discover -s tests -v
+```
+
+`src/q1/optimizer.py` 只读加载冻结的 `data/processed/q1_input.csv`，复用公共时间解析和文件哈希检查，使用已有 PySCIPOpt/SCIP 实现连续线性规划。`x` 为外网向电池充电的电量，`y` 为外网直接供负载的电量，`q` 为光伏向电池充电的电量，`z` 为电池实际送达负载的电量，均为 kWh；SOC 是各 slot 结束后的电池内部电量。
+
+SOC 递推采用 `S_i = S_(i-1) + 0.9*(x_i+q_i) - z_i/0.9`，初末 SOC 为 6000 kWh，范围 1200–10800 kWh。每个 slot 的充电端输入 `x+q` 和送达端放电量 `z` 分别不超过 `5000*10/60` kWh。供能满足 `pv-q+y+z >= load`，且 `0 <= q <= pv`。保留供能不等式以允许弃光；所有变量连续，不添加充放电互斥二进制变量。
+
+一级最小化 `sum(price*(x+y))`，必须求得 `optimal` 才继续。随后以等式锁定一级最优费用 `C_star`，二级最小化 `sum(0.9*(x+q)+z/0.9)`。SCIP 可行性容差设为 `1e-9`；输出按绝对残差 `1e-6` 复核（能量 kWh、费用元），不裁剪近零变量。费用等式不人为放宽成本预算。二级同样必须达到 `optimal`。
+
+| 文件 | 内容 |
+| --- | --- |
+| `outputs/schedule/q1_schedule.csv` | 完整 144 行，保留所有输入列，增加 `x_kwh/y_kwh/q_kwh/z_kwh/soc_kwh`，以及前一 SOC、购电量、充电端输入、电池内部充放电量、供能剩余、费用和吞吐量。 |
+| `outputs/metrics/q1_metrics.json` | 两阶段状态及求解器目标、独立重算费用/吞吐量、SOC 指标、同充同放数量、各约束残差、容差、参数、冻结输入哈希及提交状态。 |
+| `outputs/submissions/result1.xlsx` | 复制官方 `data/raw/附件5/result1.xlsx`，按 slot 1–144 顺序填写“计划购电量”B2:B145，另填充放电汇总及初末 SOC；保留原模板标签与格式。 |
+
+入口必须先写出完整 CSV 与指标，再重新读取 CSV 独立复核全部约束、派生列和目标值；失败时禁止写 Excel。四小时汇总已确认固定使用 slot 1–24、25–48、49–72、73–96、97–120、121–144，模板充电量为 `sum(x+q)`，放电量为 `sum(z)`；效率仅用于 SOC 和吞吐量。初末储电量填写 6000 kWh。
+
+结果写入规则已确认：购电量数值按 slot 行序填入模板，slot 1 对应 Excel 第 2 行，slot 144 对应第 145 行。官方时间段标签完全保留，不平移数值、不修改模板原件。默认运行即可在 CSV 与指标复核通过后生成 Excel，最终指标标记 `submission_status=written`。Q1 当前没有未解决的建模确认事项。
+
+如后续另行确认其他映射，也可将按 slot 1..144 排列的 144 个官方区间标签保存为 JSON 字符串列表，再运行（当前默认行序规则不需要此参数）：
+
+```bash
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/03_run_q1.py --interval-map path/to/confirmed_q1_intervals.json
+```
+
+`src/q1/result_writer.py` 默认按已确认的 slot 行序写入，也支持验证显式映射与模板标签一一对应后按标签定位，保留工作簿格式和其他单元格。测试中的反序映射仅用于验证可选映射，不构成正式时间规则。当前完整测试套件共 20 项，包括 Q1 两阶段目标、独立约束计算、错误解拒绝、零负载二级优化、输入不变、默认行序写入及模板样式和汇总检查。
 
 ## 许可证
 
