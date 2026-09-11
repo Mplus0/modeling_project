@@ -13,6 +13,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from src.common.data_loader import discover_workbooks, file_hash
 from src.q1.optimizer import INPUT_COLUMNS, evaluate_schedule, load_input, solve_q1
 from src.q1.result_writer import write_result
+from src.q1.comparison import write_comparison
 
 
 def main():
@@ -21,7 +22,29 @@ def main():
     args = parser.parse_args()
     frozen = discover_workbooks(PROJECT_ROOT / "data/raw") + sorted((PROJECT_ROOT / "data/processed").glob("*.csv"))
     before = {p: file_hash(p) for p in frozen}
-    schedule, metrics = solve_q1(load_input(PROJECT_ROOT / "data/processed/q1_input.csv"))
+    official = [PROJECT_ROOT / name for name in (
+        "outputs/schedule/q1_schedule.csv", "outputs/metrics/q1_metrics.json",
+        "outputs/submissions/result1.xlsx")]
+    existing = [p.exists() for p in official]
+    if any(existing) and not all(existing):
+        raise RuntimeError("Q1 正式结果不完整，已停止以避免覆盖已有文件")
+    if all(existing) and args.interval_map:
+        raise ValueError("Q1 正式结果已冻结，不能通过时间映射参数改写")
+    protected = {p: file_hash(p) for p in official} if all(existing) else {}
+    schedule, metrics, primary = solve_q1(
+        load_input(PROJECT_ROOT / "data/processed/q1_input.csv"), capture_primary=True)
+    comparison = write_comparison(primary, schedule, metrics, PROJECT_ROOT / "outputs/comparison")
+    # 已有正式结果时仅导出诊断；不触碰正式 CSV、JSON 或 Excel。
+    if protected:
+        saved = pd.read_csv(official[0], float_precision="round_trip", keep_default_na=False)
+        checked = evaluate_schedule(saved, metrics["C_star"], metrics["secondary_solver_objective"])
+        if not checked["validation_passed"] or not saved[INPUT_COLUMNS].equals(schedule[INPUT_COLUMNS]):
+            raise RuntimeError("现有正式调度与本次最优费用、吞吐量或输入不一致")
+        if not all(file_hash(p) == h for p, h in {**before, **protected}.items()):
+            raise RuntimeError("冻结数据或正式结果哈希发生变化")
+        print(json.dumps(comparison, ensure_ascii=False, indent=2, allow_nan=False))
+        print("诊断对比已生成；正式 Q1 输出 SHA-256 保持不变。")
+        return 0
     metrics["input_sha256"] = before[PROJECT_ROOT / "data/processed/q1_input.csv"]
     metrics["frozen_data_unchanged"] = all(file_hash(p) == h for p, h in before.items())
     metrics["submission_status"] = "pending_validation"

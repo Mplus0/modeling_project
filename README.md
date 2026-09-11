@@ -2,7 +2,7 @@
 
 本仓库用于 2026 全国大学生数学建模竞赛 C 题“微网与外部电网电力调控策略”的建模、编程、实验、结果整理与团队协作。
 
-当前项目已完成赛题资料归档、只读数据审计、标准化预处理和问题一两阶段线性规划。预处理已冻结；问题一完整调度、指标及按已确认 slot 行序填写的官方结果副本已输出。尚未实现预测或问题二至四的优化。
+当前项目已完成赛题资料归档、只读数据审计、标准化预处理和问题一两阶段线性规划。预处理已冻结；问题一完整调度、指标及按已确认 slot 行序填写的官方结果副本已输出。问题二动态预测与逐日优化、模板副本及论文表已实现，等待数值验收；尚未实现问题三、四。
 
 ## 项目结构
 
@@ -230,7 +230,9 @@ SOC 递推采用 `S_i = S_(i-1) + 0.9*(x_i+q_i) - z_i/0.9`，初末 SOC 为 6000
 conda run --no-capture-output -n modeling_project python -X utf8 scripts/03_run_q1.py --interval-map path/to/confirmed_q1_intervals.json
 ```
 
-`src/q1/result_writer.py` 默认按已确认的 slot 行序写入，也支持验证显式映射与模板标签一一对应后按标签定位，保留工作簿格式和其他单元格。测试中的反序映射仅用于验证可选映射，不构成正式时间规则。当前完整测试套件共 20 项，包括 Q1 两阶段目标、独立约束计算、错误解拒绝、零负载二级优化、输入不变、默认行序写入及模板样式和汇总检查。
+`src/q1/result_writer.py` 默认按已确认的 slot 行序写入，也支持验证显式映射与模板标签一一对应后按标签定位，保留工作簿格式和其他单元格。测试中的反序映射仅用于验证可选映射，不构成正式时间规则。Q1 相关测试包括两阶段目标、独立约束计算、错误解拒绝、零负载二级优化、一级原始解对比、输入不变、默认行序写入及模板样式和汇总检查。
+
+问题一诊断对比可随同一入口生成 `outputs/comparison/q1_primary_only_schedule.csv`、`q1_secondary_comparison.json` 和 `q1_secondary_comparison.md`。该诊断保存 SCIP 一级费用最优时实际返回的一个解，并与现有二级正式解比较吞吐量；正式调度、指标和提交副本已冻结，入口重复运行不会覆盖它们。
 
 ## 问题一论文图片入口
 
@@ -253,3 +255,43 @@ conda run --no-capture-output -n modeling_project python -X utf8 scripts/04_plot
 ## 许可证
 
 本项目采用仓库中 `LICENSE` 文件所示许可证。竞赛官方提供的题目、数据、格式文件及其他附件仍受其原始版权和竞赛规则约束，不因存放在本仓库中而改变。
+
+## 问题二实现与数值验收入口
+
+正式计算范围为2025-02-01至2025-12-31，共334天、48096个10分钟时段。一月只用于历史回测和残差预热。只读取 `historical_power.csv` 的既有kWh列及 `q1_input.csv` 的固定日电价，不使用附件4电价；Q1与预处理数据保持冻结。本阶段不生成Q2图片，输出供数值验收。
+
+```bash
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/05_run_q2.py
+conda run --no-capture-output -n modeling_project python -X utf8 -m unittest discover -s tests -v
+```
+
+先运行入口再执行完整测试（全年集成测试读取上述输出）。完整套件41项测试已通过。分步检查可加 `--skip-workbook`，先生成CSV与指标，不生成Excel；默认命令完成全部输出。程序每30天显示进度，不输出逐次求解器日志。
+
+| 模块 | 职责 |
+| --- | --- |
+| `src/q2/forecasting.py` | 负荷同星期1/2/3/4周、光伏连续3/5/7/14天；每天在各自公共历史回测日上比较NMAE并动态选窗，缓存历史误差和以避免重复计算。 |
+| `src/q2/risk.py` | 按slot取历史残差的逆经验CDF 80%分位数，保留负风险修正；拒绝空样本与目标日/未来残差。 |
+| `src/q2/optimizer.py` | 日前最小计划费用、实际最小5倍分时紧急费用，各自再最小吞吐量；实际普通购电承诺固定，真实日末SOC传入次日。 |
+| `src/q2/result_writer.py` | 复制并按官方示例样式扩展输出模板，实际充放电六段汇总、紧急区间逐日合并及题面指定日期论文表。 |
+| `scripts/05_run_q2.py` | 严格按历史预测→计划承诺→揭示当天实际→实际运行→更新历史和SOC顺序执行，写CSV并读回复核后才生成Excel。 |
+| `tests/test_q2_*.py` | 预测/风险合成样本与全年因果性检查、优化手算案例与逐日约束复核、模板扩展和原文件完整性检查。 |
+
+全部数值文件在 [outputs/q2/](outputs/q2/)：
+
+| 文件 | 含义 |
+| --- | --- |
+| [q2_window_selection.csv](outputs/q2/q2_window_selection.csv) | 334天的动态窗口、所有候选NMAE、公共回测日期清单和风险样本日期清单。 |
+| [q2_predictions.csv](outputs/q2/q2_predictions.csv) | 48096行实际/预测负荷与光伏、基线净负荷、Type-1风险修正及实现后的残差，能量单位均为kWh。 |
+| [q2_plan_schedule.csv](outputs/q2/q2_plan_schedule.csv) | 日前变量、固定购电承诺、计划SOC、风险净负荷及逐slot计划费用。 |
+| [q2_actual_schedule.csv](outputs/q2/q2_actual_schedule.csv) | 实际变量、紧急购电、真实SOC、实际供需数据和各类逐slot费用，可独立复算约束。 |
+| [q2_daily_metrics.csv](outputs/q2/q2_daily_metrics.csv) | 日初/计划末/实际末SOC、购电和费用、四次求解状态、一级最优值、二级吞吐及逐项约束残差。 |
+| [q2_metrics.json](outputs/q2/q2_metrics.json) | 年度汇总、预测NMAE、选窗分布、紧急购电统计、状态和容差。 |
+| [q2_warmup_predictions.csv](outputs/q2/q2_warmup_predictions.csv)、[q2_warmup_windows.csv](outputs/q2/q2_warmup_windows.csv) | 1月30日、31日的合法在线伪预测和选窗依据；这两天构成2月1日的初始残差样本。 |
+| [q2_integrity.json](outputs/q2/q2_integrity.json) | 官方附件、Q1输出及预处理文件的运行前后SHA-256对照。 |
+| [q2_paper_tables.md](outputs/q2/q2_paper_tables.md) | 自动提取3月20日、6月21日、9月23日、12月21日的指定购电时段、日费用、实际充放电和紧急购电区间。 |
+
+提交文件为 [outputs/submissions/result2.xlsx](outputs/submissions/result2.xlsx)。计划表保留334天原行列和标签，填写48096个 `G_plan` 及计划日购电量/计划费用；充放电表在副本扩展至334×6行，填写实际 `x_real+q_real`、`z_real` 和日初/日末SOC。紧急购电仅报告 `e>1e-6 kWh` 的slot，按每日连续区间合并，不跨源日期合并，不生成零购电日期记录。区间端点沿用官方购电表的slot顺序与跨日标签；实际全年费用（含紧急费用）见每日指标及论文表。
+
+新增行复制原模板示例块的字体、填充、边框、对齐、数字格式、行高及块内合并规则。原始模板不变，省略占位符仅在输出副本中被完整日期记录替代。
+
+复核口径：SCIP可行性容差为1e-9；二级费用在一级最优值±1e-7元内锁定（避免精确浮点费用等式的退化LP数值故障），每个日计划和实际输出独立按1e-6验收，不裁剪数值、不引入成本与吞吐量加权目标。费用窗口和报告阈值写入指标文件。预测误差使用NMAE，不表述为分类准确率。当前无未解决的Q2建模确认事项；结果待人工数值验收。

@@ -87,7 +87,7 @@ def evaluate_schedule(schedule, c_star, secondary_objective):
     }
 
 
-def solve_q1(frame):
+def solve_q1(frame, *, capture_primary=False):
     validate_input(frame)
     model = Model("q1_lexicographic_lp")
     model.hideOutput()
@@ -118,6 +118,8 @@ def solve_q1(frame):
     primary_recomputed = sum(price[i] * (model.getVal(x[i]) + model.getVal(y[i])) for i in range(144))
     if abs(primary_recomputed - c_star) > VALIDATION_TOL:
         raise RuntimeError("Q1 一级目标重算不一致")
+    # 在费用锁定和二级目标设置之前读取实际一级解，复制数值而不保留求解器引用。
+    primary_schedule = _snapshot_schedule(frame, model, x, y, q, z, soc) if capture_primary else None
     # 保留原约束，将费用锁定为一级最优值；等式允许的偏差仅来自求解器数值容差。
     model.freeTransform()
     model.addCons(cost == c_star, name="primary_optimal_cost_lock")
@@ -127,6 +129,21 @@ def solve_q1(frame):
     if secondary_status != "optimal":
         raise RuntimeError(f"Q1 二级求解未达到最优：{secondary_status}")
     secondary_objective = float(model.getObjVal())
+    schedule = _snapshot_schedule(frame, model, x, y, q, z, soc)
+    metrics = evaluate_schedule(schedule, c_star, secondary_objective)
+    metrics.update({"primary_status": primary_status, "secondary_status": secondary_status,
+                    "primary_solver_objective": c_star, "primary_recomputed_objective": float(primary_recomputed),
+                    "secondary_solver_objective": secondary_objective, "solver_feasibility_tolerance": SOLVER_FEASTOL,
+                    "cost_lock": "equality to C_star", "parameters": {
+                        "eta_charge": ETA_CHARGE, "eta_discharge": ETA_DISCHARGE, "initial_soc_kwh": INITIAL_SOC,
+                        "soc_min_kwh": SOC_MIN, "soc_max_kwh": SOC_MAX, "max_interval_energy_kwh": MAX_INTERVAL_ENERGY}})
+    if capture_primary:
+        return schedule, metrics, primary_schedule
+    return schedule, metrics
+
+
+def _snapshot_schedule(frame, model, x, y, q, z, soc):
+    """两个阶段使用完全一致的变量读取及派生列口径。"""
     schedule = frame.copy(deep=True)
     for name, variables in [("x_kwh", x), ("y_kwh", y), ("q_kwh", q), ("z_kwh", z), ("soc_kwh", soc)]:
         schedule[name] = [model.getVal(v) for v in variables]
@@ -138,11 +155,4 @@ def solve_q1(frame):
     schedule["supply_surplus_kwh"] = schedule["pv_forecast_kwh"] - schedule["q_kwh"] + schedule["y_kwh"] + schedule["z_kwh"] - schedule["load_kwh"]
     schedule["cost_yuan"] = schedule["price_yuan_per_kwh"] * schedule["grid_purchase_kwh"]
     schedule["throughput_kwh"] = schedule["battery_charge_kwh"] + schedule["battery_discharge_kwh"]
-    metrics = evaluate_schedule(schedule, c_star, secondary_objective)
-    metrics.update({"primary_status": primary_status, "secondary_status": secondary_status,
-                    "primary_solver_objective": c_star, "primary_recomputed_objective": float(primary_recomputed),
-                    "secondary_solver_objective": secondary_objective, "solver_feasibility_tolerance": SOLVER_FEASTOL,
-                    "cost_lock": "equality to C_star", "parameters": {
-                        "eta_charge": ETA_CHARGE, "eta_discharge": ETA_DISCHARGE, "initial_soc_kwh": INITIAL_SOC,
-                        "soc_min_kwh": SOC_MIN, "soc_max_kwh": SOC_MAX, "max_interval_energy_kwh": MAX_INTERVAL_ENERGY}})
-    return schedule, metrics
+    return schedule
