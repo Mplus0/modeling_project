@@ -305,3 +305,17 @@ conda run --no-capture-output -n modeling_project python -X utf8 -m unittest dis
 旧版结果完整保留在 `outputs/comparison/archive/q2_expost/`，包括原CSV、指标、论文表、result2副本及SHA-256清单；重复运行不会覆盖该存档。新旧对比见 [q2_expost_vs_rolling.md](outputs/comparison/q2_expost_vs_rolling.md) 和同名JSON。正式结果始终以新 `outputs/q2/` 和 `outputs/submissions/result2.xlsx` 为准。当前无未解决的Q2建模确认事项，结果待人工数值验收。
 
 最新完整套件61项测试通过，覆盖审计、预处理、Q1及新Q2因果性、三级优先级、当前执行、全年复算和模板样式。Q1正式结果、图片、原始附件、预处理输入、预测与风险模块SHA-256均不变；新旧预测/风险输出逐字节一致。运行与校验数值见 `q2_metrics.json`，哈希对照见 `q2_integrity.json`。
+
+## Q2 历史日曲线相似性图
+
+运行 `conda run --no-capture-output -n modeling_project python -X utf8 scripts/06_plot_q2_lag_similarity.py`。唯一计算输入是 `data/processed/historical_power.csv` 中的实际 `load_kwh` 和 `pv_actual_kwh`，不调用预测或优化器。
+
+`src/q2/lag_similarity.py` 按2025年源日期检查365×144条完整记录，按datetime排序；沿用冻结数据的日曲线归属，`0:00+1`保留为源日期最后一个slot。对滞后l=1..14，以第l+1日至第365日为有效目标日，计算与滞后日的绝对差总和，除以相同有效目标日的实际电量总和。
+
+| 输出 | 用途 |
+| --- | --- |
+| [300 dpi PNG](outputs/figures/q2/q2_lag_similarity.png) | 两行子图，分别展示负荷和光伏的日滞后误差，供论文插图。 |
+| [矢量 PDF](outputs/figures/q2/q2_lag_similarity.pdf) | 排版缩放使用，嵌入中文字体。 |
+| [14行计算结果 CSV](outputs/metrics/q2/q2_lag_similarity.csv) | `lag_days`、`load_nmae`、`pv_nmae`，保留未取整计算值。 |
+
+误差越小表示该滞后下日曲线越接近。虚线仅标注5、7、14天；此图是历史数据特征描述，不等同于预测模型的回测误差，也不据此更改已确认的预测窗口。新增 `tests/test_q2_lag_similarity.py` 的三项测试已通过，验证手算分母口径、完整性/跨年末点、输出格式和冻结文件哈希。
