@@ -319,3 +319,11 @@ conda run --no-capture-output -n modeling_project python -X utf8 -m unittest dis
 | [14行计算结果 CSV](outputs/metrics/q2/q2_lag_similarity.csv) | `lag_days`、`load_nmae`、`pv_nmae`，保留未取整计算值。 |
 
 误差越小表示该滞后下日曲线越接近。虚线仅标注5、7、14天；此图是历史数据特征描述，不等同于预测模型的回测误差，也不据此更改已确认的预测窗口。新增 `tests/test_q2_lag_similarity.py` 的三项测试已通过，验证手算分母口径、完整性/跨年末点、输出格式和冻结文件哈希。
+
+## Q3 第一阶段（部分模块已实现，完整流程待口径确认）
+
+`src/q3/forecast.py` 校验附件3的冻结小时预报，使用发布时刻实测功率作为首小时左端点，线性插值后乘10/60得到电量；负荷预测直接复用Q2动态选窗函数。融合函数仅更新未执行slot。`src/q3/scenarios.py` 按最多14个合法历史日期同日配对负荷/融合光伏残差，等概率构造场景；按《第三问(6)》对场景预测加残差取max(0,·)，不修改数据或历史残差。
+
+当前可运行：`conda run --no-capture-output -n modeling_project python -X utf8 -m unittest discover -s tests -p "test_q3_*.py" -v`。预测与场景模块的五项合成测试已通过。完整单组运行入口及数值输出尚未生成；尚未执行最终15组联合参数搜索，也未选择最终alpha/lambda、计算Score或生成result3.xlsx。
+
+TODO: 需建模手确认：实际执行层是否保留Q2的日末SOC缺口目标；可信度有效光伏时段的具体筛选及无历史/无有效时段时的初始化规则；3月20日独立烟雾测试的初始SOC。确认前不运行依赖这些口径的仿真。
