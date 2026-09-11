@@ -1,0 +1,109 @@
+{
+  "old_operation_mode": "ex-post perfect foresight",
+  "new_operation_mode": "causal rolling horizon",
+  "difference_definition": "new minus old; percentage null when old is numerically zero",
+  "comparison": {
+    "total_planned_grid_purchase_kwh": {
+      "old": 21614871.337124128,
+      "new": 21616419.907505244,
+      "absolute_difference": 1548.570381116122,
+      "percentage_difference": 0.007164374735168608
+    },
+    "total_emergency_purchase_kwh": {
+      "old": 199512.6131110432,
+      "new": 277409.427002502,
+      "absolute_difference": 77896.81389145882,
+      "percentage_difference": 39.04355352616409
+    },
+    "total_planned_cost_yuan": {
+      "old": 13208282.12428261,
+      "new": 13194213.86346297,
+      "absolute_difference": -14068.26081964001,
+      "percentage_difference": -0.10651090495543233
+    },
+    "total_emergency_cost_yuan": {
+      "old": 723303.400818712,
+      "new": 1194359.0889661158,
+      "absolute_difference": 471055.6881474039,
+      "percentage_difference": 65.12560118122116
+    },
+    "total_actual_cost_yuan": {
+      "old": 13931585.525101319,
+      "new": 14388572.952429088,
+      "absolute_difference": 456987.4273277689,
+      "percentage_difference": 3.280225545788661
+    },
+    "emergency_purchase_day_count": {
+      "old": 142,
+      "new": 230,
+      "absolute_difference": 88,
+      "percentage_difference": 61.97183098591549
+    },
+    "emergency_purchase_slot_count": {
+      "old": 2598,
+      "new": 3282,
+      "absolute_difference": 684,
+      "percentage_difference": 26.32794457274827
+    },
+    "initial_soc_kwh": {
+      "old": 6000.0,
+      "new": 6000.0,
+      "absolute_difference": 0.0,
+      "percentage_difference": 0.0
+    },
+    "final_soc_kwh": {
+      "old": 1200.0,
+      "new": 2748.5289686118745,
+      "absolute_difference": 1548.5289686118745,
+      "percentage_difference": 129.04408071765621
+    },
+    "minimum_actual_soc_kwh": {
+      "old": 1199.9999999999998,
+      "new": 1199.9999999999998,
+      "absolute_difference": 0.0,
+      "percentage_difference": 0.0
+    },
+    "maximum_actual_soc_kwh": {
+      "old": 10800.00000004421,
+      "new": 10800.000000000002,
+      "absolute_difference": -4.4208718463778496e-08,
+      "percentage_difference": -4.0933998577405115e-10
+    },
+    "days_ending_at_soc_min_within_tolerance": {
+      "old": 334,
+      "new": 28,
+      "absolute_difference": -306,
+      "percentage_difference": -91.61676646706587
+    },
+    "average_day_end_soc_kwh": {
+      "old": 1200.0,
+      "new": 3231.2705434554946,
+      "absolute_difference": 2031.2705434554946,
+      "percentage_difference": 169.27254528795788
+    },
+    "emergency_purchase_kwh_2025-03-20": {
+      "old": 43.09980989161475,
+      "new": 441.7725466049353,
+      "absolute_difference": 398.67273671332055,
+      "percentage_difference": 924.9988288019898
+    },
+    "emergency_purchase_kwh_2025-06-21": {
+      "old": 4.673987151331118e-08,
+      "new": 5.2652032047185e-07,
+      "absolute_difference": 4.797804489585388e-07,
+      "percentage_difference": null
+    },
+    "emergency_purchase_kwh_2025-09-23": {
+      "old": 4.764181164014305e-08,
+      "new": 1031.014902635832,
+      "absolute_difference": 1031.0149025881901,
+      "percentage_difference": null
+    },
+    "emergency_purchase_kwh_2025-12-21": {
+      "old": 4.5945329014252945e-08,
+      "new": 4.3918916026288576e-07,
+      "absolute_difference": 3.9324383124863283e-07,
+      "percentage_difference": null
+    }
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "data\\processed\\electricity_price.csv": {
+    "before": "31587645ca844f1d1b363e0e3431ec2809e3821400bd8ebd98439a2e7afeeba3",
+    "after": "31587645ca844f1d1b363e0e3431ec2809e3821400bd8ebd98439a2e7afeeba3"
+  },
+  "data\\processed\\historical_power.csv": {
+    "before": "9405abb88dd4c4705cc18f7917a984f8df584afc35e7cc8c0ee264e47b91e342",
+    "after": "9405abb88dd4c4705cc18f7917a984f8df584afc35e7cc8c0ee264e47b91e342"
+  },
+  "data\\processed\\pv_forecast_hourly.csv": {
+    "before": "971286cd4fc4368623cd07da0eb29f00cf0f3b8dfd943580d1ac02e1c3e6f33a",
+    "after": "971286cd4fc4368623cd07da0eb29f00cf0f3b8dfd943580d1ac02e1c3e6f33a"
+  },
+  "data\\processed\\q1_input.csv": {
+    "before": "e6a5a8ffa391759f388470b548a2683588ae98df06ff249e19516c2234da4834",
+    "after": "e6a5a8ffa391759f388470b548a2683588ae98df06ff249e19516c2234da4834"
+  },
+  "data\\raw\\附件1.xlsx": {
+    "before": "66b87134f5ecccd68184d3539bb1293ef039f9e0fdd955a589b9bfa7f227c377",
+    "after": "66b87134f5ecccd68184d3539bb1293ef039f9e0fdd955a589b9bfa7f227c377"
+  },
+  "data\\raw\\附件2.xlsx": {
+    "before": "2e95fd446bfafa0d8c59577b5c2e2ea8b3f1def20dde54a3062556f4da9b4c72",
+    "after": "2e95fd446bfafa0d8c59577b5c2e2ea8b3f1def20dde54a3062556f4da9b4c72"
+  },
+  "data\\raw\\附件3.xlsx": {
+    "before": "8a61b06c52bd0d639a1cc37c61a7d9f5b75edcbca718f64c1bd3498ec9f9d843",
+    "after": "8a61b06c52bd0d639a1cc37c61a7d9f5b75edcbca718f64c1bd3498ec9f9d843"
+  },
+  "data\\raw\\附件4.xlsx": {
+    "before": "20e9c93aeab5e8e21ae4dd15587f9e190f7408692504c1319598461cd654fe71",
+    "after": "20e9c93aeab5e8e21ae4dd15587f9e190f7408692504c1319598461cd654fe71"
+  },
+  "data\\raw\\附件5\\result1.xlsx": {
+    "before": "28360e0974e7d6065394a8aba4e14a86773ae0036cc7d3ea1b211b515b03d688",
+    "after": "28360e0974e7d6065394a8aba4e14a86773ae0036cc7d3ea1b211b515b03d688"
+  },
+  "data\\raw\\附件5\\result2.xlsx": {
+    "before": "1c26494cfc6d754e0bd9bff7e13e1126a73d2d2da6c5336eb251d89b9a1a1a47",
+    "after": "1c26494cfc6d754e0bd9bff7e13e1126a73d2d2da6c5336eb251d89b9a1a1a47"
+  },
+  "data\\raw\\附件5\\result3.xlsx": {
+    "before": "c59da470cabd0be23f602c95c8aa9d11ec224a0cdac216b3e1f218e65d006bdc",
+    "after": "c59da470cabd0be23f602c95c8aa9d11ec224a0cdac216b3e1f218e65d006bdc"
+  },
+  "data\\raw\\附件5\\result4-2.xlsx": {
+    "before": "1c26494cfc6d754e0bd9bff7e13e1126a73d2d2da6c5336eb251d89b9a1a1a47",
+    "after": "1c26494cfc6d754e0bd9bff7e13e1126a73d2d2da6c5336eb251d89b9a1a1a47"
+  },
+  "data\\raw\\附件5\\result4-3.xlsx": {
+    "before": "c59da470cabd0be23f602c95c8aa9d11ec224a0cdac216b3e1f218e65d006bdc",
+    "after": "c59da470cabd0be23f602c95c8aa9d11ec224a0cdac216b3e1f218e65d006bdc"
+  },
+  "outputs\\figures\\q1\\q1_figure1_price_grid_purchase.pdf": {
+    "before": "e33d1ace6bac234b96cd9fd1d7dc72e32a3d4be48862c027078fffcf56944b68",
+    "after": "e33d1ace6bac234b96cd9fd1d7dc72e32a3d4be48862c027078fffcf56944b68"
+  },
+  "outputs\\figures\\q1\\q1_figure1_price_grid_purchase.png": {
+    "before": "41a6af5c91c2d634e48e364180aa9011d2c7e2e705f2fa30bedc95351591a327",
+    "after": "41a6af5c91c2d634e48e364180aa9011d2c7e2e705f2fa30bedc95351591a327"
+  },
+  "outputs\\figures\\q1\\q1_figure2_load_pv.pdf": {
+    "before": "dac758a43f8c1b50dfe1e6ae220735ebd6e632ac3cee0c0ab4aef1aa62f8a7b4",
+    "after": "dac758a43f8c1b50dfe1e6ae220735ebd6e632ac3cee0c0ab4aef1aa62f8a7b4"
+  },
+  "outputs\\figures\\q1\\q1_figure2_load_pv.png": {
+    "before": "8b184ee7379ed238cf65eaeac6b88d8c1ad92d85c33a307313c3fa06262a3321",
+    "after": "8b184ee7379ed238cf65eaeac6b88d8c1ad92d85c33a307313c3fa06262a3321"
+  },
+  "outputs\\figures\\q1\\q1_figure3_battery_charge_discharge.pdf": {
+    "before": "755d28fce80b3b899e25e649c841d3fd5f03cab040dcf873d7eb8b57a49ca404",
+    "after": "755d28fce80b3b899e25e649c841d3fd5f03cab040dcf873d7eb8b57a49ca404"
+  },
+  "outputs\\figures\\q1\\q1_figure3_battery_charge_discharge.png": {
+    "before": "2761051398a28f226ff502d96bce3479d724cafc9842898fe50d2d9b9f5b1d7b",
+    "after": "2761051398a28f226ff502d96bce3479d724cafc9842898fe50d2d9b9f5b1d7b"
+  },
+  "outputs\\figures\\q1\\q1_figure4_soc.pdf": {
+    "before": "712858379ff46a541594aef70d8b0cc05d84c2b299fcabeb972f4930ff0fc044",
+    "after": "712858379ff46a541594aef70d8b0cc05d84c2b299fcabeb972f4930ff0fc044"
+  },
+  "outputs\\figures\\q1\\q1_figure4_soc.png": {
+    "before": "9ff01c2c2508271149f962884b1459f240e565fc89013c2f91a0d32539360b6a",
+    "after": "9ff01c2c2508271149f962884b1459f240e565fc89013c2f91a0d32539360b6a"
+  },
+  "outputs\\figures\\q1\\q1_figure5_grid_purchase_structure.pdf": {
+    "before": "aa04a54ef2abfb619b365ba8e2e3ce00bc65a9946ab4182b35b1d1cecb512f0b",
+    "after": "aa04a54ef2abfb619b365ba8e2e3ce00bc65a9946ab4182b35b1d1cecb512f0b"
+  },
+  "outputs\\figures\\q1\\q1_figure5_grid_purchase_structure.png": {
+    "before": "592d76a2dad9db5e5d04092f7508db5eb7543cb68dbf8f1d64770fe5067f055e",
+    "after": "592d76a2dad9db5e5d04092f7508db5eb7543cb68dbf8f1d64770fe5067f055e"
+  },
+  "outputs\\figures\\q1\\README.md": {
+    "before": "fac3d027bdbc41a1559caa9d9628ce33577b0f4c25847d9e38c1f9a3206613dd",
+    "after": "fac3d027bdbc41a1559caa9d9628ce33577b0f4c25847d9e38c1f9a3206613dd"
+  },
+  "outputs\\metrics\\q1_metrics.json": {
+    "before": "5c6e022d462c3c275cfc59a562fc248c5bdec8ed77ba173e279793a5bf3a3ab0",
+    "after": "5c6e022d462c3c275cfc59a562fc248c5bdec8ed77ba173e279793a5bf3a3ab0"
+  },
+  "outputs\\schedule\\q1_schedule.csv": {
+    "before": "aed38cd7d44bdd6be176931786b0c8d85282d4c243a437807db83dbe114c83db",
+    "after": "aed38cd7d44bdd6be176931786b0c8d85282d4c243a437807db83dbe114c83db"
+  },
+  "outputs\\submissions\\result1.xlsx": {
+    "before": "83c77b752da6bf1ad707cd5564df559dfd64129f65ff27059e096f35cb289c17",
+    "after": "83c77b752da6bf1ad707cd5564df559dfd64129f65ff27059e096f35cb289c17"
+  },
+  "src\\q1\\__init__.py": {
+    "before": "de177c2524694901595fbc815e4821768f3f3f000b82a855fe119dfbf7b11125",
+    "after": "de177c2524694901595fbc815e4821768f3f3f000b82a855fe119dfbf7b11125"
+  },
+  "src\\q1\\comparison.py": {
+    "before": "2bae52a7398de9877a2bf823011a82d88298bec21fbf8ab1510052a8b8b0b6c4",
+    "after": "2bae52a7398de9877a2bf823011a82d88298bec21fbf8ab1510052a8b8b0b6c4"
+  },
+  "src\\q1\\optimizer.py": {
+    "before": "33fe2d60f82fb16687c9b74dadfebf6201a3a3e1533e32c300fac45a36716d3b",
+    "after": "33fe2d60f82fb16687c9b74dadfebf6201a3a3e1533e32c300fac45a36716d3b"
+  },
+  "src\\q1\\plotting.py": {
+    "before": "a48c317804e3fa5d2c9f654a6d03350b95902ba718c128b287180e0584fd8d82",
+    "after": "a48c317804e3fa5d2c9f654a6d03350b95902ba718c128b287180e0584fd8d82"
+  },
+  "src\\q1\\result_writer.py": {
+    "before": "77627f316d9829363e0290b5747bfdb04b039c2d2ad666f0a68531ae27507aee",
+    "after": "77627f316d9829363e0290b5747bfdb04b039c2d2ad666f0a68531ae27507aee"
+  },
+  "src\\q2\\forecasting.py": {
+    "before": "fef52756e7f75a34c4b1ed9790d9e569ca4c77bd81e554c11ad1439958fdafcc",
+    "after": "fef52756e7f75a34c4b1ed9790d9e569ca4c77bd81e554c11ad1439958fdafcc"
+  },
+  "src\\q2\\risk.py": {
+    "before": "a65717e4e3f4894845152524a60c8bace6a7106f5357e44590561c6f0ade278f",
+    "after": "a65717e4e3f4894845152524a60c8bace6a7106f5357e44590561c6f0ade278f"
+  }
+}

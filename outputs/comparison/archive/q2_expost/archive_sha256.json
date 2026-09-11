@@ -1,0 +1,13 @@
+{
+  "q2_actual_schedule.csv": "eeaf61ea28cdbe23b920e1ab50c2585eb8a958083fe603c4210a83e2d93cf0fe",
+  "q2_daily_metrics.csv": "c2ca824923215742acb487924e7b7c98fc3412f10953436d732e1204d828baab",
+  "q2_integrity.json": "a8d7d59157f75a149a52544b4b978732468887bbf26d01ae26b901fa322df5d1",
+  "q2_metrics.json": "1af42c85a3330895d8ba913a4c29445acfb5e0360ba4432ab5edb1ebd7cbb682",
+  "q2_paper_tables.md": "7df0915c0955cb28e00d85287dcbfe4710a0fb8922a03066fad7f344a27df933",
+  "q2_plan_schedule.csv": "73b242d2a76c5040dfcc114e2c89183c5e386530374780e9533b062de01f67e5",
+  "q2_predictions.csv": "c7eb3bbdf9e8ebba14aa7ff2f6859eb0588774df35abe1d78a824de61b99c52f",
+  "q2_warmup_predictions.csv": "b62e4e595e7f9b4363c92369b3ab3542158c96149de3af71541f5e3acf48600d",
+  "q2_warmup_windows.csv": "e059ec2c4996cb9cf1bd75c1d2fa10cc9b194e13198d66fe111e74c4c39b83cd",
+  "q2_window_selection.csv": "7f5a3bf76bb8acc615f92e75307643e3703f4e1f392a138893cc95377a095967",
+  "result2.xlsx": "c8a819091cacefa7735a700a4f0dee81f825da04f97ef96eb26809789385ee9a"
+}

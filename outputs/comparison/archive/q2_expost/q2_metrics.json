@@ -1,0 +1,57 @@
+{
+  "formal_start_date": "2025-02-01",
+  "formal_end_date": "2025-12-31",
+  "number_of_days": 334,
+  "number_of_slots": 48096,
+  "total_planned_grid_purchase_kwh": 21614871.337124128,
+  "total_emergency_purchase_kwh": 199512.6131110432,
+  "total_planned_cost_yuan": 13208282.12428261,
+  "total_emergency_cost_yuan": 723303.400818712,
+  "total_actual_cost_yuan": 13931585.525101319,
+  "emergency_purchase_day_count": 142,
+  "emergency_purchase_slot_count": 2598,
+  "initial_soc_kwh": 6000.0,
+  "final_soc_kwh": 1200.0,
+  "minimum_actual_soc_kwh": 1199.9999999999998,
+  "maximum_actual_soc_kwh": 10800.00000004421,
+  "maximum_plan_constraint_violation": 1.0003714123740792e-07,
+  "maximum_actual_constraint_violation": 1.0002258932217956e-07,
+  "maximum_cross_day_soc_violation": 0.0,
+  "load_window_selection_counts": {
+    "2": 313,
+    "3": 19,
+    "4": 2
+  },
+  "pv_window_selection_counts": {
+    "5": 334
+  },
+  "overall_load_forecast_nmae": 0.037281417211640314,
+  "overall_pv_forecast_nmae": 0.06369253179799361,
+  "simultaneous_plan_charge_discharge_slots": 0,
+  "simultaneous_actual_charge_discharge_slots": 0,
+  "solver_status_counts": {
+    "plan_primary_status": {
+      "optimal": 334
+    },
+    "plan_secondary_status": {
+      "optimal": 334
+    },
+    "actual_primary_status": {
+      "optimal": 334
+    },
+    "actual_secondary_status": {
+      "optimal": 334
+    }
+  },
+  "validation_tolerance": 1e-06,
+  "reporting_tolerance": 1e-06,
+  "cost_lock_tolerance_yuan": 1e-07,
+  "solver_feasibility_tolerance": 1e-09,
+  "remaining_todos": [],
+  "february_1_residual_dates": [
+    "2025-01-30",
+    "2025-01-31"
+  ],
+  "submission_status": "written",
+  "frozen_data_unchanged": true
+}

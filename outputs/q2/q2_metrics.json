@@ -3,19 +3,19 @@
   "formal_end_date": "2025-12-31",
   "number_of_days": 334,
   "number_of_slots": 48096,
-  "total_planned_grid_purchase_kwh": 21614871.337124128,
-  "total_emergency_purchase_kwh": 199512.6131110432,
-  "total_planned_cost_yuan": 13208282.12428261,
-  "total_emergency_cost_yuan": 723303.400818712,
-  "total_actual_cost_yuan": 13931585.525101319,
-  "emergency_purchase_day_count": 142,
-  "emergency_purchase_slot_count": 2598,
+  "total_planned_grid_purchase_kwh": 21616419.907505244,
+  "total_emergency_purchase_kwh": 277409.427002502,
+  "total_planned_cost_yuan": 13194213.86346297,
+  "total_emergency_cost_yuan": 1194359.0889661158,
+  "total_actual_cost_yuan": 14388572.952429088,
+  "emergency_purchase_day_count": 230,
+  "emergency_purchase_slot_count": 3282,
   "initial_soc_kwh": 6000.0,
-  "final_soc_kwh": 1200.0,
+  "final_soc_kwh": 2748.5289686118745,
   "minimum_actual_soc_kwh": 1199.9999999999998,
-  "maximum_actual_soc_kwh": 10800.00000004421,
-  "maximum_plan_constraint_violation": 1.0003714123740792e-07,
-  "maximum_actual_constraint_violation": 1.0002258932217956e-07,
+  "maximum_actual_soc_kwh": 10800.000000000002,
+  "maximum_plan_constraint_violation": 1.000444171950221e-07,
+  "maximum_actual_constraint_violation": 3.2525804272154346e-10,
   "maximum_cross_day_soc_violation": 0.0,
   "load_window_selection_counts": {
     "2": 313,
@@ -35,14 +35,28 @@
     },
     "plan_secondary_status": {
       "optimal": 334
-    },
-    "actual_primary_status": {
-      "optimal": 334
-    },
-    "actual_secondary_status": {
-      "optimal": 334
     }
   },
+  "actual_operation_mode": "rolling_horizon_causal",
+  "total_rolling_steps": 48096,
+  "total_actual_lp_optimizations": 144288,
+  "rolling_primary_status_counts": {
+    "optimal": 48096
+  },
+  "rolling_secondary_status_counts": {
+    "optimal": 48096
+  },
+  "rolling_tertiary_status_counts": {
+    "optimal": 48096
+  },
+  "days_ending_at_soc_min_within_tolerance": 28,
+  "average_day_start_soc_kwh": 3241.005486663244,
+  "average_day_end_soc_kwh": 3231.2705434554946,
+  "average_actual_end_soc_deficit_kwh": 22.928633709411326,
+  "maximum_actual_end_soc_deficit_kwh": 749.3325498990514,
+  "maximum_rolling_constraint_violation": 3.684816078930453e-07,
+  "total_actual_executed_throughput_kwh": 11374710.655381553,
+  "terminal_gap_lock_tolerance_kwh": 1e-07,
   "validation_tolerance": 1e-06,
   "reporting_tolerance": 1e-06,
   "cost_lock_tolerance_yuan": 1e-07,

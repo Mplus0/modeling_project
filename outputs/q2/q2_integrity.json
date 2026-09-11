@@ -106,5 +106,33 @@
   "outputs\\submissions\\result1.xlsx": {
     "before": "83c77b752da6bf1ad707cd5564df559dfd64129f65ff27059e096f35cb289c17",
     "after": "83c77b752da6bf1ad707cd5564df559dfd64129f65ff27059e096f35cb289c17"
+  },
+  "src\\q1\\__init__.py": {
+    "before": "de177c2524694901595fbc815e4821768f3f3f000b82a855fe119dfbf7b11125",
+    "after": "de177c2524694901595fbc815e4821768f3f3f000b82a855fe119dfbf7b11125"
+  },
+  "src\\q1\\comparison.py": {
+    "before": "2bae52a7398de9877a2bf823011a82d88298bec21fbf8ab1510052a8b8b0b6c4",
+    "after": "2bae52a7398de9877a2bf823011a82d88298bec21fbf8ab1510052a8b8b0b6c4"
+  },
+  "src\\q1\\optimizer.py": {
+    "before": "33fe2d60f82fb16687c9b74dadfebf6201a3a3e1533e32c300fac45a36716d3b",
+    "after": "33fe2d60f82fb16687c9b74dadfebf6201a3a3e1533e32c300fac45a36716d3b"
+  },
+  "src\\q1\\plotting.py": {
+    "before": "a48c317804e3fa5d2c9f654a6d03350b95902ba718c128b287180e0584fd8d82",
+    "after": "a48c317804e3fa5d2c9f654a6d03350b95902ba718c128b287180e0584fd8d82"
+  },
+  "src\\q1\\result_writer.py": {
+    "before": "77627f316d9829363e0290b5747bfdb04b039c2d2ad666f0a68531ae27507aee",
+    "after": "77627f316d9829363e0290b5747bfdb04b039c2d2ad666f0a68531ae27507aee"
+  },
+  "src\\q2\\forecasting.py": {
+    "before": "fef52756e7f75a34c4b1ed9790d9e569ca4c77bd81e554c11ad1439958fdafcc",
+    "after": "fef52756e7f75a34c4b1ed9790d9e569ca4c77bd81e554c11ad1439958fdafcc"
+  },
+  "src\\q2\\risk.py": {
+    "before": "a65717e4e3f4894845152524a60c8bace6a7106f5357e44590561c6f0ade278f",
+    "after": "a65717e4e3f4894845152524a60c8bace6a7106f5357e44590561c6f0ade278f"
   }
 }

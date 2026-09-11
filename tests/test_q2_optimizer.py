@@ -3,7 +3,8 @@ import numpy as np
 from pathlib import Path
 import pandas as pd
 
-from src.q2.optimizer import INITIAL_SOC, solve_actual, solve_plan, validate_schedule
+from src.q2.optimizer import INITIAL_SOC, solve_plan, validate_schedule
+from src.q2.rolling import solve_actual_rolling_step
 
 
 class OptimizerTests(unittest.TestCase):
@@ -18,12 +19,20 @@ class OptimizerTests(unittest.TestCase):
         self.assertEqual(actual.soc_real_start_kwh.iloc[0], 6000.)
         np.testing.assert_allclose(daily.soc_start_kwh.iloc[1:], daily.soc_actual_end_kwh.iloc[:-1], rtol=0, atol=1e-6)
         np.testing.assert_array_equal(plan.grid_purchase_plan_kwh, actual.grid_purchase_plan_kwh)
-        self.assertTrue((abs(daily.soc_actual_end_kwh - daily.soc_start_kwh) > 1).any())
+        self.assertTrue((daily.actual_rolling_solve_count == 144).all())
+        for stage in ("primary", "secondary", "tertiary"):
+            self.assertTrue(actual[f"rolling_{stage}_status"].eq("optimal").all())
+            self.assertTrue(daily[f"rolling_{stage}_optimal_count"].eq(144).all())
+        self.assertLessEqual(actual.rolling_max_constraint_violation.max(), 1e-6)
+        self.assertFalse(actual.isna().any().any())
         for index, row in daily.iterrows():
             for mode, table in [("plan", plan), ("actual", actual)]:
-                checked = validate_schedule(table.iloc[index * 144:(index + 1) * 144], mode, row.soc_start_kwh,
-                                            row[f"{mode}_primary_star"], row[f"{mode}_secondary_objective"])
+                objectives = (row.plan_primary_star, row.plan_secondary_objective) if mode == "plan" else ()
+                checked = validate_schedule(table.iloc[index * 144:(index + 1) * 144], mode, row.soc_start_kwh, *objectives)
                 self.assertLessEqual(checked["max_violation"], 1e-6)
+                if mode == "actual":
+                    self.assertAlmostEqual(checked["throughput"], row.actual_executed_throughput_kwh, delta=1e-6)
+                    self.assertAlmostEqual(checked["cost"], row.emergency_cost_yuan, delta=1e-6)
 
     def test_plan_terminal_and_cost_lock(self):
         frame, checked = solve_plan(np.array([10., 10.]), np.zeros(2), np.array([1., 10.]), 1200., "test")
@@ -34,7 +43,8 @@ class OptimizerTests(unittest.TestCase):
 
     def test_actual_cost_priority_and_no_terminal_reset(self):
         commitment = np.zeros(2)
-        frame, checked = solve_actual(np.array([10., 10.]), np.zeros(2), np.array([1., 10.]), 1210., commitment, "test")
+        frame, checked = solve_actual_rolling_step(1, 10., 0., np.array([10., 10.]), np.zeros(2),
+                                                   np.array([1., 10.]), commitment, 1210., 1210., "test")
         np.testing.assert_allclose(frame.x_real_kwh + frame.y_real_kwh, commitment, atol=1e-6)
         # 仅9kWh可送达负荷，应该先替代高价时段紧急购电：费用=5*(10+10*1)。
         self.assertAlmostEqual(checked["primary_star"], 100., delta=1e-6)

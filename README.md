@@ -265,15 +265,21 @@ conda run --no-capture-output -n modeling_project python -X utf8 scripts/05_run_
 conda run --no-capture-output -n modeling_project python -X utf8 -m unittest discover -s tests -v
 ```
 
-先运行入口再执行完整测试（全年集成测试读取上述输出）。完整套件41项测试已通过。分步检查可加 `--skip-workbook`，先生成CSV与指标，不生成Excel；默认命令完成全部输出。程序每30天显示进度，不输出逐次求解器日志。
+先执行 `python scripts/05_run_q2.py --benchmark`，将2月1日的完整滚动结果与耗时写入独立目录 `outputs/comparison/q2_rolling_benchmark/`，不覆盖正式结果。随后运行默认入口生成全年输出，再执行完整测试（单日和全年集成测试分别读取上述输出）。分步检查可加 `--skip-workbook`，先生成CSV与指标；默认命令完成全部输出。程序每5天显示进度，不输出逐次求解器日志。
+
+当前正式实际运行模型依据《第二问(4)》由 ex-post perfect foresight recourse 更新为 causal rolling-horizon actual operation：0:00冻结日前预测和 `G_plan` → 只观测当前slot → 用当前真实值和未来冻结预测优化剩余时域 → 仅执行当前动作 → 重算真实SOC → 下一slot重新优化。每天固定日初真实SOC作为终端缺口参考，跨日继续传递真实末态，不每天重置为6000。预测、动态选窗、风险分位和日前两级模型保持原规则。
+
+每次实际滚动使用同一个SCIP模型依次最小化紧急购电费用、日末SOC缺口 `delta>=max(0, day_start_soc-S_terminal)`、储能吞吐量；后级锁定前级最优值，不做加权折中。全年为48096次滚动、144288次实际LP优化。费用与吞吐量只累计真正执行的当前动作，不能累加彼此重叠的剩余时域目标。首个正式日基准总耗时约2.73秒，实际阶段2.70秒，其中432次优化约1.45秒，推算全年实际阶段约15分钟；完整运行实际阶段累计约14.02分钟。运行时间因设备与日期而异。
 
 | 模块 | 职责 |
 | --- | --- |
 | `src/q2/forecasting.py` | 负荷同星期1/2/3/4周、光伏连续3/5/7/14天；每天在各自公共历史回测日上比较NMAE并动态选窗，缓存历史误差和以避免重复计算。 |
 | `src/q2/risk.py` | 按slot取历史残差的逆经验CDF 80%分位数，保留负风险修正；拒绝空样本与目标日/未来残差。 |
-| `src/q2/optimizer.py` | 日前最小计划费用、实际最小5倍分时紧急费用，各自再最小吞吐量；实际普通购电承诺固定，真实日末SOC传入次日。 |
+| `src/q2/optimizer.py` | 保留日前费用/吞吐量两级LP及共用约束复核；`solve_actual_expost_legacy` 仅供旧版诊断，正式入口不调用。 |
+| `src/q2/rolling.py` | 当前真实标量与冻结预测的安全接口，三级词典序求解、仅执行首个动作并从实际动作更新SOC。 |
+| `src/q2/comparison.py` | 首次覆盖前复制并校验旧版结果；生成新旧全年购电、费用、SOC及四个指定日期的对比。 |
 | `src/q2/result_writer.py` | 复制并按官方示例样式扩展输出模板，实际充放电六段汇总、紧急区间逐日合并及题面指定日期论文表。 |
-| `scripts/05_run_q2.py` | 严格按历史预测→计划承诺→揭示当天实际→实际运行→更新历史和SOC顺序执行，写CSV并读回复核后才生成Excel。 |
+| `scripts/05_run_q2.py` | 严格按历史预测→计划承诺→逐slot观测和滚动执行→更新历史和SOC顺序执行，写CSV并读回复核后才生成Excel。 |
 | `tests/test_q2_*.py` | 预测/风险合成样本与全年因果性检查、优化手算案例与逐日约束复核、模板扩展和原文件完整性检查。 |
 
 全部数值文件在 [outputs/q2/](outputs/q2/)：
@@ -283,8 +289,8 @@ conda run --no-capture-output -n modeling_project python -X utf8 -m unittest dis
 | [q2_window_selection.csv](outputs/q2/q2_window_selection.csv) | 334天的动态窗口、所有候选NMAE、公共回测日期清单和风险样本日期清单。 |
 | [q2_predictions.csv](outputs/q2/q2_predictions.csv) | 48096行实际/预测负荷与光伏、基线净负荷、Type-1风险修正及实现后的残差，能量单位均为kWh。 |
 | [q2_plan_schedule.csv](outputs/q2/q2_plan_schedule.csv) | 日前变量、固定购电承诺、计划SOC、风险净负荷及逐slot计划费用。 |
-| [q2_actual_schedule.csv](outputs/q2/q2_actual_schedule.csv) | 实际变量、紧急购电、真实SOC、实际供需数据和各类逐slot费用，可独立复算约束。 |
-| [q2_daily_metrics.csv](outputs/q2/q2_daily_metrics.csv) | 日初/计划末/实际末SOC、购电和费用、四次求解状态、一级最优值、二级吞吐及逐项约束残差。 |
+| [q2_actual_schedule.csv](outputs/q2/q2_actual_schedule.csv) | 48096行真正执行的动作、当前真实供需、冻结预测、SOC与费用；滚动时域长度、三级目标/状态和残差仅作诊断。 |
+| [q2_daily_metrics.csv](outputs/q2/q2_daily_metrics.csv) | 日初/计划末/实际末SOC、实际执行费用与吞吐、日末缺口、144次滚动的三级最优数量和最大残差、每日耗时。 |
 | [q2_metrics.json](outputs/q2/q2_metrics.json) | 年度汇总、预测NMAE、选窗分布、紧急购电统计、状态和容差。 |
 | [q2_warmup_predictions.csv](outputs/q2/q2_warmup_predictions.csv)、[q2_warmup_windows.csv](outputs/q2/q2_warmup_windows.csv) | 1月30日、31日的合法在线伪预测和选窗依据；这两天构成2月1日的初始残差样本。 |
 | [q2_integrity.json](outputs/q2/q2_integrity.json) | 官方附件、Q1输出及预处理文件的运行前后SHA-256对照。 |
@@ -294,4 +300,8 @@ conda run --no-capture-output -n modeling_project python -X utf8 -m unittest dis
 
 新增行复制原模板示例块的字体、填充、边框、对齐、数字格式、行高及块内合并规则。原始模板不变，省略占位符仅在输出副本中被完整日期记录替代。
 
-复核口径：SCIP可行性容差为1e-9；二级费用在一级最优值±1e-7元内锁定（避免精确浮点费用等式的退化LP数值故障），每个日计划和实际输出独立按1e-6验收，不裁剪数值、不引入成本与吞吐量加权目标。费用窗口和报告阈值写入指标文件。预测误差使用NMAE，不表述为分类准确率。当前无未解决的Q2建模确认事项；结果待人工数值验收。
+复核口径：SCIP可行性容差为1e-9；费用在前级最优值±1e-7元内锁定；实际运行二级缺口在最优值±1e-7 kWh内锁定。两者都只用于数值稳定性，不是建模权重。计划、每个剩余时域方案和真正执行序列均按1e-6独立验收。底层CSV不裁剪，论文展示将低于报告容差的残差显示为0。预测误差使用NMAE，不表述为分类准确率。
+
+旧版结果完整保留在 `outputs/comparison/archive/q2_expost/`，包括原CSV、指标、论文表、result2副本及SHA-256清单；重复运行不会覆盖该存档。新旧对比见 [q2_expost_vs_rolling.md](outputs/comparison/q2_expost_vs_rolling.md) 和同名JSON。正式结果始终以新 `outputs/q2/` 和 `outputs/submissions/result2.xlsx` 为准。当前无未解决的Q2建模确认事项，结果待人工数值验收。
+
+最新完整套件61项测试通过，覆盖审计、预处理、Q1及新Q2因果性、三级优先级、当前执行、全年复算和模板样式。Q1正式结果、图片、原始附件、预处理输入、预测与风险模块SHA-256均不变；新旧预测/风险输出逐字节一致。运行与校验数值见 `q2_metrics.json`，哈希对照见 `q2_integrity.json`。

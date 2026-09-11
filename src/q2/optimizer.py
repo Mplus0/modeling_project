@@ -1,4 +1,4 @@
-"""Q2 日前计划与实际运行的连续LP；两阶段均锁定一级最优费用。"""
+"""Q2 日前计划LP与通用约束复核；旧实际LP仅保留供历史诊断。"""
 
 import numpy as np
 import pandas as pd
@@ -9,7 +9,7 @@ from src.q1.optimizer import ETA_CHARGE, ETA_DISCHARGE, INITIAL_SOC, MAX_INTERVA
 COST_LOCK_TOLERANCE = 1e-7
 
 
-def validate_schedule(frame, mode, start_soc, primary_star, secondary_objective):
+def validate_schedule(frame, mode, start_soc, primary_star=None, secondary_objective=None):
     prefix = "plan" if mode == "plan" else "real"
     x, y, q, z = [frame[f"{v}_{prefix}_kwh"].to_numpy(float) for v in "xyqz"]
     soc = frame[f"soc_{prefix}_end_kwh"].to_numpy(float)
@@ -32,9 +32,12 @@ def validate_schedule(frame, mode, start_soc, primary_star, secondary_objective)
         "pv_allocation": positive(q - pv), "charge_limit": positive(x + q - MAX_INTERVAL_ENERGY),
         "discharge_limit": positive(z - MAX_INTERVAL_ENERGY),
         "supply": positive(demand - (y + z - q + emergency)),
-        "primary_cost_preservation": abs(cost - primary_star),
-        "secondary_objective": abs(throughput - secondary_objective),
     }
+    # 实际执行序列不是某轮剩余时域最优解，不能与重叠滚动目标值比较。
+    if primary_star is not None:
+        violations["primary_cost_preservation"] = abs(cost - primary_star)
+    if secondary_objective is not None:
+        violations["secondary_objective"] = abs(throughput - secondary_objective)
     violations["terminal_soc" if mode == "plan" else "fixed_grid_purchase"] = (
         abs(float(soc[-1]) - start_soc) if mode == "plan" else float(np.max(np.abs(x + y - frame.grid_purchase_plan_kwh))))
     planned_slots = price * frame.grid_purchase_plan_kwh.to_numpy(float)
@@ -139,7 +142,8 @@ def solve_plan(net_risk, pv_forecast, price, start_soc, date):
     return _solve("plan", net_risk, pv_forecast, price, start_soc, date)
 
 
-def solve_actual(load_actual, pv_actual, price, start_soc, commitment, date):
+def solve_actual_expost_legacy(load_actual, pv_actual, price, start_soc, commitment, date):
+    """仅供旧版诊断，正式运行禁止调用此完美预见接口。"""
     frame, checked = _solve("actual", np.asarray(load_actual) - pv_actual, pv_actual, price, start_soc, date, commitment)
     # CSV保留实际负荷原值，不用减后再加造成的浮点往返值替代。
     frame["load_actual_kwh"] = np.asarray(load_actual).copy()

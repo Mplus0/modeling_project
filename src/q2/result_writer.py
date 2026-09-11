@@ -110,14 +110,18 @@ def validate_tables(plan, actual, daily):
             raise ValueError(f"Q2{name}slot顺序不符")
     if daily.date.tolist() != expected:
         raise ValueError("每日指标日期不完整")
-    status = ["plan_primary_status", "plan_secondary_status", "actual_primary_status", "actual_secondary_status"]
-    if not daily[status].eq("optimal").all().all():
+    status = ["plan_primary_status", "plan_secondary_status"]
+    rolling_status = [f"rolling_{s}_status" for s in ("primary", "secondary", "tertiary")]
+    if not daily[status].eq("optimal").all().all() or not actual[rolling_status].eq("optimal").all().all():
         raise ValueError("Q2存在非最优日期，拒绝生成提交文件")
-    if daily[["max_plan_constraint_violation", "max_actual_constraint_violation"]].max().max() > VALIDATION_TOL:
+    if daily[["max_plan_constraint_violation", "max_actual_constraint_violation", "max_rolling_constraint_violation"]].max().max() > VALIDATION_TOL:
         raise ValueError("Q2存在约束验证失败日期")
 
 
 def paper_tables(plan, actual, daily, labels, intervals, emergencies):
+    # 仅论文显示层把低于报告容差的残差显示为0；原CSV及求解变量保留。
+    def show(value):
+        return f"{0.0 if abs(value) < VALIDATION_TOL else value:.8f}"
     lines = ["# 问题二论文表格", "", "单位：电量 kWh，费用元。采用已确认的slot顺序；购电时段沿用官方模板标签。",
              "充放电按连续24个slot汇总，使用实际 x_real+q_real 和 z_real。全天实际费用包含计划费用与5倍分时紧急费用。", ""]
     for day in PAPER_DATES:
@@ -126,12 +130,12 @@ def paper_tables(plan, actual, daily, labels, intervals, emergencies):
         lines += [f"## {day}", "", "| 指定购电时段 | 计划购电量 |", "|---|---:|"]
         for hour in PAPER_HOURS:
             slot = next(i for i, (start, _) in enumerate(intervals) if start == hour * 3600)
-            lines.append(f"| {labels[slot]} | {planned.grid_purchase_plan_kwh.iloc[slot]:.8f} |")
-        lines += ["", f"全天计划购电量：{metric.planned_grid_purchase_kwh:.8f}；计划费用：{metric.planned_cost_yuan:.8f}；紧急费用：{metric.emergency_cost_yuan:.8f}；全天实际总费用：{metric.total_cost_yuan:.8f}。", "",
+            lines.append(f"| {labels[slot]} | {show(planned.grid_purchase_plan_kwh.iloc[slot])} |")
+        lines += ["", f"全天计划购电量：{show(metric.planned_grid_purchase_kwh)}；计划费用：{show(metric.planned_cost_yuan)}；紧急费用：{show(metric.emergency_cost_yuan)}；全天实际总费用：{show(metric.total_cost_yuan)}。", "",
                   "| 四小时时段 | 实际充电量 | 实际放电量 |", "|---|---:|---:|"]
         for block in range(6):
             part = operated.iloc[block * 24:(block + 1) * 24]
-            lines.append(f"| {block*4}:00-{(block+1)*4}:00 | {(part.x_real_kwh+part.q_real_kwh).sum():.8f} | {part.z_real_kwh.sum():.8f} |")
+            lines.append(f"| {block*4}:00-{(block+1)*4}:00 | {show((part.x_real_kwh+part.q_real_kwh).sum())} | {show(part.z_real_kwh.sum())} |")
         lines += ["", f"0:00实际SOC：{metric.soc_start_kwh:.8f}；24:00实际SOC：{metric.soc_actual_end_kwh:.8f}。", "",
                   "| 紧急购电区间 | 紧急购电量 |", "|---|---:|"]
         events = [r for r in emergencies if r["date"] == day]

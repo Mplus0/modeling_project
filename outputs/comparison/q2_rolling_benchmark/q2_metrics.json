@@ -1,0 +1,73 @@
+{
+  "formal_start_date": "2025-02-01",
+  "formal_end_date": "2025-02-01",
+  "number_of_days": 1,
+  "number_of_slots": 144,
+  "total_planned_grid_purchase_kwh": 44450.97092428207,
+  "total_emergency_purchase_kwh": 67.06747942791316,
+  "total_planned_cost_yuan": 23188.32112475901,
+  "total_emergency_cost_yuan": 247.79954451887747,
+  "total_actual_cost_yuan": 23436.120669277887,
+  "emergency_purchase_day_count": 1,
+  "emergency_purchase_slot_count": 3,
+  "initial_soc_kwh": 6000.0,
+  "final_soc_kwh": 6002.314430403525,
+  "minimum_actual_soc_kwh": 1995.1973839536977,
+  "maximum_actual_soc_kwh": 10799.999999999998,
+  "maximum_plan_constraint_violation": 1.00000761449337e-07,
+  "maximum_actual_constraint_violation": 1.8189894035458565e-12,
+  "maximum_cross_day_soc_violation": 0.0,
+  "load_window_selection_counts": {
+    "4": 1
+  },
+  "pv_window_selection_counts": {
+    "5": 1
+  },
+  "overall_load_forecast_nmae": 0.06888556312460632,
+  "overall_pv_forecast_nmae": 0.03670498189719748,
+  "simultaneous_plan_charge_discharge_slots": 0,
+  "simultaneous_actual_charge_discharge_slots": 0,
+  "solver_status_counts": {
+    "plan_primary_status": {
+      "optimal": 1
+    },
+    "plan_secondary_status": {
+      "optimal": 1
+    }
+  },
+  "actual_operation_mode": "rolling_horizon_causal",
+  "total_rolling_steps": 144,
+  "total_actual_lp_optimizations": 432,
+  "rolling_primary_status_counts": {
+    "optimal": 144
+  },
+  "rolling_secondary_status_counts": {
+    "optimal": 144
+  },
+  "rolling_tertiary_status_counts": {
+    "optimal": 144
+  },
+  "days_ending_at_soc_min_within_tolerance": 0,
+  "average_day_start_soc_kwh": 6000.0,
+  "average_day_end_soc_kwh": 6002.314430403525,
+  "average_actual_end_soc_deficit_kwh": 0.0,
+  "maximum_actual_end_soc_deficit_kwh": 0.0,
+  "maximum_rolling_constraint_violation": 1.0000000116860974e-07,
+  "total_actual_executed_throughput_kwh": 34128.569695939135,
+  "terminal_gap_lock_tolerance_kwh": 1e-07,
+  "validation_tolerance": 1e-06,
+  "reporting_tolerance": 1e-06,
+  "cost_lock_tolerance_yuan": 1e-07,
+  "solver_feasibility_tolerance": 1e-09,
+  "remaining_todos": [],
+  "february_1_residual_dates": [
+    "2025-01-30",
+    "2025-01-31"
+  ],
+  "submission_status": "not_written",
+  "benchmark_total_day_seconds": 2.731855900001392,
+  "benchmark_actual_optimize_seconds": 1.4513619000063045,
+  "benchmark_actual_elapsed_seconds": 2.7030384999998205,
+  "estimated_year_actual_seconds": 902.81485899994,
+  "frozen_data_unchanged": true
+}
