@@ -336,10 +336,22 @@ conda run --no-capture-output -n modeling_project python -X utf8 scripts/07_run_
 conda run --no-capture-output -n modeling_project python -X utf8 -m unittest discover -s tests -p "test_q3_*.py" -v
 ```
 
-入口仅允许2025-03-20起始、首日6000kWh的1至3日 `TEST / REFERENCE ONLY` 验证；alpha/lambda显式传入，未进行15组全年搜索、最终参数选择、Score计算或result3.xlsx生成。完整通过后在指定Q3目录保存六份 `q3_forecast_updates.csv`、`q3_confidence.csv`、`q3_scenarios_summary.csv`、`q3_plan_updates.csv`、`q3_actual_schedule.csv`、`q3_daily_metrics.csv` 及 `q3_single_metrics.json`。原始数据、预处理及Q1/Q2文件运行前后逐份核对SHA-256。
+入口仅允许2025-03-20起始、首日6000kWh的1至3日 `TEST / REFERENCE ONLY` 验证；alpha/lambda显式传入，未进行20组全年搜索、最终参数选择、正式Score计算或result3.xlsx生成。完整通过后在指定Q3目录保存六份 `q3_forecast_updates.csv`、`q3_confidence.csv`、`q3_scenarios_summary.csv`、`q3_plan_updates.csv`、`q3_actual_schedule.csv`、`q3_daily_metrics.csv` 及 `q3_single_metrics.json`。原始数据、预处理及Q1/Q2文件运行前后逐份核对SHA-256。
 
 实际运行第二级参考值按团队确认定义为最新有效滚动计划的场景终端SOC概率加权期望，当前14个等概率场景等价于算术平均。加权函数支持非等概率输入并验证概率，不重选单个场景、不增加计划层终端恢复约束。每次0/6/12/18点计划完成后更新参考值，仅在下一次更新前沿用该值。
 
 已完成2025-03-20单日144时段及03-20至03-22连续三日432时段验证，alpha=0.95、lambda=0.5，均为TEST / REFERENCE ONLY。三日实际费用76265.470158元，紧急购电748.019911kWh、15个有效时段；真实日末SOC依次1324.979516、1351.265017、1320.674143kWh，跨日传递误差0。所有计划两级及实际三级状态均optimal，最大约束误差1.00008e-7以内，无有效同时充放电。94个冻结文件SHA-256不变。
 
 19项Q3测试及9项复用Q2预测/优化回归测试通过，独立复算场景加权参考、最新计划切换、合同增量结算、物理约束和跨日SOC；单日与三日首日输出逐值一致。完整逐日数值见 `outputs/q3/single/q3_daily_metrics.csv`，汇总见 `q3_single_metrics.json`，单日输出在 `smoke_one_day/`。当前Q3本阶段无未解除的建模确认事项，结果等待人工数值验收。
+
+### Q3后续联合参数实验规则
+
+`src/q3/parameters.py` 为统一候选来源：alpha为{0.80,0.85,0.90,0.95}，lambda为{0,0.25,0.5,1,2}，笛卡尔积共20组；参考入口与后续搜索共用，alpha=0.99不再合法。alpha=0.95保留为高风险厌恶参考。W_s=14等概率场景下，alpha达到13/14后经验CVaR等于最大损失。
+
+`src/q3/search.py` 提供后续搜索的 `score_annual_results(daily_results)`：输入20组相同2025-02-01至12-31共334天的逐日实际结果，所需列为alpha、lambda、date、total_actual_cost_yuan、emergency_slot_count。该函数拒绝缺组、缺日、重复日期和旧候选，计算全年实际费用、有效紧急购电时段数以及日实际费用总体标准差(ddof=0)。三个指标分别使用全部20组的统一Min-Max上下界；极差≤1e-6时归一化统一为0。Score=0.5×归一化费用+0.3×归一化紧急时段数+0.2×归一化费用标准差，返回评分表及全部并列argmin参数，不添加并列选择偏好。参考三日结果不能用于正式评分。
+
+后续全部20组必须使用相同全年流程、日期及初始化规则，仅改变alpha/lambda。当前只准备候选网格和评分接口，未启动全年实验，也未把参考仿真入口扩展为正式全年入口。
+
+本次更新后23项Q3测试全部通过，包含候选集合、旧alpha拒绝、20组全局上下界、总体标准差、近常量指标置零及不完整结果拒绝测试。
+
+建模团队已接受SOC长期接近1200kWh下界的可能性；这是计划层无终端恢复/终端价值、实际层跟踪最新计划终态的模型结果。运行与结果分析应如实保留，不因此新增终端等式、惩罚、额外SOC目标，或修改目标函数及储能参数。

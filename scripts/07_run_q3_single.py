@@ -14,14 +14,15 @@ from src.q2.forecasting import load_daily_inputs
 from src.q3.forecast import load_hourly_forecasts
 from src.q3.simulation import simulate_days
 from src.q3.metrics import write_outputs
+from src.q3.parameters import ALPHA_CHOICES, LAMBDA_CHOICES
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--start-date",type=date.fromisoformat,default=date(2025,3,20))
     parser.add_argument("--days",type=int,choices=(1,2,3),default=1)
-    parser.add_argument("--alpha",type=float,choices=(.90,.95,.99),required=True)
-    parser.add_argument("--lambda",dest="risk_weight",type=float,choices=(0,.25,.5,1,2),required=True)
+    parser.add_argument("--alpha",type=float,choices=ALPHA_CHOICES,required=True)
+    parser.add_argument("--lambda",dest="risk_weight",type=float,choices=LAMBDA_CHOICES,required=True)
     parser.add_argument("--initial-soc",type=float,default=6000)
     parser.add_argument("--output-dir",type=Path,default=Path("outputs/q3/single"))
     args = parser.parse_args()
