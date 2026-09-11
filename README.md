@@ -232,6 +232,24 @@ conda run --no-capture-output -n modeling_project python -X utf8 scripts/03_run_
 
 `src/q1/result_writer.py` 默认按已确认的 slot 行序写入，也支持验证显式映射与模板标签一一对应后按标签定位，保留工作簿格式和其他单元格。测试中的反序映射仅用于验证可选映射，不构成正式时间规则。当前完整测试套件共 20 项，包括 Q1 两阶段目标、独立约束计算、错误解拒绝、零负载二级优化、输入不变、默认行序写入及模板样式和汇总检查。
 
+## 问题一论文图片入口
+
+仅读取已保存的 Q1 输入、调度和指标，使用 matplotlib 生成图片，不调用优化器或修改数值结果：
+
+```bash
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/04_plot_q1.py
+```
+
+图片统一保存于 `outputs/figures/q1/`，每图提供 **300 dpi PNG** 和 **PDF 矢量版**。论文手可直接打开 [图片索引与解读建议](outputs/figures/q1/README.md) 查找变量口径和用途。
+
+| 图号 | 内容及用途 | PNG | PDF |
+| --- | --- | --- | --- |
+| 图1 | 电价与计划购电量：分析调度的经济响应 | [查看](outputs/figures/q1/q1_figure1_price_grid_purchase.png) | [矢量版](outputs/figures/q1/q1_figure1_price_grid_purchase.pdf) |
+| 图2 | 负荷与光伏预测功率：说明日内供需特征 | [查看](outputs/figures/q1/q1_figure2_load_pv.png) | [矢量版](outputs/figures/q1/q1_figure2_load_pv.pdf) |
+| 图3 | 储能充放电：正值充电、负值放电，识别运行阶段 | [查看](outputs/figures/q1/q1_figure3_battery_charge_discharge.png) | [矢量版](outputs/figures/q1/q1_figure3_battery_charge_discharge.pdf) |
+| 图4 | SOC：展示初末状态及储电上下界 | [查看](outputs/figures/q1/q1_figure4_soc.png) | [矢量版](outputs/figures/q1/q1_figure4_soc.pdf) |
+| 图5 | 购电用途分解：区分直接供负荷与充电，可选作附录图 | [查看](outputs/figures/q1/q1_figure5_grid_purchase_structure.png) | [矢量版](outputs/figures/q1/q1_figure5_grid_purchase_structure.pdf) |
+
 ## 许可证
 
 本项目采用仓库中 `LICENSE` 文件所示许可证。竞赛官方提供的题目、数据、格式文件及其他附件仍受其原始版权和竞赛规则约束，不因存放在本仓库中而改变。
