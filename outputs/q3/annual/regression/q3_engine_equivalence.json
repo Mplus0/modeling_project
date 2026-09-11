@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "tolerance": 1e-06,
+  "maximum_differences": {
+    "forecast_updates": 0.0,
+    "confidence": 0.0,
+    "scenarios_summary": 0.0,
+    "plan_updates": 0.0,
+    "actual_schedule": 0.0,
+    "daily_metrics": 0.0
+  }
+}

@@ -93,6 +93,34 @@ def update_pv(target, hour, current_actual_pv_kw, previous, issues, historical_v
     return fuse_remaining(previous, raw, start+1, checked["confidence_rho"]), raw, checked
 
 
+def replay_completed_day(history, day, issues, records, residuals, cache, load=None):
+    """将一个已完成日加入回放状态；与旧逐日回放共用同一计算路径。"""
+    from datetime import timedelta
+
+    if day-timedelta(days=1) not in history:
+        return
+    actual = np.asarray(history[day]["pv"], float)
+    previous, versions, updates = None, {}, {}
+    for hour in UPDATE_HOURS:
+        anchor = history[day-timedelta(days=1)]["pv"][-1] if hour == 0 else actual[hour*6-1]
+        # 仅回放已完成日；各次发布仍只用当时可见的实测锚点。
+        fused, raw, checked = update_pv(day, hour, float(anchor)*6, previous, issues, records)
+        if hour:
+            new_full = previous.copy()
+            new_full[hour*6:] = raw
+            updates[hour] = dict(old=previous.copy(), new=new_full, confidence=checked)
+        versions[hour] = fused.copy()
+        previous = fused
+    records[day] = dict(actual=actual.copy(), versions=versions, updates=updates)
+    prior = {d: v for d, v in history.items() if d < day}
+    eligible = any(all(d-timedelta(days=7*i) in prior for i in range(1,5)) for d in prior)
+    if eligible and all(day-timedelta(days=7*i) in prior for i in range(1,5)):
+        if load is None:
+            load, _ = load_prediction(prior, day, cache)
+        residuals[day] = dict(load=np.asarray(history[day]["load"])-load,
+                              pv={hour: actual-versions[hour] for hour in UPDATE_HOURS})
+
+
 def replay_history(history, target, issues):
     """回放所有合法历史融合版本；返回同日负荷/光伏残差及可信度回放记录。"""
     from datetime import timedelta
@@ -101,27 +129,5 @@ def replay_history(history, target, issues):
         raise ValueError("Q3历史回放只能接收目标日前数据")
     records, residuals, cache = {}, {}, {}
     for day in sorted(history):
-        if day-timedelta(days=1) not in history:
-            # 没有前一天末点就缺少午夜实测锚点，不虚构0:00观测。
-            continue
-        actual = np.asarray(history[day]["pv"], float)
-        previous, versions, updates = None, {}, {}
-        for hour in UPDATE_HOURS:
-            anchor = history[day-timedelta(days=1)]["pv"][-1] if hour == 0 else actual[hour*6-1]
-            # 历史已完成日仅在回放发布时刻读取对应锚点；电量除以1/6还原功率。
-            fused, raw, checked = update_pv(day, hour, float(anchor)*6, previous, issues, records)
-            if hour:
-                new_full = previous.copy()
-                new_full[hour*6:] = raw
-                updates[hour] = dict(old=previous.copy(), new=new_full, confidence=checked)
-            versions[hour] = fused.copy()
-            previous = fused
-        records[day] = dict(actual=actual.copy(), versions=versions, updates=updates)
-        # 最大负荷窗口需28天；其公共历史回测还需一个更早的有效日。
-        prior = {d: v for d, v in history.items() if d < day}
-        eligible = any(all(d-timedelta(days=7*i) in prior for i in range(1,5)) for d in prior)
-        if eligible and all(day-timedelta(days=7*i) in prior for i in range(1,5)):
-            load, _ = load_prediction(prior, day, cache)
-            residuals[day] = dict(load=np.asarray(history[day]["load"])-load,
-                                  pv={hour: actual-versions[hour] for hour in UPDATE_HOURS})
+        replay_completed_day(history, day, issues, records, residuals, cache)
     return residuals, records

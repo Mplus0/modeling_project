@@ -355,3 +355,20 @@ conda run --no-capture-output -n modeling_project python -X utf8 -m unittest dis
 本次更新后23项Q3测试全部通过，包含候选集合、旧alpha拒绝、20组全局上下界、总体标准差、近常量指标置零及不完整结果拒绝测试。
 
 建模团队已接受SOC长期接近1200kWh下界的可能性；这是计划层无终端恢复/终端价值、实际层跟踪最新计划终态的模型结果。运行与结果分析应如实保留，不因此新增终端等式、惩罚、额外SOC目标，或修改目标函数及储能参数。
+
+## Q3 第二阶段：单组正式全年参考
+
+`scripts/08_run_q3_annual.py` 独立运行2025-02-01至12-31共334天、48096个执行时段；2月1日0:00真实SOC为6000kWh，随后仅继承前一日真实终态。首次年度验证使用alpha=0.90、lambda=0.50，标签为 `ANNUAL REFERENCE ONLY`，不是最终参数。07仍为1至3日参考入口。
+
+```powershell
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/08_run_q3_annual.py --alpha 0.90 --lambda 0.50
+conda run --no-capture-output -n modeling_project python -X utf8 -m unittest discover -s tests -p "test_q3_*.py" -v
+```
+
+可加 `--regression-only` 仅执行年度引擎与既有03-20至03-22参考结果的逐值比较。正式入口先通过这道1e-6等价门槛再运行全年，每完成10天输出进度。回归记录位于 `outputs/q3/annual/regression/`，既有 `outputs/q3/single/` 保持不变。
+
+`src/q3/annual.py` 逐日维护参数无关缓存，每个历史日仅回放一次；原 `replay_history` 与年度路径共用 `replay_completed_day`。负荷预测及其候选误差缓存复用Q2算法，可信度使用最近7日、场景使用最近14个合法成对残差日，发布时刻光伏插值和场景构造仍按日内时间顺序执行。目标日及未来真实值不进入历史缓存；SOC、合同和求解结果不跨参数共享。本阶段未增加checkpoint/resume。
+
+年度输出位于 `outputs/q3/annual/reference_a0.90_l0.50/`：六份预测更新/可信度/场景/计划/实际/逐日CSV以及 `q3_annual_metrics.json`。逐日执行轨迹及结算将由独立验证器复算，所有状态必须optimal、误差≤1e-6；紧急购电只在e>1e-6kWh时计有效时段。日末接近SOC下界按同一1e-6kWh数值容差统计。指标记录总体标准差(ddof=0)、初始与终末SOC、各更新时间累计调整量和rho、LP次数、加载/准备/首7天/全年耗时，以及保护文件SHA-256。
+
+本阶段仅进行一组全年程序验收与性能benchmark，不运行20组联合搜索，不计算正式Score、不选择最终alpha/lambda、不生成result3.xlsx或最终论文表。

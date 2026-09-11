@@ -1,6 +1,7 @@
 """Q3单组参考仿真：四次计划更新、当前一步执行及跨日真实SOC传递。"""
 
 from datetime import timedelta
+from time import perf_counter
 
 import numpy as np
 import pandas as pd
@@ -24,21 +25,24 @@ def expected_terminal_soc(values, probabilities):
 
 
 def simulate_day(date, observe_current, midnight_pv_kw, load_forecast, price, issues,
-                 records, residuals, start_soc, alpha, risk_weight):
+                 records, residuals, start_soc, alpha, risk_weight, run_label="TEST / REFERENCE ONLY", timings=None):
     """真实未来仅存在于观测回调内部，每次只读取当前已到达时段。"""
     if len(load_forecast) != 144 or len(price) != 144:
         raise ValueError("Q3单日必须包含144个完整时段")
     soc, current_pv, pv_forecast, grid = float(start_soc), float(midnight_pv_kw), None, None
     forecast_rows, confidence_rows, scenario_rows, plan_rows, actual_rows = [], [], [], [], []
-    daily = dict(date=str(date), run_label="TEST / REFERENCE ONLY", alpha=alpha,
+    daily = dict(date=str(date), run_label=run_label, alpha=alpha,
                  **{"lambda": risk_weight}, soc_start_kwh=soc)
     max_plan_violation = 0.
     for slot in range(1,145):
         if slot in (1,37,73,109):
+            preparation_tick = perf_counter()
             hour = (slot-1)//6
             old_pv = None if pv_forecast is None else pv_forecast.copy()
             pv_forecast, raw, conf = update_pv(date, hour, current_pv, pv_forecast, issues, records)
             scenario = build_scenarios(date, hour, load_forecast, pv_forecast, residuals, slot)
+            if timings is not None:
+                timings["forecast_scenario_seconds"] += perf_counter()-preparation_tick
             old_grid = None if grid is None else grid[slot-1:].copy()
             plan = solve_plan(scenario["load"], scenario["pv"], np.asarray(price)[slot-1:], soc,
                               alpha, risk_weight, old_grid)
@@ -84,6 +88,7 @@ def simulate_day(date, observe_current, midnight_pv_kw, load_forecast, price, is
                                       alpha=alpha,**{"lambda":risk_weight},scenario_count=len(scenario["dates"]),
                                       primary_objective=plan["primary_objective"],secondary_throughput=plan["secondary_throughput"],
                                       primary_status=plan["primary_status"],secondary_status=plan["secondary_status"],
+                                      empirical_cvar_yuan=plan["cvar_empirical"],
                                       initial_soc_kwh=soc,plan_terminal_soc_kwh=target_soc,
                                       max_constraint_violation=plan["max_violation"]))
         current_load, observed_pv = observe_current(slot)
@@ -95,10 +100,11 @@ def simulate_day(date, observe_current, midnight_pv_kw, load_forecast, price, is
         row["soc_real_end_kwh"] = soc
         current_pv = observed_pv*6
         row.update(effective_contract_kwh=float(grid[slot-1]), load_forecast_kwh=float(load_forecast[slot-1]),
-                   pv_forecast_kwh=float(pv_forecast[slot-1]), run_label="TEST / REFERENCE ONLY",
+                   pv_forecast_kwh=float(pv_forecast[slot-1]), run_label=run_label,
                    rolling_primary_status=checked["primary_status"],rolling_secondary_status=checked["secondary_status"],
                    rolling_tertiary_status=checked["tertiary_status"],rolling_primary_star=checked["primary_star"],
                    rolling_terminal_gap_star=checked["terminal_gap_star"],rolling_max_violation=checked["max_violation"])
+        row["rolling_tertiary_throughput_star"] = checked["tertiary_objective"]
         actual_rows.append(row)
     actual = pd.DataFrame(actual_rows)
     check = validate_schedule(actual,"actual",start_soc)
@@ -114,6 +120,8 @@ def simulate_day(date, observe_current, midnight_pv_kw, load_forecast, price, is
                  emergency_slot_count=int((actual.emergency_purchase_kwh>VALIDATION_TOL).sum()),
                  actual_throughput_kwh=check["throughput"], simultaneous_slots=check["simultaneous_slots"],
                  max_constraint_violation=max(check["max_violation"],max_plan_violation,float(actual.rolling_max_violation.max())))
+    for stage in ("primary", "secondary", "tertiary"):
+        daily[f"actual_{stage}_status"] = "optimal" if actual[f"rolling_{stage}_status"].eq("optimal").all() else "failed"
     return dict(forecast_updates=pd.DataFrame(forecast_rows),confidence=pd.DataFrame(confidence_rows),
                 scenarios_summary=pd.DataFrame(scenario_rows),plan_updates=pd.DataFrame(plan_rows),
                 actual_schedule=actual,daily_metrics=pd.DataFrame([daily]))

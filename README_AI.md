@@ -2,6 +2,7 @@
 
 | 日期 | 工具/模型 | 使用目的 | 涉及文件 | 辅助内容 |
 | --- | --- | --- | --- | --- |
+| 2026-09-12 | OpenAI Codex（GPT-6） | Q3第二阶段年度参考实现与缓存优化 | `src/q3/annual.py`、`forecast.py`、`simulation.py`、`metrics.py`、`scripts/08_run_q3_annual.py`、`tests/test_q3_annual.py`、README | 模型来自建模团队；抽取原单日历史回放供年度增量缓存共用，复用当前单日求解器，实现独立全年入口、指标和验收。先测试缓存/场景逐值等价及未来实际扰动不改变当前决策，再进行旧单日/三日回归和年度验证；未因SOC或费用结果修改模型。 |
 | 2026-09-12 | OpenAI Codex（GPT-6） | 同步团队确认的Q3低SOC口径及20组联合实验规则 | `src/q3/parameters.py`、`src/q3/search.py`、`scripts/07_run_q3_single.py`、`tests/test_q3_search.py`、README | 统一alpha={0.80,0.85,0.90,0.95}与原lambda五值，添加完整20组334天实际指标校验、全局Min-Max、近常量置零、ddof=0及Score/argmin接口；记录低SOC为接受的模型特征。modeling_project环境23项Q3测试通过；未改变优化目标/约束/储能参数，未重算已有结果或启动全年实验。 |
 | 2026-09-10 | OpenAI Codex（GPT-6） | C 题 Q1–Q4 共用初始数据审计 | `src/common/data_loader.py`、`src/common/data_validator.py`、`src/common/time_utils.py`、`scripts/01_check_data.py`、`tests/test_data_audit.py`、`README.md`、`README_AI.md`、`outputs/data_quality/` | 依据 AGENTS.md 检查附件结构，编写只读审计、合成样本验证及使用说明；生成列统计、时间轴和预报结构报告，核对原始文件 SHA-256；所有清洗及时间语义待确认项只报告，不修改官方数据。 |
 | 2026-09-10 | OpenAI Codex（GPT-6） | C 题标准化预处理，不涉及预测或优化 | `src/common/preprocessing.py`、`scripts/02_preprocess.py`、`tests/test_preprocessing.py`、`README.md`、`README_AI.md`、`data/processed/` 四份 CSV、`outputs/data_quality/preprocessing_summary.md` | 复用现有加载、校验和时间解析模块；实现宽表展开、显式跨日解析、验证每日四次发布后推导展示用空日期及 kWh 派生列；在 modeling_project Conda 环境运行全部 12 项测试，验证原始数值、时间结构和官方文件 SHA-256 完整性。 |
