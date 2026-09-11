@@ -320,10 +320,26 @@ conda run --no-capture-output -n modeling_project python -X utf8 -m unittest dis
 
 误差越小表示该滞后下日曲线越接近。虚线仅标注5、7、14天；此图是历史数据特征描述，不等同于预测模型的回测误差，也不据此更改已确认的预测窗口。新增 `tests/test_q2_lag_similarity.py` 的三项测试已通过，验证手算分母口径、完整性/跨年末点、输出格式和冻结文件哈希。
 
-## Q3 第一阶段（部分模块已实现，完整流程待口径确认）
+## Q3 第一阶段（单日及连续三日参考验证通过）
 
 `src/q3/forecast.py` 校验附件3的冻结小时预报，使用发布时刻实测功率作为首小时左端点，线性插值后乘10/60得到电量；负荷预测直接复用Q2动态选窗函数。融合函数仅更新未执行slot。`src/q3/scenarios.py` 按最多14个合法历史日期同日配对负荷/融合光伏残差，等概率构造场景；按《第三问(6)》对场景预测加残差取max(0,·)，不修改数据或历史残差。
 
-当前可运行：`conda run --no-capture-output -n modeling_project python -X utf8 -m unittest discover -s tests -p "test_q3_*.py" -v`。预测与场景模块的五项合成测试已通过。完整单组运行入口及数值输出尚未生成；尚未执行最终15组联合参数搜索，也未选择最终alpha/lambda、计算Score或生成result3.xlsx。
+新增 `confidence.py` 按历史实际光伏>0评价剩余时域，最多7个历史日；无历史取0.5，无有效时段取0，epsilon固定1e-8，仅用于防除零。`forecast.py` 按同一机制逐日回放历史融合预报，负荷残差仍复用Q2动态选窗，合法成对残差从2025-01-30开始。
 
-TODO: 需建模手确认：实际执行层是否保留Q2的日末SOC缺口目标；可信度有效光伏时段的具体筛选及无历史/无有效时段时的初始化规则；3月20日独立烟雾测试的初始SOC。确认前不运行依赖这些口径的仿真。
+`optimizer.py` 实现共享购电场景计划和CVaR，计划无终端恢复约束，调整相对上一轮计划按1.5u−0.5v结算。实际层采用紧急费用→与最新计划终端SOC绝对偏差→吞吐量三级词典序，复用Q2物理约束验证器。`simulation.py` 只执行每轮当前一步，更新及跨日继承真实SOC；`metrics.py` 单独结算初始购电、各次增量调整和已执行紧急购电，不将风险目标计入实际费用。
+
+运行命令（在项目根目录）：
+
+```powershell
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/07_run_q3_single.py --alpha 0.95 --lambda 0.5 --days 1 --output-dir outputs/q3/single/smoke_one_day
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/07_run_q3_single.py --alpha 0.95 --lambda 0.5 --days 3
+conda run --no-capture-output -n modeling_project python -X utf8 -m unittest discover -s tests -p "test_q3_*.py" -v
+```
+
+入口仅允许2025-03-20起始、首日6000kWh的1至3日 `TEST / REFERENCE ONLY` 验证；alpha/lambda显式传入，未进行15组全年搜索、最终参数选择、Score计算或result3.xlsx生成。完整通过后在指定Q3目录保存六份 `q3_forecast_updates.csv`、`q3_confidence.csv`、`q3_scenarios_summary.csv`、`q3_plan_updates.csv`、`q3_actual_schedule.csv`、`q3_daily_metrics.csv` 及 `q3_single_metrics.json`。原始数据、预处理及Q1/Q2文件运行前后逐份核对SHA-256。
+
+实际运行第二级参考值按团队确认定义为最新有效滚动计划的场景终端SOC概率加权期望，当前14个等概率场景等价于算术平均。加权函数支持非等概率输入并验证概率，不重选单个场景、不增加计划层终端恢复约束。每次0/6/12/18点计划完成后更新参考值，仅在下一次更新前沿用该值。
+
+已完成2025-03-20单日144时段及03-20至03-22连续三日432时段验证，alpha=0.95、lambda=0.5，均为TEST / REFERENCE ONLY。三日实际费用76265.470158元，紧急购电748.019911kWh、15个有效时段；真实日末SOC依次1324.979516、1351.265017、1320.674143kWh，跨日传递误差0。所有计划两级及实际三级状态均optimal，最大约束误差1.00008e-7以内，无有效同时充放电。94个冻结文件SHA-256不变。
+
+19项Q3测试及9项复用Q2预测/优化回归测试通过，独立复算场景加权参考、最新计划切换、合同增量结算、物理约束和跨日SOC；单日与三日首日输出逐值一致。完整逐日数值见 `outputs/q3/single/q3_daily_metrics.csv`，汇总见 `q3_single_metrics.json`，单日输出在 `smoke_one_day/`。当前Q3本阶段无未解除的建模确认事项，结果等待人工数值验收。

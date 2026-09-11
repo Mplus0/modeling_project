@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 from src.q2.forecasting import forecast_day
+from src.q3.confidence import confidence
 
 UPDATE_HOURS = (0, 6, 12, 18)
 
@@ -71,3 +72,56 @@ def fuse_remaining(previous, new_remaining, first_slot, rho):
     result = previous.copy()
     result[start:] = (1-rho)*previous[start:] + rho*new_remaining
     return result
+
+
+def update_pv(target, hour, current_actual_pv_kw, previous, issues, historical_versions):
+    """仅接收当前实测锚点、已发布版本和已完成历史回放。"""
+    if hour not in UPDATE_HOURS:
+        raise ValueError("Q3仅在00/06/12/18点更新")
+    if any(day >= target for day in historical_versions):
+        raise ValueError("Q3光伏更新不能使用目标日或未来历史记录")
+    issue = pd.Timestamp(target) + pd.Timedelta(hours=hour)
+    start = hour*6
+    targets = pd.date_range(issue+pd.Timedelta(minutes=10), periods=144-start, freq="10min")
+    raw = interpolate_issue(issues[issue], issue, current_actual_pv_kw, targets)
+    if hour == 0:
+        return raw.copy(), raw, None
+    historical = {day: dict(actual=record["actual"], old=record["updates"][hour]["old"],
+                             new=record["updates"][hour]["new"])
+                  for day, record in historical_versions.items()}
+    checked = confidence(target, hour, historical)
+    return fuse_remaining(previous, raw, start+1, checked["confidence_rho"]), raw, checked
+
+
+def replay_history(history, target, issues):
+    """回放所有合法历史融合版本；返回同日负荷/光伏残差及可信度回放记录。"""
+    from datetime import timedelta
+
+    if any(day >= target for day in history):
+        raise ValueError("Q3历史回放只能接收目标日前数据")
+    records, residuals, cache = {}, {}, {}
+    for day in sorted(history):
+        if day-timedelta(days=1) not in history:
+            # 没有前一天末点就缺少午夜实测锚点，不虚构0:00观测。
+            continue
+        actual = np.asarray(history[day]["pv"], float)
+        previous, versions, updates = None, {}, {}
+        for hour in UPDATE_HOURS:
+            anchor = history[day-timedelta(days=1)]["pv"][-1] if hour == 0 else actual[hour*6-1]
+            # 历史已完成日仅在回放发布时刻读取对应锚点；电量除以1/6还原功率。
+            fused, raw, checked = update_pv(day, hour, float(anchor)*6, previous, issues, records)
+            if hour:
+                new_full = previous.copy()
+                new_full[hour*6:] = raw
+                updates[hour] = dict(old=previous.copy(), new=new_full, confidence=checked)
+            versions[hour] = fused.copy()
+            previous = fused
+        records[day] = dict(actual=actual.copy(), versions=versions, updates=updates)
+        # 最大负荷窗口需28天；其公共历史回测还需一个更早的有效日。
+        prior = {d: v for d, v in history.items() if d < day}
+        eligible = any(all(d-timedelta(days=7*i) in prior for i in range(1,5)) for d in prior)
+        if eligible and all(day-timedelta(days=7*i) in prior for i in range(1,5)):
+            load, _ = load_prediction(prior, day, cache)
+            residuals[day] = dict(load=np.asarray(history[day]["load"])-load,
+                                  pv={hour: actual-versions[hour] for hour in UPDATE_HOURS})
+    return residuals, records
