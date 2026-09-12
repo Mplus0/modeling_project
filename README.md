@@ -407,6 +407,10 @@ conda run --no-capture-output -n modeling_project python -X utf8 scripts/10_run_
 
 ## Q4 动态电价代码及运行入口
 
+已修复Q4-3合同负尾差接口：alpha=0.80、lambda=0在2025-09-22 slot109的commitment出现单个−1.1368683772161603e-13kWh，负荷/PV/价格均非负。`q4_3.py`仅将合同[-VALIDATION_TOL,0)规范为0，先拒绝低于−1e-6或非有限值；负荷/PV/价格仍严格非负。适配器对本次Q3日循环作局部函数绑定，不修改冻结源码或全局函数，不调整模型；计划输出与实际入口采用同一合同边界，避免尾差流入下一轮计划。计划CSV新增`solver_grid_raw_kwh`及`commitment_roundoff_adjustment_kwh`，保留原值与规范量。异常包含参数、date/slot及四类minimum。历史故障JSON/NPZ保持原样。
+
+精确故障快照及记录日初SOC下的故障单日已通过，Q3全部40项、Q4全部19项测试通过，包含固定价格回归。恢复签名已核对仅本次适配源码变化，原清单及升级记录保存于 `outputs/q4/search/manifest_before_commitment_fix.json`、`commitment_fix_migration.json`；没有已完成组，不混用旧组结果。可以继续使用原`--resume`命令，失败组从首日重新开始；不保证尚未运行部分不存在其他独立故障。本次未执行任何全年、搜索或提交。
+
 代码实现阶段及轻量验证已完成：14项新增测试通过，含固定价格复现、未来数据扰动、临时模板及模拟搜索恢复。两种Q4各完成2025-03-20至03-22连续3日/432slot smoke，最大复算误差均约1e-7，204份冻结文件SHA一致。尚未执行334天正式Q4结果、Q4-3全年reference或真实20组全年搜索，未生成正式Q4提交。Q1/Q2/Q3代码及结果保持冻结，Git分支由用户管理。
 
 `src/q4/price_forecasting.py` 每日用严格过去的公共回测日期，对同星期1/2/3/4周均值预测计算NMAE，复用Q2同精度选择较小窗口的规则。窗口每天重选，不固定为两周；原价格只读、不重新清洗或插值。选窗、候选误差及历史日期记录于 `q4_price_selection.csv`。
@@ -452,3 +456,13 @@ conda run --no-capture-output -n modeling_project python -X utf8 scripts/15_writ
 ```
 
 reference或smoke不能提交。冻结数据、Q1/Q2/Q3源码及既有结果在所有入口前后核对SHA-256。本阶段未解决的建模确认事项：无；正式Q4结果状态待用户全年运行及人工验收。
+
+## Q2与Q3全年运行效果对比图
+
+脚本 `scripts/17_plot_q2_q3_annual_comparison.py` 只读取冻结的 `outputs/q2/q2_metrics.json` 和 `outputs/q3/final/q3_annual_metrics.json`，验证两者均为2025-02-01至2025-12-31的334天/48096时段结果，并验证Q3 FINAL参数为alpha=0.85、lambda=0.25。图中Q2统一为100%，Q3为Q3/Q2×100%，比较全年实际总费用、紧急购电量、紧急购电费用和有效紧急购电10分钟时段数。
+
+```powershell
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/17_plot_q2_q3_annual_comparison.py
+```
+
+输出为 `outputs/figures/q3/q2_q3_annual_relative_comparison.png`（320 dpi）和对应核验表 `q2_q3_annual_relative_comparison.csv`。脚本不会运行优化器或修改Q2/Q3正式结果。

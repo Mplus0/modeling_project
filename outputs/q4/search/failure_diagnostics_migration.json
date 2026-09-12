@@ -1,0 +1,7 @@
+{
+  "reason": "exception diagnostics only; no mathematical or input changes",
+  "path": "src\\q4\\q4_3.py",
+  "old_sha256": "217d4ac2f51c1a865ba8dedb3ebf4573807958658086cfd94a6c558ca4250c74",
+  "new_sha256": "6d99525a5a781975c490e991e4a60c4eb477f9509dd9a4470f3a03b74f831aa1",
+  "all_other_signatures_unchanged": true
+}

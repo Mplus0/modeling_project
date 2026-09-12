@@ -1,0 +1,10 @@
+{
+  "completed_groups": 1,
+  "groups": [
+    {
+      "alpha": 0.8,
+      "lambda": 0.0,
+      "directory": "outputs\\q4\\search\\groups\\a0.80_l0.00"
+    }
+  ]
+}

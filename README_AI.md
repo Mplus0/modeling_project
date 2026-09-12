@@ -1,7 +1,13 @@
 # AI 工具使用记录
 
+Q4合同尾差修复验证：Q3既有40项、Q4全部19项测试通过，精确失败快照、故障单日及固定价格回归通过；按用户授权仅规范既有容差内合同负尾差。
+
 | 日期 | 工具/模型 | 使用目的 | 涉及文件 | 辅助内容 |
 | --- | --- | --- | --- | --- |
+| 2026-09-12 | OpenAI Codex（GPT-6） | Q2/Q3全年运行效果论文图 | `scripts/17_plot_q2_q3_annual_comparison.py`、`tests/test_q2_q3_annual_comparison.py`、README、`outputs/figures/q3/` | 从冻结Q2/Q3年度JSON读取四项指标，验证Q3 FINAL及0.85/0.25参数和334天范围，按Q2=100%计算相对水平及变化率，生成320 dpi PNG和核验CSV。未运行模型、未修改正式结果。 |
+| 2026-09-12 | OpenAI Codex（GPT-6） | Q4已确认commitment负尾差最小修复 | `src/q4/q4_3.py`、`tests/test_q4_commitment_boundary.py`、README、恢复签名备份及验证记录 | 快照确认0.80/0在9月22日slot109仅合同有−1.1368683772161603e-13尾差；按用户授权在Q4计划输出/实际入口统一容差，保留原合同审计列，严格拒绝超容差负合同及负load/PV/price。局部绑定冻结Q3日循环接口，不修改Q3源码或模型。40项Q3及19项Q4测试通过，故障日仅单日重放；无全年或搜索运行。恢复签名仅迁移本次源码变更并备份，无已完成组混用。 |
+| 2026-09-12 | OpenAI Codex（GPT-6） | Q4异常上下文自动保存 | `src/q4/q4_3.py`、`tests/test_q4_failure_diagnostics.py`、README、搜索诊断签名记录 | 用户traceback不含失败实参，因此仅新增异常后的四类输入统计和NPZ快照，未改非负规则或Q3代码。合成测试验证可准确捕获并单步重放，但不冒充真实失败复现。核对搜索签名唯一变化为异常诊断源码后备份并记录签名升级，不跳过其他完整性检查；未启动全年、搜索或提交。 |
+| 2026-09-12 | OpenAI Codex（GPT-6） | Q4-3负输入故障的有限诊断 | `scripts/16_diagnose_q4_boundary.py`、Q4诊断JSON、README | 只读检查搜索目录，未发现失败组日期/状态记录；在modeling_project环境对首组0.80/0的前3日增加临时输入观测，未复现负输入，冻结文件保护通过。尚不能确认实际负值来源，已请求失败日志，未修改数值处理或任何模型，也未启动全年/搜索/提交。 |
 | 2026-09-12 | OpenAI Codex（GPT-6） | Q4代码实现与轻量验证 | `src/q4/`、脚本11至15、`tests/test_q4_*.py`、README及Q4 smoke诊断 | 协助实现动态电价选窗、逐时gamma、Q2/Q3价格适配、真实结算、reference/search入口及模板副本写入。数学模型、信息边界、窗口候选、gamma、合同更新时间、CVaR网格和Score均来自团队确认，未新增模型或修改冻结代码。modeling_project环境14项新增测试通过，含固定价格复现、未来数据因果性、临时模板及模拟搜索恢复；两种Q4各连续3日/432slot smoke通过，204份冻结文件SHA一致。未运行全年或真实20组搜索，未生成正式Q4提交，未操作Git分支。 |
 | 2026-09-12 | OpenAI Codex（GPT-6） | Q3固定winner最终入口与交接代码 | `src/q3/final.py`、`final_reports.py`、`result_writer.py`、`scripts/10_run_q3_final.py`、`tests/test_q3_final.py`、README | 最终数学模型、候选、Score权重和winner规则来自团队确认，未重新设计模型。固定0.85/0.25，复用年度引擎并编写最终与搜索逐值验收、Q2/Q3比较、论文摘要及模板写入。团队确认调整表为三轮净变化/净调整费，并授权仅输出副本按Q2样式扩展；原模板只读。modeling_project环境Q3回归及新增报告测试合计40项，39通过、最终产物验收1项待用户全年运行而跳过；固定入口只读检查通过，临时模板测试SHA不变。未启动最终全年运行或生成正式提交。 |
 | 2026-09-12 | OpenAI Codex（GPT-6） | Q3第三阶段联合实验管理与统一评分 | `src/q3/search_runner.py`、`src/q3/metrics.py`、`scripts/09_run_q3_parameter_search.py`、`tests/test_q3_parameter_search_runner.py`、README | 参数集合与Score均来自团队确认；复用冻结年度引擎和唯一评分函数，添加按组恢复、摘要校验、只读reference复用、逐组独立SOC初始化及摘要输出。modeling_project环境32项Q3测试全部通过并复验reference；曾启动首组，随后按用户“正式运行由我进行”要求中止，未完成新全年组或评分。后续仅负责代码和验证，正式实验由用户运行；未修改目标函数、物理约束、SOC规则或评分权重。 |
