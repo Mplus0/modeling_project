@@ -2,6 +2,7 @@
 
 | 日期 | 工具/模型 | 使用目的 | 涉及文件 | 辅助内容 |
 | --- | --- | --- | --- | --- |
+| 2026-09-12 | OpenAI Codex（GPT-6） | Q4代码实现与轻量验证 | `src/q4/`、脚本11至15、`tests/test_q4_*.py`、README及Q4 smoke诊断 | 协助实现动态电价选窗、逐时gamma、Q2/Q3价格适配、真实结算、reference/search入口及模板副本写入。数学模型、信息边界、窗口候选、gamma、合同更新时间、CVaR网格和Score均来自团队确认，未新增模型或修改冻结代码。modeling_project环境14项新增测试通过，含固定价格复现、未来数据因果性、临时模板及模拟搜索恢复；两种Q4各连续3日/432slot smoke通过，204份冻结文件SHA一致。未运行全年或真实20组搜索，未生成正式Q4提交，未操作Git分支。 |
 | 2026-09-12 | OpenAI Codex（GPT-6） | Q3固定winner最终入口与交接代码 | `src/q3/final.py`、`final_reports.py`、`result_writer.py`、`scripts/10_run_q3_final.py`、`tests/test_q3_final.py`、README | 最终数学模型、候选、Score权重和winner规则来自团队确认，未重新设计模型。固定0.85/0.25，复用年度引擎并编写最终与搜索逐值验收、Q2/Q3比较、论文摘要及模板写入。团队确认调整表为三轮净变化/净调整费，并授权仅输出副本按Q2样式扩展；原模板只读。modeling_project环境Q3回归及新增报告测试合计40项，39通过、最终产物验收1项待用户全年运行而跳过；固定入口只读检查通过，临时模板测试SHA不变。未启动最终全年运行或生成正式提交。 |
 | 2026-09-12 | OpenAI Codex（GPT-6） | Q3第三阶段联合实验管理与统一评分 | `src/q3/search_runner.py`、`src/q3/metrics.py`、`scripts/09_run_q3_parameter_search.py`、`tests/test_q3_parameter_search_runner.py`、README | 参数集合与Score均来自团队确认；复用冻结年度引擎和唯一评分函数，添加按组恢复、摘要校验、只读reference复用、逐组独立SOC初始化及摘要输出。modeling_project环境32项Q3测试全部通过并复验reference；曾启动首组，随后按用户“正式运行由我进行”要求中止，未完成新全年组或评分。后续仅负责代码和验证，正式实验由用户运行；未修改目标函数、物理约束、SOC规则或评分权重。 |
 | 2026-09-12 | OpenAI Codex（GPT-6） | Q3第二阶段年度参考实现与缓存优化 | `src/q3/annual.py`、`forecast.py`、`simulation.py`、`metrics.py`、`scripts/08_run_q3_annual.py`、`tests/test_q3_annual.py`、README | 模型来自建模团队；抽取原单日历史回放供年度增量缓存共用，复用当前单日求解器，实现独立全年入口、指标和验收。先测试缓存/场景逐值等价及未来实际扰动不改变当前决策，再进行旧单日/三日回归和年度验证；未因SOC或费用结果修改模型。 |

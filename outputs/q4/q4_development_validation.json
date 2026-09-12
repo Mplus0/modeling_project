@@ -1,0 +1,26 @@
+{
+  "phase": "CODE AND LIGHT TESTS ONLY",
+  "new_tests_passed": 14,
+  "frozen_sha256_unchanged": true,
+  "frozen_files": 204,
+  "annual_run_executed": false,
+  "real_parameter_search_executed": false,
+  "formal_submissions_generated": false,
+  "remaining_todos": [],
+  "smoke": {
+    "2": {
+      "passed": true,
+      "days": 3,
+      "slots": 432,
+      "max_constraint_violation": 1.0000258043874055e-07,
+      "cross_day_soc_max_difference": 0.0
+    },
+    "3": {
+      "passed": true,
+      "days": 3,
+      "slots": 432,
+      "max_constraint_violation": 1.0000030670198612e-07,
+      "cross_day_soc_max_difference": 0.0
+    }
+  }
+}

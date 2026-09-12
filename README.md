@@ -404,3 +404,51 @@ conda run --no-capture-output -n modeling_project python -X utf8 scripts/10_run_
 <!-- Q3_FINAL_STATUS_BEGIN -->
 最终全年完整重跑、搜索一致性对比、独立验收及result3.xlsx生成均已完成；论文交接文件已输出，等待人工最终审阅。
 <!-- Q3_FINAL_STATUS_END -->
+
+## Q4 动态电价代码及运行入口
+
+代码实现阶段及轻量验证已完成：14项新增测试通过，含固定价格复现、未来数据扰动、临时模板及模拟搜索恢复。两种Q4各完成2025-03-20至03-22连续3日/432slot smoke，最大复算误差均约1e-7，204份冻结文件SHA一致。尚未执行334天正式Q4结果、Q4-3全年reference或真实20组全年搜索，未生成正式Q4提交。Q1/Q2/Q3代码及结果保持冻结，Git分支由用户管理。
+
+`src/q4/price_forecasting.py` 每日用严格过去的公共回测日期，对同星期1/2/3/4周均值预测计算NMAE，复用Q2同精度选择较小窗口的规则。窗口每天重选，不固定为两周；原价格只读、不重新清洗或插值。选窗、候选误差及历史日期记录于 `q4_price_selection.csv`。
+
+价格适配器只持有0:00预测c0与已揭示的真实价格。合同更新先用此前已执行slot的价格计算gamma；随后实际层揭示当前负荷、PV、价格，再刷新gamma，当前用真实价格、未来用gamma*c0。gamma每10分钟刷新，Q4-2合同全天固定，Q4-3合同仅在slot 1/37/73/109更新未执行尾部。`PRICE_EPSILON=1e-12`仅保护分母。`q4_price_refresh.csv` 保存每slot的gamma、观测数量、累加值及c0，可独立重建价格预测。
+
+`q4_2.py` 复用Q2负荷/PV动态选窗、Type-1 tau=0.8历史风险及计划/实际求解器，保留负风险修正和当天真实日初SOC参考。`q4_3.py` 直接调用冻结Q3完整日循环，仅通过价格数组接口接入动态价格；保留W_c=7、W_s=14、可信度、成对场景、CVaR及实际三级词典序。两个实验各自初始6000kWh，之后独立传递真实SOC，不每日重置。
+
+预测价格只用于决策。执行后按真实价格结算：Q4-2为原合同加5倍紧急购电；Q4-3为g0加三轮ΣC(1.5u−0.5v)加5倍紧急购电。预测目标与真实费用使用不同诊断列。
+
+| 脚本 | 用途 | 输出目录 |
+|---|---|---|
+| `11_smoke_q4.py --days 3` | 两种Q4各连续1至3日TEST ONLY验证，默认从2025-03-20开始 | `outputs/q4/smoke/q4_2/`、`q4_3/` |
+| `12_run_q4_2.py` | 用户以后运行独立334天Q4-2 | `outputs/q4/q4_2/` |
+| `13_run_q4_3_reference.py` | 用户以后运行固定0.85/0.25的334天参考，禁止覆盖参数 | `outputs/q4/reference/q4_3_a0.85_l0.25/` |
+| `14_run_q4_3_search.py` | 用户以后运行完整20组，可加`--resume`恢复 | `outputs/q4/search/` |
+| `15_write_q4_results.py` | 全年结果人工验收后复制并填写官方模板 | `outputs/submissions/result4-2.xlsx`、`result4-3.xlsx` |
+
+在项目根目录运行轻量验证：
+
+```powershell
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/11_smoke_q4.py --days 3
+conda run --no-capture-output -n modeling_project python -X utf8 -m unittest discover -s tests -p "test_q4*.py" -v
+```
+
+以后由用户执行的长任务：
+
+```powershell
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/12_run_q4_2.py
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/13_run_q4_3_reference.py
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/14_run_q4_3_search.py --resume
+```
+
+Q4-3 reference标记 `Q4-3 PROVISIONAL / PAPER REFERENCE ONLY; NOT FINAL Q4-3 PARAMETER`。正式搜索alpha={0.80,0.85,0.90,0.95}、lambda={0,0.25,0.5,1,2}，每组独立初态及相同334天流程，直接复用Q3统一20组Min-Max、ddof=0、0.5/0.3/0.2 Score及近常量置零规则。恢复时核对输入/代码及已完成组SHA。汇齐20组才评分，唯一winner完整明细另存 `outputs/q4/final/`等待人工验收；若并列，不擅自指定最终组。
+
+每个运行目录保存 `q4_actual_schedule.csv`、`q4_daily_metrics.csv`、价格选窗及刷新CSV、`q4_metrics.json`、`q4_validation.json`。Q4-2另有计划和负荷/PV选窗明细；Q4-3另有预测更新、可信度、场景及合同明细。运行记录进度和runtime_seconds。CSV保留原求解浮点数，独立验收复算约束、合同尾部、费用、价格观测与跨日SOC。
+
+提交沿用Q2/Q3确认口径：官方slot顺序，连续24slot汇总充/放电x_real+q_real及z_real，e>1e-6按日合并紧急区间；Q4-3调整表为累计净变化及真实净调整费。仅扩展输出副本，保留原标题、列顺序及样式。用户人工验收全年结果后才能执行：
+
+```powershell
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/15_write_q4_results.py --variant 2 --human-approved
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/15_write_q4_results.py --variant 3 --human-approved
+```
+
+reference或smoke不能提交。冻结数据、Q1/Q2/Q3源码及既有结果在所有入口前后核对SHA-256。本阶段未解决的建模确认事项：无；正式Q4结果状态待用户全年运行及人工验收。
