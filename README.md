@@ -336,7 +336,7 @@ conda run --no-capture-output -n modeling_project python -X utf8 scripts/07_run_
 conda run --no-capture-output -n modeling_project python -X utf8 -m unittest discover -s tests -p "test_q3_*.py" -v
 ```
 
-入口仅允许2025-03-20起始、首日6000kWh的1至3日 `TEST / REFERENCE ONLY` 验证；alpha/lambda显式传入，未进行20组全年搜索、最终参数选择、正式Score计算或result3.xlsx生成。完整通过后在指定Q3目录保存六份 `q3_forecast_updates.csv`、`q3_confidence.csv`、`q3_scenarios_summary.csv`、`q3_plan_updates.csv`、`q3_actual_schedule.csv`、`q3_daily_metrics.csv` 及 `q3_single_metrics.json`。原始数据、预处理及Q1/Q2文件运行前后逐份核对SHA-256。
+入口仅允许2025-03-20起始、首日6000kWh的1至3日 `TEST / REFERENCE ONLY` 验证；alpha/lambda显式传入。该入口不承担参数搜索、Score计算或result3.xlsx生成；已完成的20组实验及最终入口见下文。完整通过后在指定Q3目录保存六份 `q3_forecast_updates.csv`、`q3_confidence.csv`、`q3_scenarios_summary.csv`、`q3_plan_updates.csv`、`q3_actual_schedule.csv`、`q3_daily_metrics.csv` 及 `q3_single_metrics.json`。原始数据、预处理及Q1/Q2文件运行前后逐份核对SHA-256。
 
 实际运行第二级参考值按团队确认定义为最新有效滚动计划的场景终端SOC概率加权期望，当前14个等概率场景等价于算术平均。加权函数支持非等概率输入并验证概率，不重选单个场景、不增加计划层终端恢复约束。每次0/6/12/18点计划完成后更新参考值，仅在下一次更新前沿用该值。
 
@@ -350,7 +350,7 @@ conda run --no-capture-output -n modeling_project python -X utf8 -m unittest dis
 
 `src/q3/search.py` 提供后续搜索的 `score_annual_results(daily_results)`：输入20组相同2025-02-01至12-31共334天的逐日实际结果，所需列为alpha、lambda、date、total_actual_cost_yuan、emergency_slot_count。该函数拒绝缺组、缺日、重复日期和旧候选，计算全年实际费用、有效紧急购电时段数以及日实际费用总体标准差(ddof=0)。三个指标分别使用全部20组的统一Min-Max上下界；极差≤1e-6时归一化统一为0。Score=0.5×归一化费用+0.3×归一化紧急时段数+0.2×归一化费用标准差，返回评分表及全部并列argmin参数，不添加并列选择偏好。参考三日结果不能用于正式评分。
 
-后续全部20组必须使用相同全年流程、日期及初始化规则，仅改变alpha/lambda。当前只准备候选网格和评分接口，未启动全年实验，也未把参考仿真入口扩展为正式全年入口。
+全部20组使用相同全年流程、日期及初始化规则，仅改变alpha/lambda；联合实验现已完成并经过人工审查，最终winner见第三阶段结果说明。
 
 本次更新后23项Q3测试全部通过，包含候选集合、旧alpha拒绝、20组全局上下界、总体标准差、近常量指标置零及不完整结果拒绝测试。
 
@@ -385,4 +385,22 @@ conda run --no-capture-output -n modeling_project python -X utf8 scripts/09_run_
 
 所有20组成功才调用唯一的 `score_annual_results()`，在整个网格统一Min-Max，按已确认0.5/0.3/0.2权重计算Score，ddof=0、近常量指标置零；完全并列最优全部保留。结果写入 `q3_parameter_ranking.csv`、`q3_parameter_ranking.json`、`q3_parameter_search_summary.json` 和 `q3_all_daily_metrics.csv`，均位于 `outputs/q3/search/`。summary中的完成数、失败组和all_groups_valid反映当前状态；未全部完成时不生成最终排名。
 
-搜索前32项Q3测试全部通过，完整reference重新验收通过。正式实验由用户手动执行09入口；此前启动的首组已按用户要求中止，尚无完整新参数组或最终排名，当前摘要completed_groups=0。重新运行会从首个未完成组开始，已验收reference按原规则复用。搜索结束后停下等待人工验收，不重跑winner、不生成result3.xlsx、论文图或问题四结果。
+20组联合实验全部完成，failed_groups为空（0组）、all_groups_valid=true。用户已人工审查并确认唯一winner=(0.85,0.25)，best Score=0.07674725274725275，无并列winner。排名及组摘要位于 `outputs/q3/search/`，冻结保留，不重新运行搜索。
+
+## Q3 最终收尾：固定winner完整重跑
+
+```powershell
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/10_run_q3_final.py
+```
+
+10入口固定 `src/q3/final.py` 中FINAL_ALPHA=0.85、FINAL_LAMBDA=0.25，不接受CLI参数覆盖。沿用年度引擎，从2025-02-01初始6000kWh连续运行334天、48096slot，预计约28分钟。正式重跑由用户执行；可加 `--check-only` 只核对已确认winner与模板，不执行优化。
+
+完整结果写至 `outputs/q3/final/`，标记 `Q3 FINAL`。六份完整CSV及年度指标先落盘，再复用 `validate_annual` 独立复核并与搜索winner逐日/年度数值比较，容差1e-6；运行耗时和来源标签不要求相等。对比失败保存 `q3_search_vs_final_comparison.json` 诊断并停止，禁止写submission。
+
+模板映射已由团队明确：计划表填写0:00原始g0及计划费用；调整表填写每slot三轮累计净变化Σ(u−v)，全天费用为ΣC(1.5u−0.5v)。保持四个sheet、原标题/列顺序/slot标签；只在输出副本中扩展全年充放电和实际紧急区间。充电用x_real+q_real、放电用z_real，每24slot汇总；e>1e-6kWh才合并为逐日紧急区间，不跨日。原始模板SHA-256始终核对，复用Q2样式块工具。仅Excel和论文显示层允许绝对值≤1e-6显示为0，不修改底层CSV。
+
+通过后自动生成 `outputs/submissions/result3.xlsx`、`q3_final_validation.json`、`q3_final_summary.md`、`q3_paper_summary.md`、`q2_vs_q3_final_comparison.csv/.md`、`q3_update_time_summary.csv`、`q3_parameter_selection_table.csv`。论文表直接读取冻结排名，不重新评分；Q2比较只读其最终指标。当前候选网格与评价体系下的最优结果不表述为唯一理论最优，不虚构其他预测发布时间，不进入问题四。
+
+<!-- Q3_FINAL_STATUS_BEGIN -->
+最终全年完整重跑、搜索一致性对比、独立验收及result3.xlsx生成均已完成；论文交接文件已输出，等待人工最终审阅。
+<!-- Q3_FINAL_STATUS_END -->
