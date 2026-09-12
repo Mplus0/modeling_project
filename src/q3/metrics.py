@@ -36,7 +36,7 @@ def write_outputs(outputs, directory, integrity):
     return metrics
 
 
-def write_annual_outputs(outputs, directory, timings, integrity):
+def write_annual_outputs(outputs, directory, timings, integrity, save_details=True):
     """完整年度验收通过才写参考结果，不调用Score或最终排名。"""
     from src.q3.annual import validate_annual, ANNUAL_LABEL
     from src.q3.optimizer import SOC_MIN
@@ -78,6 +78,7 @@ def write_annual_outputs(outputs, directory, timings, integrity):
                                            for stage in ("primary","secondary","tertiary")})
     directory.mkdir(parents=True,exist_ok=True)
     for name,frame in outputs.items():
-        frame.to_csv(directory/f"q3_{name}.csv",index=False,encoding="utf-8-sig")
+        if save_details or name == "daily_metrics":
+            frame.to_csv(directory/f"q3_{name}.csv",index=False,encoding="utf-8-sig")
     (directory/"q3_annual_metrics.json").write_text(json.dumps(metrics,ensure_ascii=False,indent=2,allow_nan=False)+"\n",encoding="utf-8")
     return metrics

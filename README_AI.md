@@ -2,6 +2,7 @@
 
 | 日期 | 工具/模型 | 使用目的 | 涉及文件 | 辅助内容 |
 | --- | --- | --- | --- | --- |
+| 2026-09-12 | OpenAI Codex（GPT-6） | Q3第三阶段联合实验管理与统一评分 | `src/q3/search_runner.py`、`src/q3/metrics.py`、`scripts/09_run_q3_parameter_search.py`、`tests/test_q3_parameter_search_runner.py`、README | 参数集合与Score均来自团队确认；复用冻结年度引擎和唯一评分函数，添加按组恢复、摘要校验、只读reference复用、逐组独立SOC初始化及摘要输出。modeling_project环境32项Q3测试全部通过并复验reference；曾启动首组，随后按用户“正式运行由我进行”要求中止，未完成新全年组或评分。后续仅负责代码和验证，正式实验由用户运行；未修改目标函数、物理约束、SOC规则或评分权重。 |
 | 2026-09-12 | OpenAI Codex（GPT-6） | Q3第二阶段年度参考实现与缓存优化 | `src/q3/annual.py`、`forecast.py`、`simulation.py`、`metrics.py`、`scripts/08_run_q3_annual.py`、`tests/test_q3_annual.py`、README | 模型来自建模团队；抽取原单日历史回放供年度增量缓存共用，复用当前单日求解器，实现独立全年入口、指标和验收。先测试缓存/场景逐值等价及未来实际扰动不改变当前决策，再进行旧单日/三日回归和年度验证；未因SOC或费用结果修改模型。 |
 | 2026-09-12 | OpenAI Codex（GPT-6） | 同步团队确认的Q3低SOC口径及20组联合实验规则 | `src/q3/parameters.py`、`src/q3/search.py`、`scripts/07_run_q3_single.py`、`tests/test_q3_search.py`、README | 统一alpha={0.80,0.85,0.90,0.95}与原lambda五值，添加完整20组334天实际指标校验、全局Min-Max、近常量置零、ddof=0及Score/argmin接口；记录低SOC为接受的模型特征。modeling_project环境23项Q3测试通过；未改变优化目标/约束/储能参数，未重算已有结果或启动全年实验。 |
 | 2026-09-10 | OpenAI Codex（GPT-6） | C 题 Q1–Q4 共用初始数据审计 | `src/common/data_loader.py`、`src/common/data_validator.py`、`src/common/time_utils.py`、`scripts/01_check_data.py`、`tests/test_data_audit.py`、`README.md`、`README_AI.md`、`outputs/data_quality/` | 依据 AGENTS.md 检查附件结构，编写只读审计、合成样本验证及使用说明；生成列统计、时间轴和预报结构报告，核对原始文件 SHA-256；所有清洗及时间语义待确认项只报告，不修改官方数据。 |

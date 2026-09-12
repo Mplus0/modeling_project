@@ -372,3 +372,17 @@ conda run --no-capture-output -n modeling_project python -X utf8 -m unittest dis
 年度输出位于 `outputs/q3/annual/reference_a0.90_l0.50/`：六份预测更新/可信度/场景/计划/实际/逐日CSV以及 `q3_annual_metrics.json`。逐日执行轨迹及结算将由独立验证器复算，所有状态必须optimal、误差≤1e-6；紧急购电只在e>1e-6kWh时计有效时段。日末接近SOC下界按同一1e-6kWh数值容差统计。指标记录总体标准差(ddof=0)、初始与终末SOC、各更新时间累计调整量和rho、LP次数、加载/准备/首7天/全年耗时，以及保护文件SHA-256。
 
 本阶段仅进行一组全年程序验收与性能benchmark，不运行20组联合搜索，不计算正式Score、不选择最终alpha/lambda、不生成result3.xlsx或最终论文表。
+
+## Q3 第三阶段：20组联合全年实验
+
+```powershell
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/09_run_q3_parameter_search.py
+```
+
+09入口使用 `parameters.py` 的20组笛卡尔积和同一 `annual.run_dates`，每组独立从6000kWh开始，默认且目前仅支持 `--workers 1`。启动前重新完整验收已有 `reference_a0.90_l0.50/`，该组只读复用；其他组逐个计算334天及48096个实际时段。可用 `--validate-only` 仅检查reference。
+
+组级恢复由 `src/q3/search_runner.py` 管理。每组通过 `validate_annual`、状态及零有效同时充放电验收后，仅保存 `outputs/q3/search/groups/a{alpha}_l{lambda}/q3_daily_metrics.csv` 和 `q3_annual_metrics.json`。恢复必须验证完整日期、参数、摘要一致性、所有求解状态、误差、SOC连续、运行标签、摘要SHA-256和输入/模型指纹；失败组重算，不能凭文件存在跳过。不保存其他19组的大型调度/场景CSV，原reference完整明细不变。
+
+所有20组成功才调用唯一的 `score_annual_results()`，在整个网格统一Min-Max，按已确认0.5/0.3/0.2权重计算Score，ddof=0、近常量指标置零；完全并列最优全部保留。结果写入 `q3_parameter_ranking.csv`、`q3_parameter_ranking.json`、`q3_parameter_search_summary.json` 和 `q3_all_daily_metrics.csv`，均位于 `outputs/q3/search/`。summary中的完成数、失败组和all_groups_valid反映当前状态；未全部完成时不生成最终排名。
+
+搜索前32项Q3测试全部通过，完整reference重新验收通过。正式实验由用户手动执行09入口；此前启动的首组已按用户要求中止，尚无完整新参数组或最终排名，当前摘要completed_groups=0。重新运行会从首个未完成组开始，已验收reference按原规则复用。搜索结束后停下等待人工验收，不重跑winner、不生成result3.xlsx、论文图或问题四结果。
