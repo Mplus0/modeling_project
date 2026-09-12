@@ -4,6 +4,7 @@ Q4合同尾差修复验证：Q3既有40项、Q4全部19项测试通过，精确�
 
 | 日期 | 工具/模型 | 使用目的 | 涉及文件 | 辅助内容 |
 | --- | --- | --- | --- | --- |
+| 2026-09-12 | OpenAI Codex（GPT-6） | Q3新增预测经济信息价值诊断 | `src/analysis/`、`scripts/18_analyze_q3_information_value.py`、`tests/test_q3_information_value.py`、README、`outputs/q3/diagnostics/information_value/` | 协助实现反事实诊断、正式一级目标复算与分时汇总。V=J_fix−J_roll及“固定旧合同与允许滚动调整”的实验设计来自建模/论文团队确认；局部约束u=v=0，复用冻结预测、场景和计划求解器，未自行修改Q3数学模型。modeling_project环境完成1002条诊断（729.98秒），重建J_roll最大误差0，显著负值0；Q3既有及新增共46项测试通过，正式数据/源码/结果SHA-256不变。不重跑实际轨迹、不搜索参数、不覆盖正式结果。 |
 | 2026-09-12 | OpenAI Codex（GPT-6） | Q2/Q3全年运行效果论文图 | `scripts/17_plot_q2_q3_annual_comparison.py`、`tests/test_q2_q3_annual_comparison.py`、README、`outputs/figures/q3/` | 从冻结Q2/Q3年度JSON读取四项指标，验证Q3 FINAL及0.85/0.25参数和334天范围，按Q2=100%计算相对水平及变化率，生成320 dpi PNG和核验CSV。未运行模型、未修改正式结果。 |
 | 2026-09-12 | OpenAI Codex（GPT-6） | Q4已确认commitment负尾差最小修复 | `src/q4/q4_3.py`、`tests/test_q4_commitment_boundary.py`、README、恢复签名备份及验证记录 | 快照确认0.80/0在9月22日slot109仅合同有−1.1368683772161603e-13尾差；按用户授权在Q4计划输出/实际入口统一容差，保留原合同审计列，严格拒绝超容差负合同及负load/PV/price。局部绑定冻结Q3日循环接口，不修改Q3源码或模型。40项Q3及19项Q4测试通过，故障日仅单日重放；无全年或搜索运行。恢复签名仅迁移本次源码变更并备份，无已完成组混用。 |
 | 2026-09-12 | OpenAI Codex（GPT-6） | Q4异常上下文自动保存 | `src/q4/q4_3.py`、`tests/test_q4_failure_diagnostics.py`、README、搜索诊断签名记录 | 用户traceback不含失败实参，因此仅新增异常后的四类输入统计和NPZ快照，未改非负规则或Q3代码。合成测试验证可准确捕获并单步重放，但不冒充真实失败复现。核对搜索签名唯一变化为异常诊断源码后备份并记录签名升级，不跳过其他完整性检查；未启动全年、搜索或提交。 |

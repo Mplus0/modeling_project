@@ -466,3 +466,16 @@ conda run --no-capture-output -n modeling_project python -X utf8 scripts/17_plot
 ```
 
 输出为 `outputs/figures/q3/q2_q3_annual_relative_comparison.png`（320 dpi）和对应核验表 `q2_q3_annual_relative_comparison.csv`。脚本不会运行优化器或修改Q2/Q3正式结果。
+
+## Q3新增预测经济信息价值诊断
+
+`scripts/18_analyze_q3_information_value.py` 从 Q3 FINAL 读取当前 SOC、上一轮有效合同和一级目标，复用冻结预测与场景函数。先核对重建 `J_roll` 与正式记录误差不超过 `1e-6`，再固定旧合同（`u=v=0`），允许场景储能及应急购电重新优化，计算 `V = J_fix - J_roll`。这是论文补充诊断，不改变 Q3 正式模型和最终参数（alpha=0.85、lambda=0.25）。
+
+```powershell
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/18_analyze_q3_information_value.py
+conda run --no-capture-output -n modeling_project python -X utf8 -m unittest discover -s tests -p "test_q3*.py" -v
+```
+
+结果位于 `outputs/q3/diagnostics/information_value/`：`q3_information_value_by_update.csv`（334天、每日06/12/18共1002条）、`q3_information_value_summary.csv`（分时汇总）、`q3_information_value.json`（整体指标）、`q3_information_value_validation.json`（一致性和SHA-256核验）、`q3_information_value_paper_summary.md`（论文摘要）。可加 `--limit 3` 做首日测试，结果隔离存入 `smoke/`。
+
+两个目标均不重复计入已签合同的沉没购电费用，不包含二级吞吐量目标。V合计是存在重叠未来时域的局部反事实价值之和，不等于全年实际节省费用。其他发布时间缺少独立预测数据，无法在不增加额外假设的条件下进行同等级定量评价。程序不重跑正式实际轨迹、不搜索参数、不改提交文件。

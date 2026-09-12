@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "days": 334,
+  "slots": 48096,
+  "max_constraint_violation": 2.8588692657649517e-07,
+  "cross_day_soc_max_difference": 0.0
+}

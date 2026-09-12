@@ -1,10 +1,50 @@
 {
-  "completed_groups": 1,
+  "completed_groups": 9,
   "groups": [
     {
       "alpha": 0.8,
       "lambda": 0.0,
       "directory": "outputs\\q4\\search\\groups\\a0.80_l0.00"
+    },
+    {
+      "alpha": 0.8,
+      "lambda": 0.25,
+      "directory": "outputs\\q4\\search\\groups\\a0.80_l0.25"
+    },
+    {
+      "alpha": 0.8,
+      "lambda": 0.5,
+      "directory": "outputs\\q4\\search\\groups\\a0.80_l0.50"
+    },
+    {
+      "alpha": 0.8,
+      "lambda": 1.0,
+      "directory": "outputs\\q4\\search\\groups\\a0.80_l1.00"
+    },
+    {
+      "alpha": 0.8,
+      "lambda": 2.0,
+      "directory": "outputs\\q4\\search\\groups\\a0.80_l2.00"
+    },
+    {
+      "alpha": 0.85,
+      "lambda": 0.0,
+      "directory": "outputs\\q4\\search\\groups\\a0.85_l0.00"
+    },
+    {
+      "alpha": 0.85,
+      "lambda": 0.25,
+      "directory": "outputs\\q4\\search\\groups\\a0.85_l0.25"
+    },
+    {
+      "alpha": 0.85,
+      "lambda": 0.5,
+      "directory": "outputs\\q4\\search\\groups\\a0.85_l0.50"
+    },
+    {
+      "alpha": 0.85,
+      "lambda": 1.0,
+      "directory": "outputs\\q4\\search\\groups\\a0.85_l1.00"
     }
   ]
 }
