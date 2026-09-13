@@ -12,6 +12,71 @@ from src.q2.result_writer import write_outputs as write_two, emergency_intervals
 from src.q3.result_writer import _populate, verify_workbook
 from src.q4.metrics import load_outputs
 from src.q4.validation import validate_outputs
+from src.q2.optimizer import VALIDATION_TOL
+
+REFERENCE_SOURCE = "outputs/q4/reference/q4_3_a0.85_l0.25"
+ADOPTION = "团队确认第四问固定沿用第三问确定的风险参数，不再进行Q4参数重新搜索。"
+
+
+def resolve_submission_source(root, variant):
+    root = Path(root)
+    if variant == 2:
+        return root / "outputs/q4/q4_2"
+    if variant != 3:
+        raise ValueError("Q4模板类型必须为2或3")
+    acceptance = json.loads((root / "outputs/model_validation/q4_reference_acceptance.json").read_text(encoding="utf-8"))
+    required = dict(passed=True, team_confirmed=True, alpha=.85, source=REFERENCE_SOURCE,
+                    label="Q4-3 fixed-parameter final candidate", parameter_adoption=ADOPTION)
+    required["lambda"] = .25
+    for key, value in required.items():
+        if acceptance.get(key) != value or (isinstance(value, bool) and acceptance.get(key) is not value):
+            raise ValueError(f"Q4团队确认记录不符：{key}")
+    return root / REFERENCE_SOURCE
+
+
+def check_protected(root, metrics):
+    # 保留原逐文件SHA门槛；不迁移或忽略历史冻结记录。
+    hashes = metrics.get("protected_sha256")
+    if not isinstance(hashes, dict) or not hashes:
+        raise ValueError("Q4缺少protected_sha256")
+    changed = [p for p,h in hashes.items() if not (root/p).is_file() or file_hash(root/p) != h]
+    if changed:
+        raise ValueError("Q4冻结文件变化：" + ", ".join(changed))
+
+
+def validate_submission_source(root, variant, outputs, metrics):
+    resolve_submission_source(root, variant)
+    if metrics.get("formal") is not True or metrics.get("variant") != variant:
+        raise ValueError("Q4 formal/variant不符")
+    label = str(metrics.get("run_label", "")).upper()
+    if "SMOKE" in label or (variant == 2 and "REFERENCE" in label):
+        raise ValueError("Q4运行标签不允许正式导出")
+    if variant == 3 and (metrics.get("alpha") != .85 or metrics.get("lambda") != .25):
+        raise ValueError("Q4 reference参数不符")
+    checked = validate_outputs(outputs, variant, formal=True)
+    if variant == 3:
+        acceptance = json.loads((root/"outputs/model_validation/q4_reference_acceptance.json").read_text(encoding="utf-8"))
+        # 采用资格来自团队记录，历史REFERENCE标签原样保留；年度数值仍须逐项核验。
+        for record in (metrics, acceptance, checked):
+            if record.get("passed") is not True or record.get("days") != 334 or record.get("slots") != 48096:
+                raise ValueError("Q4年度验收范围不符")
+            for key in ("max_constraint_violation", "cross_day_soc_max_difference"):
+                value = record.get(key, float("nan"))
+                if not np.isfinite(value) or not 0 <= value <= VALIDATION_TOL:
+                    raise ValueError(f"Q4年度验收超差：{key}")
+        aliases = {"plan_cost_yuan":"total_plan_cost_real_yuan", "adjustment_cost_yuan":"total_adjustment_cost_real_yuan",
+                   "emergency_purchase_kwh":"total_emergency_purchase_kwh", "emergency_cost_yuan":"total_emergency_cost_yuan"}
+        for key in (*aliases,"total_actual_cost_yuan","emergency_slot_count","emergency_day_count",
+                    "initial_soc_kwh","final_soc_kwh","minimum_soc_kwh","maximum_soc_kwh","simultaneous_slots"):
+            if key not in acceptance or aliases.get(key,key) not in metrics:
+                raise ValueError(f"Q4验收缺少交叉核对指标：{key}")
+        for key, value in acceptance.items():
+            target = aliases.get(key, key)
+            if isinstance(value, (int,float)) and not isinstance(value,bool) and target in metrics:
+                if not np.isfinite(metrics[target]) or abs(value-metrics[target]) > VALIDATION_TOL:
+                    raise ValueError(f"Q4 acceptance与metrics冲突：{key}")
+    check_protected(root, metrics)
+    return checked
 
 
 def render_copy(template, destination, outputs, variant):
@@ -94,28 +159,18 @@ def verify_values(path, outputs, variant):
 def write_submission(root, variant, human_approved=False):
     if not human_approved:
         raise ValueError("Q4全年结果尚未人工验收，禁止生成正式提交")
-    folder = root/("outputs/q4/q4_2" if variant==2 else "outputs/q4/final")
-    outputs,metrics = load_outputs(folder)
-    if not metrics.get("formal") or metrics.get("variant")!=variant or any(s in metrics["run_label"] for s in ("REFERENCE","SMOKE")):
-        raise ValueError("Q4 reference/smoke不得作为正式结果")
-    validate_outputs(outputs,variant,formal=True)
-    if any(file_hash(root/p)!=h for p,h in metrics["protected_sha256"].items()):
-        raise ValueError("Q4全年运行后的冻结输入已变化，禁止提交")
-    if variant==3:
-        summary = json.loads((root/"outputs/q4/search/q4_search_summary.json").read_text(encoding="utf-8"))
-        winner = [{"alpha":metrics["alpha"],"lambda":metrics["lambda"]}]
-        if summary["completed_groups"]!=20 or summary["winners"]!=winner:
-            raise ValueError("Q4-3必须来自动态价格20组搜索唯一winner")
-        group = root/f"outputs/q4/search/groups/a{metrics['alpha']:.2f}_l{metrics['lambda']:.2f}"
-        original,_ = load_outputs(group)
-        for name in outputs:
-            # 标签之外全部数据须与搜索winner一致，不能混入Q3或reference。
-            a,b = outputs[name].drop(columns="run_label",errors="ignore"),original[name].drop(columns="run_label",errors="ignore")
-            pd.testing.assert_frame_equal(a,b,atol=1e-6,rtol=0)
     destination = root/f"outputs/submissions/result4-{variant}.xlsx"
+    if destination.exists() or destination.is_symlink():
+        raise FileExistsError(f"Q4提交文件已存在，禁止覆盖：{destination}")
+    folder = resolve_submission_source(root, variant)
+    outputs,metrics = load_outputs(folder)
+    validate_submission_source(root,variant,outputs,metrics)
     if destination.resolve()!=root.resolve()/f"outputs/submissions/result4-{variant}.xlsx":
         raise ValueError("Q4提交路径指向了非指定目录")
     result = render_copy(root/f"data/raw/附件5/result4-{variant}.xlsx",destination,outputs,variant)
     from src.q3.search_runner import save_json
-    save_json(folder/"q4_submission_validation.json",result)
+    check_protected(root,metrics)
+    audit = root/"outputs/model_validation/final_export"
+    audit.mkdir(parents=True,exist_ok=True)
+    save_json(audit/f"q4_{variant}_submission_validation.json",result)
     return result

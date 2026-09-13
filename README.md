@@ -1,5 +1,9 @@
 # 2026 全国大学生数学建模竞赛 C 题项目
 
+Q4最终导出前只读验收记录：`outputs/model_validation/final_export_precheck/final_export_precheck.md`。团队确认Q4-3固定采用第三问 `alpha=.85、lambda=.25` 后，正式导出器由旧20组search-winner门槛调整为team-confirmed reference门槛，来源为`outputs/q4/reference/q4_3_a0.85_l0.25`。仍拒绝SMOKE，要求formal年度验收和原protected SHA逐项一致；variant 2继续读取`outputs/q4/q4_2`。未修改数学模型、重新求解、重新选参或修改reference结果。
+
+运行 `conda run --no-capture-output -n modeling_project python -B -X utf8 scripts/19_precheck_q4_export.py` 可复现只读验收：只写报告及`final_export_precheck/tmp/`中的NOT_FOR_SUBMISSION模拟Excel，检查模板、单位、slot和数值。当前状态以报告为准，未生成正式result4。定向测试：`conda run -n modeling_project python -B -X utf8 -m unittest discover -s tests -p test_q4_submission_gate.py -v`。正式导出仍需人工批准；拒绝覆盖已有result4，验收记录写至独立`outputs/model_validation/final_export/`，不写回reference。
+
 本仓库用于 2026 全国大学生数学建模竞赛 C 题“微网与外部电网电力调控策略”的建模、编程、实验、结果整理与团队协作。
 
 当前项目已完成赛题资料归档、只读数据审计、标准化预处理和问题一两阶段线性规划。预处理已冻结；问题一完整调度、指标及按已确认 slot 行序填写的官方结果副本已输出。问题二动态预测与逐日优化、模板副本及论文表已实现，等待数值验收；尚未实现问题三、四。
@@ -440,7 +444,7 @@ conda run --no-capture-output -n modeling_project python -X utf8 scripts/13_run_
 conda run --no-capture-output -n modeling_project python -X utf8 scripts/14_run_q4_3_search.py --resume
 ```
 
-Q4-3 reference标记 `Q4-3 PROVISIONAL / PAPER REFERENCE ONLY; NOT FINAL Q4-3 PARAMETER`。正式搜索alpha={0.80,0.85,0.90,0.95}、lambda={0,0.25,0.5,1,2}，每组独立初态及相同334天流程，直接复用Q3统一20组Min-Max、ddof=0、0.5/0.3/0.2 Score及近常量置零规则。恢复时核对输入/代码及已完成组SHA。汇齐20组才评分，唯一winner完整明细另存 `outputs/q4/final/`等待人工验收；若并列，不擅自指定最终组。
+Q4-3 reference历史标记 `Q4-3 PROVISIONAL / PAPER REFERENCE ONLY; NOT FINAL Q4-3 PARAMETER` 保持原样。团队已确认固定采用0.85/0.25，不再执行Q4参数搜索；导出资格由`outputs/model_validation/q4_reference_acceptance.json`中的团队确认和数值交叉验收决定，不依赖旧search winner或`outputs/q4/final/`。
 
 每个运行目录保存 `q4_actual_schedule.csv`、`q4_daily_metrics.csv`、价格选窗及刷新CSV、`q4_metrics.json`、`q4_validation.json`。Q4-2另有计划和负荷/PV选窗明细；Q4-3另有预测更新、可信度、场景及合同明细。运行记录进度和runtime_seconds。CSV保留原求解浮点数，独立验收复算约束、合同尾部、费用、价格观测与跨日SOC。
 
@@ -451,7 +455,7 @@ conda run --no-capture-output -n modeling_project python -X utf8 scripts/15_writ
 conda run --no-capture-output -n modeling_project python -X utf8 scripts/15_write_q4_results.py --variant 3 --human-approved
 ```
 
-reference或smoke不能提交。冻结数据、Q1/Q2/Q3源码及既有结果在所有入口前后核对SHA-256。以上为既有Q4入口说明；当前reference模型检验阶段停止Q4参数搜索和SCIP故障调试，不重新计算正式/参考结果。
+SMOKE始终不可提交；Q4-3的REFERENCE历史标签只有结合合法团队确认、固定参数和完整formal验收才允许导出。导出前后检查原protected_sha256逐项一致，拒绝覆盖已有提交。上述正式命令只供下一次人工批准后执行，本轮只生成临时检查副本，不重新计算正式/参考结果。
 
 ## reference 分支模型检验
 

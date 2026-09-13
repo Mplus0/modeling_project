@@ -4,6 +4,9 @@
 
 | 日期 | 工具/模型 | 使用目的 | 涉及文件 | 辅助内容 |
 | --- | --- | --- | --- | --- |
+| 2026-09-13 | OpenAI Codex（GPT-6） | Q4导出器适配数值验收结论 | precheck报告与临时Excel | 两组334天/48096slot既有CSV复核通过，最大误差分别3.710987e-7、1.638909e-7，跨日SOC误差0、NaN/Inf为0；原protected SHA逐项一致，123个冻结源/结果文件在模拟前后不变。两份NOT_FOR_SUBMISSION副本通过verify_values及模板格式检查；记录原行序时间标签差异和既有日期格式转换，未改数值或正式导出。 |
+| 2026-09-13 | OpenAI Codex（GPT-6） | Q4固定参数最终导出器适配及完整precheck | `src/q4/result_writer.py`、`cli.py`、`tests/test_q4_submission_gate.py`、`scripts/19_precheck_q4_export.py`、precheck报告及README | 按团队确认以team-confirmed reference替代旧20组winner门槛；保留formal、SMOKE拒绝、年度数值与逐文件SHA检查，增加覆盖拒绝及独立审计目录。write分支使用导出器前后SHA检查，避免独立审计被旧全outputs集合检查误判。只复核冻结CSV和指定临时Excel；未修改模型、Q1/Q2/Q3源码、reference、模板或正式提交。9项定向测试通过，覆盖所要求12类场景；完整数值和模板复核结果记录于precheck。 |
+| 2026-09-13 | OpenAI Codex（GPT-6） | Q4最终导出前只读验收 | `outputs/model_validation/final_export_precheck/`、README、README_AI | 核对指定reference分支及HEAD、参数确认与writer实际来源，发现variant 3仍要求20组搜索winner并读取final目录，与团队采用reference冲突后按要求停止。保存BLOCKED报告与冻结文件SHA；年度数值及模板映射未继续检查，未修复源码、重算模型或导出Excel。 |
 | 2026-09-13 | OpenAI Codex（GPT-6） | 补回已验证Q3 Vdk诊断及最终范围整理 | `src/analysis/q3_information_value.py`、`scripts/18_analyze_q3_information_value.py`、`outputs/model_validation/q3_information_value/`、最终汇总及README | 从只读历史提交 `c5c5bf9` 核对并补回1002次Vdk诊断及聚合结果，标记为external validated diagnostic，说明其为条件调整经济价值且不等于全年真实节省；Q2-A/Q4-A部分结果继续排除正式比较，Q4固定0.85/0.25采用状态按团队确认更新。未重新运行优化、参数搜索或修改模型。 |
 | 2026-09-13 | OpenAI Codex（GPT-6） | 停止Q4-A并整理最终模型检验范围 | `src/analysis/q4_price_blind.py`、`paper_validation.py`、`outputs/model_validation/summary/`、README | 根据用户决定永久停止Q4-A，不再运行或调试；保留attempt与完整审计，仅将其标记为未形成有效全年实验结果并排除正式量化表。新增论文摘要和验收表只纳入已完成Q3-C/D，Q2-A保留未完成状态，Q4继续采用0.85/0.25 reference，Vdk登记external validated diagnostic。 |
 | 2026-09-13 | OpenAI Codex（GPT-6） | Q4价格盲停止后的实验层复核 | `outputs/model_validation/q4_price_blind/tests/`、README | 运行4项价格盲专用测试和9项已有实验层测试，共13项通过，前后冻结SHA一致；日志与真实全年停止状态分开记录，不把测试通过解释为全年消融成功。未运行其他全年任务。 |

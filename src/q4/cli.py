@@ -20,13 +20,14 @@ def main(mode, root):
         parser.add_argument("--variant",type=int,choices=(2,3),required=True)
         parser.add_argument("--human-approved",action="store_true",help="仅在完整全年结果已经人工验收后使用")
     args = parser.parse_args()
+    # 导出器自己核对逐文件SHA；独立审计新增文件不能触发旧全outputs集合保护。
+    if mode=="write":
+        if not args.human_approved:
+            parser.error("正式Q4提交必须先人工验收全年结果，再显式指定--human-approved")
+        from src.q4.result_writer import write_submission
+        write_submission(root,args.variant,human_approved=True)
+        return
     with protect(root) as integrity:
-        if mode=="write":
-            if not args.human_approved:
-                parser.error("正式Q4提交必须先人工验收全年结果，再显式指定--human-approved")
-            from src.q4.result_writer import write_submission
-            write_submission(root,args.variant,human_approved=True)
-            return
         history,prices,issues = load_inputs(root)
         if mode=="search":
             from src.q4.search import run_search

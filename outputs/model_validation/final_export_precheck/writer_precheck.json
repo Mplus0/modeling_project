@@ -1,0 +1,11 @@
+{
+  "source_2": "outputs/q4/q4_2",
+  "source_3": "outputs/q4/reference/q4_3_a0.85_l0.25",
+  "gate": "team-confirmed reference，formal及SMOKE校验、年度validate_outputs、逐文件protected_sha256",
+  "calls_optimizer": false,
+  "requires_search_summary": false,
+  "rejects_existing_destination": true,
+  "audits": "outputs/model_validation/final_export/q4_{variant}_submission_validation.json",
+  "raw_template_saved": false,
+  "formal_export_executed": false
+}

@@ -1,0 +1,21 @@
+{
+  "status": "READY_FOR_HUMAN_APPROVAL",
+  "variants": {
+    "2": "READY_FOR_HUMAN_APPROVAL",
+    "3": "READY_FOR_HUMAN_APPROVAL"
+  },
+  "integrity": {
+    "unchanged": true,
+    "changed": [],
+    "checked_files": 123
+  },
+  "formal_export_executed": false,
+  "solver_calls": 0,
+  "existing_result4": [],
+  "targeted_tests": {
+    "tests": 9,
+    "failures": 0,
+    "errors": 0,
+    "passed": true
+  }
+}

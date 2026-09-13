@@ -1,0 +1,104 @@
+{
+  "variant": 2,
+  "errors": [],
+  "source": "outputs/q4/q4_2",
+  "passed": true,
+  "days": 334,
+  "slots": 48096,
+  "max_constraint_violation": 3.710986788973969e-07,
+  "cross_day_soc_max_difference": 0.0,
+  "metrics": {
+    "passed": true,
+    "days": 334,
+    "slots": 48096,
+    "max_constraint_violation": 3.710986788973969e-07,
+    "cross_day_soc_max_difference": 0.0,
+    "variant": 2,
+    "run_label": "Q4-2 ANNUAL / AWAITING HUMAN REVIEW",
+    "runtime_seconds": 755.2628397999943,
+    "total_actual_cost_yuan": 15235111.57699595,
+    "total_emergency_purchase_kwh": 282136.4764667724,
+    "total_emergency_cost_yuan": 1317895.8518359906,
+    "total_plan_cost_real_yuan": 13917215.725159962,
+    "total_adjustment_cost_real_yuan": 0.0,
+    "emergency_slot_count": 3378,
+    "emergency_day_count": 235,
+    "daily_cost_std_yuan": 20750.8876272864,
+    "initial_soc_kwh": 6000.0,
+    "final_soc_kwh": 3095.5904597477725,
+    "minimum_soc_kwh": 1199.9999999999998,
+    "maximum_soc_kwh": 10800.000000000002,
+    "simultaneous_slots": 0,
+    "formal": true,
+    "validation_tolerance": 1e-06,
+    "sha256_unchanged": true,
+    "solver_status_counts": {
+      "plan_primary": {
+        "optimal": 334
+      },
+      "plan_secondary": {
+        "optimal": 334
+      },
+      "actual_primary": {
+        "optimal": 48096
+      },
+      "actual_secondary": {
+        "optimal": 48096
+      },
+      "actual_tertiary": {
+        "optimal": 48096
+      }
+    },
+    "chosen_price_window_counts": {
+      "2": 298,
+      "1": 35,
+      "4": 1
+    },
+    "output_tables": [
+      "plan_schedule",
+      "actual_schedule",
+      "daily_metrics",
+      "price_refresh",
+      "forecast_selection",
+      "price_selection"
+    ]
+  },
+  "metric_recalculation_differences": {
+    "total_actual_cost_yuan": 0.0,
+    "total_plan_cost_real_yuan": 0.0,
+    "total_adjustment_cost_real_yuan": 0.0,
+    "total_emergency_purchase_kwh": 0.0,
+    "total_emergency_cost_yuan": 0.0,
+    "emergency_slot_count": 0,
+    "emergency_day_count": 0,
+    "initial_soc_kwh": 0.0,
+    "final_soc_kwh": 0.0,
+    "minimum_soc_kwh": 0.0,
+    "maximum_soc_kwh": 0.0,
+    "simultaneous_slots": 0
+  },
+  "nan_count": 0,
+  "inf_count": 0,
+  "nonnegative_minima": {
+    "grid_purchase_plan_kwh": 0.0,
+    "soc_real_start_kwh": 1199.9999999999998,
+    "soc_real_end_kwh": 1199.9999999999998,
+    "x_real_kwh": -2.2157564671942964e-10,
+    "y_real_kwh": -2.731642073033274e-12,
+    "q_real_kwh": 0.0,
+    "z_real_kwh": -2.418119038338773e-10,
+    "emergency_purchase_kwh": -5.604392002982156e-12
+  },
+  "plan_nonnegative_minima": {
+    "grid_purchase_plan_kwh": 0.0,
+    "x_plan_kwh": 0.0,
+    "y_plan_kwh": 0.0,
+    "q_plan_kwh": 0.0,
+    "z_plan_kwh": 0.0
+  },
+  "source_gate_passed": true,
+  "protected_sha_mismatches": {},
+  "temporary_excel": "outputs\\model_validation\\final_export_precheck\\tmp\\20260913_115011_532369\\NOT_FOR_SUBMISSION_result4-2.xlsx",
+  "verify_values_passed": true,
+  "status": "READY_FOR_HUMAN_APPROVAL"
+}
