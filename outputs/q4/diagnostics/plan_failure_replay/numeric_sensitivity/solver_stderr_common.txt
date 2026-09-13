@@ -1,0 +1,6 @@
+本轮工具返回中各失败配置的SCIP原生标准错误共同内容；逐次Python异常栈另存对应error.txt。
+
+[solve.c:4216] ERROR: (node 1) unresolved numerical troubles in LP 2 cannot be dealt with
+[solve.c:4511] ERROR: Error <-6> in function call
+[solve.c:5335] ERROR: Error <-6> in function call
+[scip_solve.c:2766] ERROR: Error <-6> in function call

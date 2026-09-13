@@ -1,0 +1,329 @@
+{
+  "manifest_sha256": "ca5facd42efc968b57c5597d8337779db46480d3a78d65990a785cfddb54515f",
+  "signature_changes": [
+    {
+      "path": "outputs\\figures\\q3\\q2_q3_annual_relative_comparison.csv",
+      "change": "added",
+      "before": null,
+      "after": "49b2da4ca0b427d3e878a3a91e5547486c1c83f73c7e65d603d3daef72a51668"
+    },
+    {
+      "path": "outputs\\figures\\q3\\q2_q3_annual_relative_comparison.png",
+      "change": "added",
+      "before": null,
+      "after": "3289ac35f3b2483dd0d90c4e7ba7ea4b02a18c9675a4c545a12294d4ca3ca0cb"
+    },
+    {
+      "path": "outputs\\q3\\diagnostics\\information_value\\q3_information_value.json",
+      "change": "added",
+      "before": null,
+      "after": "af73466d1bcaabe4f57a822d0f59d5528d04abb99e56a24285994760a3be4003"
+    },
+    {
+      "path": "outputs\\q3\\diagnostics\\information_value\\q3_information_value_by_update.csv",
+      "change": "added",
+      "before": null,
+      "after": "caedb698dc4a215713587ea1b09333aef9c1023d9edda948429fd433afac02a7"
+    },
+    {
+      "path": "outputs\\q3\\diagnostics\\information_value\\q3_information_value_paper_summary.md",
+      "change": "added",
+      "before": null,
+      "after": "cdf5f1fc1b5614b03924a9cd3c65a12cf6850c540f18ee134418b55e861d6aac"
+    },
+    {
+      "path": "outputs\\q3\\diagnostics\\information_value\\q3_information_value_summary.csv",
+      "change": "added",
+      "before": null,
+      "after": "a78de243a5b7471ca8fbc80f9a40323f25c9639d7e335a6d4d4c4e9c4c8bf6d0"
+    },
+    {
+      "path": "outputs\\q3\\diagnostics\\information_value\\q3_information_value_validation.json",
+      "change": "added",
+      "before": null,
+      "after": "0b11dd37c42520cf147958673b0812ff8d8e258023e1b727416bed761a069dda"
+    },
+    {
+      "path": "outputs\\q3\\diagnostics\\information_value\\smoke\\q3_information_value.json",
+      "change": "added",
+      "before": null,
+      "after": "2c5d841e46cd41707e6bb31b121c2c568574b668ba6d05057a1afa58686bdd83"
+    },
+    {
+      "path": "outputs\\q3\\diagnostics\\information_value\\smoke\\q3_information_value_by_update.csv",
+      "change": "added",
+      "before": null,
+      "after": "59338441324643c231c79b44b9265fcbb74b3e3685d537172bdcb86c5db9d1c1"
+    },
+    {
+      "path": "outputs\\q3\\diagnostics\\information_value\\smoke\\q3_information_value_paper_summary.md",
+      "change": "added",
+      "before": null,
+      "after": "48bf39680f8bdeb3749453805175dc20e02aa6217b1b77cedc4e9687064cffb7"
+    },
+    {
+      "path": "outputs\\q3\\diagnostics\\information_value\\smoke\\q3_information_value_summary.csv",
+      "change": "added",
+      "before": null,
+      "after": "752944020e926e418b2a3a0e2148a284503849bef340eca476067b35473717b5"
+    },
+    {
+      "path": "outputs\\q3\\diagnostics\\information_value\\smoke\\q3_information_value_validation.json",
+      "change": "added",
+      "before": null,
+      "after": "fbd09798dd4983eb7f08bbe968e695bb9075e37761e2549bb95fe4bf9792d085"
+    },
+    {
+      "path": "src\\q4\\plan_diagnostics.py",
+      "change": "added",
+      "before": null,
+      "after": "fc2f9ab2681275ec9171df17d45360938b33121a62b3e4258b537e2597142457"
+    },
+    {
+      "path": "src\\q4\\q4_3.py",
+      "change": "modified",
+      "before": "fbf85975843130accd7c3ea52a4359efa8aa1e5ed9fc0628d05f470a5931415e",
+      "after": "684cfcf2ff0cecf71e79c6ba2808ab1849ccc18498eca0fdf760b2cc0252c80a"
+    }
+  ],
+  "groups": [
+    {
+      "alpha": 0.8,
+      "lambda": 0.0,
+      "directory": "outputs\\q4\\search\\groups\\a0.80_l0.00",
+      "reusable": true,
+      "checked_files": 10,
+      "receipt_sha256": "2ed6beb727fe59dd8edd780bd73626e2822b51a268422af321ef71b37e8bf243",
+      "validation": {
+        "passed": true,
+        "days": 334,
+        "slots": 48096,
+        "max_constraint_violation": 1.499743120803032e-07,
+        "cross_day_soc_max_difference": 0.0
+      }
+    },
+    {
+      "alpha": 0.8,
+      "lambda": 0.25,
+      "directory": "outputs\\q4\\search\\groups\\a0.80_l0.25",
+      "reusable": true,
+      "checked_files": 10,
+      "receipt_sha256": "11494a3dcaba22c97a92ae690eff1a3520d8fe72337c4e5c4453b2b3b319f881",
+      "validation": {
+        "passed": true,
+        "days": 334,
+        "slots": 48096,
+        "max_constraint_violation": 1.6611284081591293e-07,
+        "cross_day_soc_max_difference": 0.0
+      }
+    },
+    {
+      "alpha": 0.8,
+      "lambda": 0.5,
+      "directory": "outputs\\q4\\search\\groups\\a0.80_l0.50",
+      "reusable": true,
+      "checked_files": 10,
+      "receipt_sha256": "ab7fd10bc06390cfec9e8965bbe9fde2aebf6562e2e472f6df7aca759d0882c3",
+      "validation": {
+        "passed": true,
+        "days": 334,
+        "slots": 48096,
+        "max_constraint_violation": 2.8588692657649517e-07,
+        "cross_day_soc_max_difference": 0.0
+      }
+    },
+    {
+      "alpha": 0.8,
+      "lambda": 1.0,
+      "directory": "outputs\\q4\\search\\groups\\a0.80_l1.00",
+      "reusable": true,
+      "checked_files": 10,
+      "receipt_sha256": "95393c17df26b1b45106f73918436cb45d1dc9e8fbaa7775fb79a1da9b4c2596",
+      "validation": {
+        "passed": true,
+        "days": 334,
+        "slots": 48096,
+        "max_constraint_violation": 2.8588851819222327e-07,
+        "cross_day_soc_max_difference": 0.0
+      }
+    },
+    {
+      "alpha": 0.8,
+      "lambda": 2.0,
+      "directory": "outputs\\q4\\search\\groups\\a0.80_l2.00",
+      "reusable": true,
+      "checked_files": 10,
+      "receipt_sha256": "8f005804769935e96885a767ac783765d0e52de4d915914768c49a68b390fb37",
+      "validation": {
+        "passed": true,
+        "days": 334,
+        "slots": 48096,
+        "max_constraint_violation": 2.858903371816268e-07,
+        "cross_day_soc_max_difference": 0.0
+      }
+    },
+    {
+      "alpha": 0.85,
+      "lambda": 0.0,
+      "directory": "outputs\\q4\\search\\groups\\a0.85_l0.00",
+      "reusable": true,
+      "checked_files": 10,
+      "receipt_sha256": "5838d4868c28e9bb22f992b9631244c384cd6395b8aeddef8f3fb45abcf6bf37",
+      "validation": {
+        "passed": true,
+        "days": 334,
+        "slots": 48096,
+        "max_constraint_violation": 1.499743120803032e-07,
+        "cross_day_soc_max_difference": 0.0
+      }
+    },
+    {
+      "alpha": 0.85,
+      "lambda": 0.25,
+      "directory": "outputs\\q4\\search\\groups\\a0.85_l0.25",
+      "reusable": true,
+      "checked_files": 10,
+      "receipt_sha256": "b3bf173ef74e80965321ecd59326e2ec50c69e475beaa660fd0ede597d0a443c",
+      "validation": {
+        "passed": true,
+        "days": 334,
+        "slots": 48096,
+        "max_constraint_violation": 1.6389094525948167e-07,
+        "cross_day_soc_max_difference": 0.0
+      }
+    },
+    {
+      "alpha": 0.85,
+      "lambda": 0.5,
+      "directory": "outputs\\q4\\search\\groups\\a0.85_l0.50",
+      "reusable": true,
+      "checked_files": 10,
+      "receipt_sha256": "f783022511d382bb0fbbeeabe38c057d634bfffe22a9558faa21eb3d933469e1",
+      "validation": {
+        "passed": true,
+        "days": 334,
+        "slots": 48096,
+        "max_constraint_violation": 2.8589101930265315e-07,
+        "cross_day_soc_max_difference": 0.0
+      }
+    },
+    {
+      "alpha": 0.85,
+      "lambda": 1.0,
+      "directory": "outputs\\q4\\search\\groups\\a0.85_l1.00",
+      "reusable": true,
+      "checked_files": 10,
+      "receipt_sha256": "d8c2700bae4c95fc8966084699e824f4e55b1938cf4608713c592818071a4e1a",
+      "validation": {
+        "passed": true,
+        "days": 334,
+        "slots": 48096,
+        "max_constraint_violation": 2.858903371816268e-07,
+        "cross_day_soc_max_difference": 0.0
+      }
+    },
+    {
+      "alpha": 0.85,
+      "lambda": 2.0,
+      "directory": "outputs\\q4\\search\\groups\\a0.85_l2.00",
+      "reusable": true,
+      "checked_files": 10,
+      "receipt_sha256": "3105bb118828fe9babf83b6c371bbdef594b64545356e6e6c0253b187ae34ded",
+      "validation": {
+        "passed": true,
+        "days": 334,
+        "slots": 48096,
+        "max_constraint_violation": 2.8589056455530226e-07,
+        "cross_day_soc_max_difference": 0.0
+      }
+    },
+    {
+      "alpha": 0.9,
+      "lambda": 0.0,
+      "directory": "outputs\\q4\\search\\groups\\a0.90_l0.00",
+      "reusable": true,
+      "checked_files": 10,
+      "receipt_sha256": "08663698c1359c31da722c061180e80d1dc24edfbf363b6f79ece211fe321177",
+      "validation": {
+        "passed": true,
+        "days": 334,
+        "slots": 48096,
+        "max_constraint_violation": 1.499743120803032e-07,
+        "cross_day_soc_max_difference": 0.0
+      }
+    }
+  ],
+  "progress": {
+    "completed_groups": 11,
+    "groups": [
+      {
+        "alpha": 0.8,
+        "lambda": 0.0,
+        "directory": "outputs\\q4\\search\\groups\\a0.80_l0.00"
+      },
+      {
+        "alpha": 0.8,
+        "lambda": 0.25,
+        "directory": "outputs\\q4\\search\\groups\\a0.80_l0.25"
+      },
+      {
+        "alpha": 0.8,
+        "lambda": 0.5,
+        "directory": "outputs\\q4\\search\\groups\\a0.80_l0.50"
+      },
+      {
+        "alpha": 0.8,
+        "lambda": 1.0,
+        "directory": "outputs\\q4\\search\\groups\\a0.80_l1.00"
+      },
+      {
+        "alpha": 0.8,
+        "lambda": 2.0,
+        "directory": "outputs\\q4\\search\\groups\\a0.80_l2.00"
+      },
+      {
+        "alpha": 0.85,
+        "lambda": 0.0,
+        "directory": "outputs\\q4\\search\\groups\\a0.85_l0.00"
+      },
+      {
+        "alpha": 0.85,
+        "lambda": 0.25,
+        "directory": "outputs\\q4\\search\\groups\\a0.85_l0.25"
+      },
+      {
+        "alpha": 0.85,
+        "lambda": 0.5,
+        "directory": "outputs\\q4\\search\\groups\\a0.85_l0.50"
+      },
+      {
+        "alpha": 0.85,
+        "lambda": 1.0,
+        "directory": "outputs\\q4\\search\\groups\\a0.85_l1.00"
+      },
+      {
+        "alpha": 0.85,
+        "lambda": 2.0,
+        "directory": "outputs\\q4\\search\\groups\\a0.85_l2.00"
+      },
+      {
+        "alpha": 0.9,
+        "lambda": 0.0,
+        "directory": "outputs\\q4\\search\\groups\\a0.90_l0.00"
+      }
+    ]
+  },
+  "migration_applied": false,
+  "search_started": false,
+  "failure_context": {
+    "alpha": 0.9,
+    "lambda": 0.25,
+    "date_min": "2025-05-22",
+    "date_max": "2025-05-31",
+    "exact_date": null,
+    "update_time": null,
+    "primary_star": null,
+    "source": "用户提供的第12组及110天进度日志",
+    "exact_replay_available": false
+  }
+}

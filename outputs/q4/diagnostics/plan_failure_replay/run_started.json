@@ -1,0 +1,7 @@
+{
+  "alpha": 0.9,
+  "lambda": 0.25,
+  "start_date": "2025-02-01",
+  "label": "PATH REPLAY DIAGNOSTIC ONLY / NOT FORMAL",
+  "historical_frozen_list_test": "已知Q4 21/22中的旧全目录清单失败单独保留，未更新或忽略旧清单；本次仍执行protect并核对运行前后全体文件SHA"
+}

@@ -8,6 +8,7 @@ from types import FunctionType
 from src.q3.optimizer import solve_actual_step, solve_plan, VALIDATION_TOL
 from src.q3.simulation import simulate_day
 from src.q4.price_forecasting import PriceStream
+from src.q4.plan_diagnostics import diagnostic_plan
 
 REFERENCE_LABEL = "Q4-3 PROVISIONAL / PAPER REFERENCE ONLY; NOT FINAL Q4-3 PARAMETER"
 
@@ -75,7 +76,8 @@ def run_day(day, observe, midnight_pv_kw, load, baseline, issues, records, resid
     # 原循环在观测回调之前更新合同，因此合同只看上一slot及更早的价格。
     raw_grids = []
     def plan_boundary(*args,**kwargs):
-        plan = solve_plan(*args,**kwargs)
+        plan = diagnostic_plan(*args,date=day,solver=solve_plan,
+                               directory=Path(__file__).resolve().parents[2]/"outputs/q4/diagnostics",**kwargs)
         raw_grids.append(plan["grid"].copy())
         # 在计划输出接口统一合同表示，防止同一尾差再进入下一轮计划的严格检查。
         return dict(plan,grid=normalize_commitment(plan["grid"]))

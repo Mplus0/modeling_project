@@ -1,0 +1,143 @@
+{
+  "date": "2025-05-30",
+  "update_time": "12:00",
+  "slot": 73,
+  "horizon_start": 73,
+  "horizon_length": 72,
+  "current_soc": 10640.209484784917,
+  "scenario_count": 14,
+  "scenario_dates": [
+    "2025-05-16",
+    "2025-05-17",
+    "2025-05-18",
+    "2025-05-19",
+    "2025-05-20",
+    "2025-05-21",
+    "2025-05-22",
+    "2025-05-23",
+    "2025-05-24",
+    "2025-05-25",
+    "2025-05-26",
+    "2025-05-27",
+    "2025-05-28",
+    "2025-05-29"
+  ],
+  "scenario_probabilities": [
+    0.07142857142857142,
+    0.07142857142857142,
+    0.07142857142857142,
+    0.07142857142857142,
+    0.07142857142857142,
+    0.07142857142857142,
+    0.07142857142857142,
+    0.07142857142857142,
+    0.07142857142857142,
+    0.07142857142857142,
+    0.07142857142857142,
+    0.07142857142857142,
+    0.07142857142857142,
+    0.07142857142857142
+  ],
+  "alpha": 0.9,
+  "lambda": 0.25,
+  "solver_capture": {
+    "date": "2025-05-30",
+    "update_time": "12:00",
+    "slot": 73,
+    "horizon_length": 72,
+    "scenario_count": 14,
+    "start_soc": 10640.209484784917,
+    "alpha": 0.9,
+    "lambda": 0.25,
+    "primary_star": 118.6613023613645,
+    "primary_status": "optimal",
+    "optimize_calls": 2,
+    "COST_LOCK_TOLERANCE": 1e-07,
+    "SOLVER_FEASTOL": 1e-09,
+    "input_ranges": {
+      "price": {
+        "shape": [
+          72
+        ],
+        "minimum": 0.14659701947379294,
+        "maximum": 1.2081952258799906,
+        "negative_count": 0,
+        "nonfinite_count": 0
+      },
+      "load_scenarios": {
+        "shape": [
+          14,
+          72
+        ],
+        "minimum": 338.92733333333325,
+        "maximum": 691.2299999999999,
+        "negative_count": 0,
+        "nonfinite_count": 0
+      },
+      "pv_scenarios": {
+        "shape": [
+          14,
+          72
+        ],
+        "minimum": 0.0,
+        "maximum": 1593.76788134681,
+        "negative_count": 0,
+        "nonfinite_count": 0
+      },
+      "previous_plan": {
+        "shape": [
+          72
+        ],
+        "minimum": 0.0,
+        "maximum": 564.1574999999999,
+        "negative_count": 0,
+        "nonfinite_count": 0
+      }
+    },
+    "cost_lock": {
+      "lower": 118.66130226136451,
+      "upper": 118.6613024613645,
+      "lower_margin_at_star": 9.999999406318238e-08,
+      "upper_margin_at_star": 9.999999406318238e-08,
+      "tolerance_over_abs_star": 8.427347248849973e-10
+    },
+    "primary_g_range": {
+      "shape": [
+        72
+      ],
+      "minimum": 0.0,
+      "maximum": 564.1574999999999,
+      "negative_count": 0,
+      "nonfinite_count": 0
+    },
+    "primary_zeta_range": {
+      "shape": [
+        1
+      ],
+      "minimum": 14.34190663726878,
+      "maximum": 14.34190663726878,
+      "negative_count": 0,
+      "nonfinite_count": 0
+    },
+    "primary_xi_range": {
+      "shape": [
+        14
+      ],
+      "minimum": 0.0,
+      "maximum": 237.17791219603973,
+      "negative_count": 0,
+      "nonfinite_count": 0
+    },
+    "error": "SCIP: error in LP solver!",
+    "error_type": "Exception",
+    "failed_stage": "secondary",
+    "captured_at_utc": "20260912T201130394419Z",
+    "provenance": "Q4 plan exception capture",
+    "npz_sha256": "c94b880e453176913147b045fa769fadbd0348a8a59bb5facf981155f83f016c",
+    ".cip_export_error": "SCIP: cannot create file!",
+    ".set_export_error": "SCIP: cannot create file!"
+  },
+  "previous_success": "last_successful_plan.json",
+  "exact_context_npz": "active_plan_context.npz",
+  "phase_confirmed": true
+}

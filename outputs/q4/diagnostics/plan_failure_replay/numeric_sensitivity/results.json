@@ -1,0 +1,437 @@
+[
+  {
+    "configuration": "default",
+    "phase": "three",
+    "attempt": 1,
+    "parameters": {},
+    "success": false,
+    "error": "SCIP: error in LP solver!",
+    "primary_status": "optimal",
+    "primary_star": 118.6613023613645,
+    "secondary_status": "LP_ERROR",
+    "secondary_objective": null,
+    "primary_value": null,
+    "primary_lock_error": null,
+    "max_constraint_violation": null,
+    "throughput": null,
+    "cvar": null,
+    "grid_min": null,
+    "grid_max": null,
+    "runtime_seconds": 0.44110759999603033
+  },
+  {
+    "configuration": "default",
+    "phase": "three",
+    "attempt": 2,
+    "parameters": {},
+    "success": false,
+    "error": "SCIP: error in LP solver!",
+    "primary_status": "optimal",
+    "primary_star": 118.6613023613645,
+    "secondary_status": "LP_ERROR",
+    "secondary_objective": null,
+    "primary_value": null,
+    "primary_lock_error": null,
+    "max_constraint_violation": null,
+    "throughput": null,
+    "cvar": null,
+    "grid_min": null,
+    "grid_max": null,
+    "runtime_seconds": 0.4407420999923488
+  },
+  {
+    "configuration": "default",
+    "phase": "three",
+    "attempt": 3,
+    "parameters": {},
+    "success": false,
+    "error": "SCIP: error in LP solver!",
+    "primary_status": "optimal",
+    "primary_star": 118.6613023613645,
+    "secondary_status": "LP_ERROR",
+    "secondary_objective": null,
+    "primary_value": null,
+    "primary_lock_error": null,
+    "max_constraint_violation": null,
+    "throughput": null,
+    "cvar": null,
+    "grid_min": null,
+    "grid_max": null,
+    "runtime_seconds": 0.4046855000051437
+  },
+  {
+    "configuration": "scaling_off",
+    "phase": "three",
+    "attempt": 1,
+    "parameters": {
+      "lp/scaling": {
+        "original": 1,
+        "new": 0
+      }
+    },
+    "success": false,
+    "error": "SCIP: error in LP solver!",
+    "primary_status": "optimal",
+    "primary_star": 118.6613023613645,
+    "secondary_status": "LP_ERROR",
+    "secondary_objective": null,
+    "primary_value": null,
+    "primary_lock_error": null,
+    "max_constraint_violation": null,
+    "throughput": null,
+    "cvar": null,
+    "grid_min": null,
+    "grid_max": null,
+    "runtime_seconds": 0.3925198999932036
+  },
+  {
+    "configuration": "scaling_off",
+    "phase": "three",
+    "attempt": 2,
+    "parameters": {
+      "lp/scaling": {
+        "original": 1,
+        "new": 0
+      }
+    },
+    "success": false,
+    "error": "SCIP: error in LP solver!",
+    "primary_status": "optimal",
+    "primary_star": 118.6613023613645,
+    "secondary_status": "LP_ERROR",
+    "secondary_objective": null,
+    "primary_value": null,
+    "primary_lock_error": null,
+    "max_constraint_violation": null,
+    "throughput": null,
+    "cvar": null,
+    "grid_min": null,
+    "grid_max": null,
+    "runtime_seconds": 0.42736209998838603
+  },
+  {
+    "configuration": "scaling_off",
+    "phase": "three",
+    "attempt": 3,
+    "parameters": {
+      "lp/scaling": {
+        "original": 1,
+        "new": 0
+      }
+    },
+    "success": false,
+    "error": "SCIP: error in LP solver!",
+    "primary_status": "optimal",
+    "primary_star": 118.6613023613645,
+    "secondary_status": "LP_ERROR",
+    "secondary_objective": null,
+    "primary_value": null,
+    "primary_lock_error": null,
+    "max_constraint_violation": null,
+    "throughput": null,
+    "cvar": null,
+    "grid_min": null,
+    "grid_max": null,
+    "runtime_seconds": 0.39264420000836253
+  },
+  {
+    "configuration": "scaling_aggressive",
+    "phase": "three",
+    "attempt": 1,
+    "parameters": {
+      "lp/scaling": {
+        "original": 1,
+        "new": 2
+      }
+    },
+    "success": false,
+    "error": "SCIP: error in LP solver!",
+    "primary_status": "optimal",
+    "primary_star": 118.6613023613645,
+    "secondary_status": "LP_ERROR",
+    "secondary_objective": null,
+    "primary_value": null,
+    "primary_lock_error": null,
+    "max_constraint_violation": null,
+    "throughput": null,
+    "cvar": null,
+    "grid_min": null,
+    "grid_max": null,
+    "runtime_seconds": 0.41580060000706
+  },
+  {
+    "configuration": "scaling_aggressive",
+    "phase": "three",
+    "attempt": 2,
+    "parameters": {
+      "lp/scaling": {
+        "original": 1,
+        "new": 2
+      }
+    },
+    "success": false,
+    "error": "SCIP: error in LP solver!",
+    "primary_status": "optimal",
+    "primary_star": 118.6613023613645,
+    "secondary_status": "LP_ERROR",
+    "secondary_objective": null,
+    "primary_value": null,
+    "primary_lock_error": null,
+    "max_constraint_violation": null,
+    "throughput": null,
+    "cvar": null,
+    "grid_min": null,
+    "grid_max": null,
+    "runtime_seconds": 0.42365339999378193
+  },
+  {
+    "configuration": "scaling_aggressive",
+    "phase": "three",
+    "attempt": 3,
+    "parameters": {
+      "lp/scaling": {
+        "original": 1,
+        "new": 2
+      }
+    },
+    "success": false,
+    "error": "SCIP: error in LP solver!",
+    "primary_status": "optimal",
+    "primary_star": 118.6613023613645,
+    "secondary_status": "LP_ERROR",
+    "secondary_objective": null,
+    "primary_value": null,
+    "primary_lock_error": null,
+    "max_constraint_violation": null,
+    "throughput": null,
+    "cvar": null,
+    "grid_min": null,
+    "grid_max": null,
+    "runtime_seconds": 0.40044259998830967
+  },
+  {
+    "configuration": "markowitz_stability",
+    "phase": "three",
+    "attempt": 1,
+    "parameters": {
+      "lp/minmarkowitz": {
+        "original": 0.01,
+        "new": 0.1
+      }
+    },
+    "success": false,
+    "error": "SCIP: error in LP solver!",
+    "primary_status": "optimal",
+    "primary_star": 118.6613023613645,
+    "secondary_status": "LP_ERROR",
+    "secondary_objective": null,
+    "primary_value": null,
+    "primary_lock_error": null,
+    "max_constraint_violation": null,
+    "throughput": null,
+    "cvar": null,
+    "grid_min": null,
+    "grid_max": null,
+    "runtime_seconds": 0.4237917999998899
+  },
+  {
+    "configuration": "markowitz_stability",
+    "phase": "three",
+    "attempt": 2,
+    "parameters": {
+      "lp/minmarkowitz": {
+        "original": 0.01,
+        "new": 0.1
+      }
+    },
+    "success": false,
+    "error": "SCIP: error in LP solver!",
+    "primary_status": "optimal",
+    "primary_star": 118.6613023613645,
+    "secondary_status": "LP_ERROR",
+    "secondary_objective": null,
+    "primary_value": null,
+    "primary_lock_error": null,
+    "max_constraint_violation": null,
+    "throughput": null,
+    "cvar": null,
+    "grid_min": null,
+    "grid_max": null,
+    "runtime_seconds": 0.4383679000020493
+  },
+  {
+    "configuration": "markowitz_stability",
+    "phase": "three",
+    "attempt": 3,
+    "parameters": {
+      "lp/minmarkowitz": {
+        "original": 0.01,
+        "new": 0.1
+      }
+    },
+    "success": false,
+    "error": "SCIP: error in LP solver!",
+    "primary_status": "optimal",
+    "primary_star": 118.6613023613645,
+    "secondary_status": "LP_ERROR",
+    "secondary_objective": null,
+    "primary_value": null,
+    "primary_lock_error": null,
+    "max_constraint_violation": null,
+    "throughput": null,
+    "cvar": null,
+    "grid_min": null,
+    "grid_max": null,
+    "runtime_seconds": 0.4138234999991255
+  },
+  {
+    "configuration": "frequent_refactor",
+    "phase": "three",
+    "attempt": 1,
+    "parameters": {
+      "lp/refactorinterval": {
+        "original": 0,
+        "new": 10
+      }
+    },
+    "success": false,
+    "error": "SCIP: error in LP solver!",
+    "primary_status": "optimal",
+    "primary_star": 118.6613023613645,
+    "secondary_status": "LP_ERROR",
+    "secondary_objective": null,
+    "primary_value": null,
+    "primary_lock_error": null,
+    "max_constraint_violation": null,
+    "throughput": null,
+    "cvar": null,
+    "grid_min": null,
+    "grid_max": null,
+    "runtime_seconds": 0.4964081000071019
+  },
+  {
+    "configuration": "frequent_refactor",
+    "phase": "three",
+    "attempt": 2,
+    "parameters": {
+      "lp/refactorinterval": {
+        "original": 0,
+        "new": 10
+      }
+    },
+    "success": false,
+    "error": "SCIP: error in LP solver!",
+    "primary_status": "optimal",
+    "primary_star": 118.6613023613645,
+    "secondary_status": "LP_ERROR",
+    "secondary_objective": null,
+    "primary_value": null,
+    "primary_lock_error": null,
+    "max_constraint_violation": null,
+    "throughput": null,
+    "cvar": null,
+    "grid_min": null,
+    "grid_max": null,
+    "runtime_seconds": 0.5256147000036435
+  },
+  {
+    "configuration": "frequent_refactor",
+    "phase": "three",
+    "attempt": 3,
+    "parameters": {
+      "lp/refactorinterval": {
+        "original": 0,
+        "new": 10
+      }
+    },
+    "success": false,
+    "error": "SCIP: error in LP solver!",
+    "primary_status": "optimal",
+    "primary_star": 118.6613023613645,
+    "secondary_status": "LP_ERROR",
+    "secondary_objective": null,
+    "primary_value": null,
+    "primary_lock_error": null,
+    "max_constraint_violation": null,
+    "throughput": null,
+    "cvar": null,
+    "grid_min": null,
+    "grid_max": null,
+    "runtime_seconds": 0.4893814000097336
+  },
+  {
+    "configuration": "lp_presolve_off",
+    "phase": "three",
+    "attempt": 1,
+    "parameters": {
+      "lp/presolving": {
+        "original": true,
+        "new": false
+      }
+    },
+    "success": false,
+    "error": "SCIP: error in LP solver!",
+    "primary_status": "optimal",
+    "primary_star": 118.6613023613645,
+    "secondary_status": "LP_ERROR",
+    "secondary_objective": null,
+    "primary_value": null,
+    "primary_lock_error": null,
+    "max_constraint_violation": null,
+    "throughput": null,
+    "cvar": null,
+    "grid_min": null,
+    "grid_max": null,
+    "runtime_seconds": 0.4060964999953285
+  },
+  {
+    "configuration": "lp_presolve_off",
+    "phase": "three",
+    "attempt": 2,
+    "parameters": {
+      "lp/presolving": {
+        "original": true,
+        "new": false
+      }
+    },
+    "success": false,
+    "error": "SCIP: error in LP solver!",
+    "primary_status": "optimal",
+    "primary_star": 118.6613023613645,
+    "secondary_status": "LP_ERROR",
+    "secondary_objective": null,
+    "primary_value": null,
+    "primary_lock_error": null,
+    "max_constraint_violation": null,
+    "throughput": null,
+    "cvar": null,
+    "grid_min": null,
+    "grid_max": null,
+    "runtime_seconds": 0.42462949999026023
+  },
+  {
+    "configuration": "lp_presolve_off",
+    "phase": "three",
+    "attempt": 3,
+    "parameters": {
+      "lp/presolving": {
+        "original": true,
+        "new": false
+      }
+    },
+    "success": false,
+    "error": "SCIP: error in LP solver!",
+    "primary_status": "optimal",
+    "primary_star": 118.6613023613645,
+    "secondary_status": "LP_ERROR",
+    "secondary_objective": null,
+    "primary_value": null,
+    "primary_lock_error": null,
+    "max_constraint_violation": null,
+    "throughput": null,
+    "cvar": null,
+    "grid_min": null,
+    "grid_max": null,
+    "runtime_seconds": 0.41865530000359286
+  }
+]

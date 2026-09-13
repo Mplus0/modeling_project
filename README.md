@@ -479,3 +479,16 @@ conda run --no-capture-output -n modeling_project python -X utf8 -m unittest dis
 结果位于 `outputs/q3/diagnostics/information_value/`：`q3_information_value_by_update.csv`（334天、每日06/12/18共1002条）、`q3_information_value_summary.csv`（分时汇总）、`q3_information_value.json`（整体指标）、`q3_information_value_validation.json`（一致性和SHA-256核验）、`q3_information_value_paper_summary.md`（论文摘要）。可加 `--limit 3` 做首日测试，结果隔离存入 `smoke/`。
 
 两个目标均不重复计入已签合同的沉没购电费用，不包含二级吞吐量目标。V合计是存在重叠未来时域的局部反事实价值之和，不等于全年实际节省费用。其他发布时间缺少独立预测数据，无法在不增加额外假设的条件下进行同等级定量评价。程序不重跑正式实际轨迹、不搜索参数、不改提交文件。
+
+## Q4计划二级LP异常诊断
+
+`src/q4/plan_diagnostics.py` 在Q4适配层记录计划求解的真实异常，成功路径沿用冻结Q3求解器。记录包含date/update_time、alpha/lambda、初态SOC、场景数/时域、输入范围、一级状态/star、cost lock浮点余量、一级grid/zeta/xi尺度及既有容差；异常快照写入 `outputs/q4/diagnostics/plan_failure_*.json/.npz`，并尽可能导出 `.cip/.set`。原异常继续抛出，不跳过组、不调整求解器参数、不改变模型。正常成功时不生成快照。
+
+```powershell
+# 只读核验已完成组及启动manifest差异，不运行搜索、不修改manifest
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/19_diagnose_q4_plan.py
+# 仅在取得真实失败NPZ后重放该计划LP，路径替换为实际快照；不重跑日/年轨迹
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/19_diagnose_q4_plan.py --snapshot "outputs/q4/diagnostics/plan_failure_实际文件名.npz" --repeats 3
+```
+
+本次日志仅定位到第12组alpha=0.90/lambda=0.25、2025-05-22至05-31；当前搜索引擎无组内状态检查点，不能仅凭进度推断精确失败SOC和合同。缺少真实快照时不声称完成复现。审计报告为 `outputs/q4/diagnostics/plan_failure_search_audit.json/.md`，逐项列出签名差异和完整组验收结果，并提供需人工批准的备份/diff迁移方案。未批准前不迁移签名、不直接恢复搜索。

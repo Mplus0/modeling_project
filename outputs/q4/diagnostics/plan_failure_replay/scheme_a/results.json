@@ -1,0 +1,53 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "success": false,
+      "error": "SCIP: error in LP solver!",
+      "primary_star": 118.6613023613645,
+      "primary_status": "optimal",
+      "secondary_status": "LP_ERROR",
+      "secondary_objective": null,
+      "primary_value": null,
+      "primary_lock_error": null,
+      "max_constraint_violation": null,
+      "grid_max_difference_from_primary": null,
+      "cvar": null,
+      "throughput": null,
+      "runtime_seconds": 0.4776973999978509
+    },
+    {
+      "attempt": 2,
+      "success": false,
+      "error": "SCIP: error in LP solver!",
+      "primary_star": 118.6613023613645,
+      "primary_status": "optimal",
+      "secondary_status": "LP_ERROR",
+      "secondary_objective": null,
+      "primary_value": null,
+      "primary_lock_error": null,
+      "max_constraint_violation": null,
+      "grid_max_difference_from_primary": null,
+      "cvar": null,
+      "throughput": null,
+      "runtime_seconds": 0.4521708999964176
+    },
+    {
+      "attempt": 3,
+      "success": false,
+      "error": "SCIP: error in LP solver!",
+      "primary_star": 118.6613023613645,
+      "primary_status": "optimal",
+      "secondary_status": "LP_ERROR",
+      "secondary_objective": null,
+      "primary_value": null,
+      "primary_lock_error": null,
+      "max_constraint_violation": null,
+      "grid_max_difference_from_primary": null,
+      "cvar": null,
+      "throughput": null,
+      "runtime_seconds": 0.4876690000091912
+    }
+  ],
+  "all_three_success": false
+}

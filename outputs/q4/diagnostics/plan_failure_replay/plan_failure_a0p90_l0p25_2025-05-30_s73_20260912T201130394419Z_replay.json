@@ -1,0 +1,29 @@
+{
+  "source": "plan_failure_a0p90_l0p25_2025-05-30_s73_20260912T201130394419Z.npz",
+  "attempts": [
+    {
+      "attempt": 1,
+      "success": false,
+      "error": "SCIP: error in LP solver!",
+      "notes": [
+        "Q4计划失败快照：replay\\plan_failure_a0p90_l0p25_2025-05-30_s73_20260912T203545686127Z.json"
+      ]
+    },
+    {
+      "attempt": 2,
+      "success": false,
+      "error": "SCIP: error in LP solver!",
+      "notes": [
+        "Q4计划失败快照：replay\\plan_failure_a0p90_l0p25_2025-05-30_s73_20260912T203546146986Z.json"
+      ]
+    },
+    {
+      "attempt": 3,
+      "success": false,
+      "error": "SCIP: error in LP solver!",
+      "notes": [
+        "Q4计划失败快照：replay\\plan_failure_a0p90_l0p25_2025-05-30_s73_20260912T203546578088Z.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "input_sha256": "c94b880e453176913147b045fa769fadbd0348a8a59bb5facf981155f83f016c",
+  "source_sha256": "33126aac5cd06fb6a7c46f92d3ffa0aa8b13a585a541c7cb4c47573c0ad514d7",
+  "alpha": 0.9,
+  "lambda": 0.25,
+  "baseline": "原实现同一输入3/3二级失败",
+  "COST_LOCK_TOLERANCE": 1e-07,
+  "SOLVER_FEASTOL": 1e-09
+}

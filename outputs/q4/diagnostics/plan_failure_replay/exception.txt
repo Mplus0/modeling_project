@@ -1,0 +1,32 @@
+Traceback (most recent call last):
+  File "D:\Desktop\数学建模\modeling _project\outputs\q4\diagnostics\plan_failure_replay\run_path_replay.py", line 111, in main
+    annual(history,prices,issues,3,FORMAL_DATES,'PATH REPLAY DIAGNOSTIC ONLY / NOT FORMAL',.90,.25,progress)
+  File "D:\Desktop\数学建模\modeling _project\src\q4\annual.py", line 35, in run_dates
+    result = run_three(day,observe,float(history[day-timedelta(days=1)]["pv"][-1])*6,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\数学建模\modeling _project\outputs\q4\diagnostics\plan_failure_replay\run_path_replay.py", line 97, in day_observer
+    result = adapted_day(*args,**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\数学建模\modeling _project\src\q4\q4_3.py", line 89, in run_day
+    result = adapted(day,reveal,midnight_pv_kw,load,stream,issues,records,residuals,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\数学建模\modeling _project\src\q3\simulation.py", line 47, in simulate_day
+    plan = solve_plan(scenario["load"], scenario["pv"], np.asarray(price)[slot-1:], soc,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\数学建模\modeling _project\src\q4\q4_3.py", line 79, in plan_boundary
+    plan = diagnostic_plan(*args,date=day,solver=solve_plan,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\数学建模\modeling _project\outputs\q4\diagnostics\plan_failure_replay\run_path_replay.py", line 70, in observed_plan
+    result = diagnostic_plan(*args,date=date,directory=DEST,solver=solver,**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\数学建模\modeling _project\src\q4\plan_diagnostics.py", line 89, in diagnostic_plan
+    return observed(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\数学建模\modeling _project\src\q3\optimizer.py", line 84, in solve_plan
+    model.optimize()
+  File "D:\Desktop\数学建模\modeling _project\src\q4\plan_diagnostics.py", line 53, in optimize
+    super().optimize()
+  File "src/pyscipopt/scip.pxi", line 8815, in pyscipopt.scip.Model.optimize
+  File "src/pyscipopt/scip.pxi", line 336, in pyscipopt.scip.PY_SCIP_CALL
+Exception: SCIP: error in LP solver!
+Q4计划失败快照：D:\Desktop\数学建模\modeling _project\outputs\q4\diagnostics\plan_failure_replay\plan_failure_a0p90_l0p25_2025-05-30_s73_20260912T201130394419Z.json

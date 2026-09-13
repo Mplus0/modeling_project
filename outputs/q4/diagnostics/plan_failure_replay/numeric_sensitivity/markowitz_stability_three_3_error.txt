@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "D:\Desktop\数学建模\modeling _project\outputs\q4\diagnostics\plan_failure_replay\numeric_sensitivity.py", line 75, in attempt
+    result = solver(*args)
+             ^^^^^^^^^^^^^
+  File "D:\Desktop\数学建模\modeling _project\src\q3\optimizer.py", line 84, in solve_plan
+    model.optimize()
+  File "D:\Desktop\数学建模\modeling _project\outputs\q4\diagnostics\plan_failure_replay\numeric_sensitivity.py", line 34, in optimize
+    return super().optimize()
+           ^^^^^^^^^^^^^^^^^^
+  File "src/pyscipopt/scip.pxi", line 8815, in pyscipopt.scip.Model.optimize
+  File "src/pyscipopt/scip.pxi", line 336, in pyscipopt.scip.PY_SCIP_CALL
+Exception: SCIP: error in LP solver!
