@@ -1,0 +1,235 @@
+{
+  "restored_frozen_sha256_unchanged": true,
+  "q4_legacy_manifest_diff": {
+    "outputs\\model_validation\\q2_risk_ablation\\q2_risk_ablation.json": {
+      "before": null,
+      "after": "63d29e51c4dbada5d6d78920eb5d0b7ff49e7390f7edb8026c2bd93bfe20c32f"
+    },
+    "outputs\\model_validation\\q2_risk_ablation\\q2_risk_ablation_paper_summary.md": {
+      "before": null,
+      "after": "dd3ea65ae13a119f4cfce03984647ac7457ed3924bf1a5f99bae763e6845edd6"
+    },
+    "outputs\\model_validation\\q2_risk_ablation\\q2_risk_ablation_validation.json": {
+      "before": null,
+      "after": "4b0c982909700ca61c8c34604995a2c25bee16e1849d5086264dc9409cd87153"
+    },
+    "outputs\\model_validation\\q2_risk_ablation\\run\\attempt.json": {
+      "before": null,
+      "after": "63d29e51c4dbada5d6d78920eb5d0b7ff49e7390f7edb8026c2bd93bfe20c32f"
+    },
+    "outputs\\model_validation\\q2_risk_ablation\\run\\frozen_before.json": {
+      "before": null,
+      "after": "b1d97f2dfca4804f0fc12b214251f5edee7df7a075067d29a8cae757f38fe8b8"
+    },
+    "outputs\\model_validation\\q2_risk_ablation\\run\\integrity.json": {
+      "before": null,
+      "after": "e68ddf48bb0f0dee90501b4772a76f2b802bc24291bb83bdf5e672ffcade7766"
+    },
+    "outputs\\model_validation\\q2_risk_ablation\\smoke\\attempt.json": {
+      "before": null,
+      "after": "5797df8da4e79e2aef56eee22c3350161edb3741f4e4ce7c5769b195633b799a"
+    },
+    "outputs\\model_validation\\q2_risk_ablation\\smoke\\frozen_before.json": {
+      "before": null,
+      "after": "b1d97f2dfca4804f0fc12b214251f5edee7df7a075067d29a8cae757f38fe8b8"
+    },
+    "outputs\\model_validation\\q2_risk_ablation\\smoke\\integrity.json": {
+      "before": null,
+      "after": "e68ddf48bb0f0dee90501b4772a76f2b802bc24291bb83bdf5e672ffcade7766"
+    },
+    "outputs\\model_validation\\q2_risk_ablation\\smoke\\q2_actual_schedule.csv": {
+      "before": null,
+      "after": "9d2769cee029c5e977c64fd56b6ffb3d63cab45002ea0e8c636a95640205698a"
+    },
+    "outputs\\model_validation\\q2_risk_ablation\\smoke\\q2_daily_metrics.csv": {
+      "before": null,
+      "after": "c90b0b1a62191515d2e9147aff2f8e354eda3d744285e8d83f99fa4cad114558"
+    },
+    "outputs\\model_validation\\q2_risk_ablation\\smoke\\q2_integrity.json": {
+      "before": null,
+      "after": "cf5c7fe9228cccd4daed912efdc934a5d731eb99e8dea03755f80e6de774c976"
+    },
+    "outputs\\model_validation\\q2_risk_ablation\\smoke\\q2_metrics.json": {
+      "before": null,
+      "after": "7a4362ca8f5bd9c726c199c3fcf8705dbece0d7125bee36b98d46f643c4a8334"
+    },
+    "outputs\\model_validation\\q2_risk_ablation\\smoke\\q2_plan_schedule.csv": {
+      "before": null,
+      "after": "cf7bed362dc70d5cca7a82ed06a7315bd8d5acf9b7d14844fc997069ae823190"
+    },
+    "outputs\\model_validation\\q2_risk_ablation\\smoke\\q2_predictions.csv": {
+      "before": null,
+      "after": "0b1691bbf303434ce57bbf04199bd43c3d56640eae2d37d1b643d96ca4f20aa5"
+    },
+    "outputs\\model_validation\\q2_risk_ablation\\smoke\\q2_warmup_predictions.csv": {
+      "before": null,
+      "after": "b62e4e595e7f9b4363c92369b3ab3542158c96149de3af71541f5e3acf48600d"
+    },
+    "outputs\\model_validation\\q2_risk_ablation\\smoke\\q2_warmup_windows.csv": {
+      "before": null,
+      "after": "e059ec2c4996cb9cf1bd75c1d2fa10cc9b194e13198d66fe111e74c4c39b83cd"
+    },
+    "outputs\\model_validation\\q2_risk_ablation\\smoke\\q2_window_selection.csv": {
+      "before": null,
+      "after": "e933c8737edb982c25b2e3241419d4d19b8819108eefb67c9c114548d0051050"
+    },
+    "outputs\\model_validation\\q2_risk_ablation\\smoke\\validation.json": {
+      "before": null,
+      "after": "6dca804b40c277778e9855608d8d7a7bfe7354802559e9e1eb179673d94b8e13"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\q3_confidence_ablation.json": {
+      "before": null,
+      "after": "d14e04ff2e3b80afce5158e633879a3732018ec696d6976393e8693da24f9c05"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\q3_confidence_ablation_by_update.csv": {
+      "before": null,
+      "after": "c894f439db0357b8114003e5e3d46beeb0a318c0c1af5dd881de16474a12bd86"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\q3_confidence_ablation_metrics.csv": {
+      "before": null,
+      "after": "41a7c80b02dab7c65846a1efef7733ae1c4d91b3c0db5e86e37a0c8f3dff4fb8"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\q3_confidence_ablation_paper_summary.md": {
+      "before": null,
+      "after": "9a6252aa3ba1aaabe4a11c55505d703e5387ee49fc2dc6ae7e8445ee5428f922"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\q3_confidence_ablation_validation.json": {
+      "before": null,
+      "after": "da178aa57223670a29b6765203afb2979ec024b3daca4e56d07ab0969d0bf597"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\run\\attempt.json": {
+      "before": null,
+      "after": "5920b3dd63fb2e06c7348fff240bbc8a4d415d204860914edbbb671b9bab3038"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\run\\frozen_before.json": {
+      "before": null,
+      "after": "b1d97f2dfca4804f0fc12b214251f5edee7df7a075067d29a8cae757f38fe8b8"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\run\\integrity.json": {
+      "before": null,
+      "after": "e68ddf48bb0f0dee90501b4772a76f2b802bc24291bb83bdf5e672ffcade7766"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\run\\q3_actual_schedule.csv": {
+      "before": null,
+      "after": "9a6552b0704c9cd3512b5904b5ed8626d5ebfad959c3526b332cf2784321591d"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\run\\q3_confidence.csv": {
+      "before": null,
+      "after": "eea5eff2e1f0eef3ed5de37ee22caec38aeef6e963d48b566883888c9b6a245e"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\run\\q3_daily_metrics.csv": {
+      "before": null,
+      "after": "68bb6ca4748f46e6ae22bf394fda16becaf7cd3554c4f4ac4723660e009dd02a"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\run\\q3_forecast_updates.csv": {
+      "before": null,
+      "after": "fad640c4907332f279ade6d07f9e312b3e0d8f7bda77d3db669a185fb4813d6a"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\run\\q3_plan_updates.csv": {
+      "before": null,
+      "after": "0bcf4112d4e5bebdd5f799887b66c1e7a6ebe25bb4cf945fe82d66a235394e91"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\run\\q3_scenarios_summary.csv": {
+      "before": null,
+      "after": "d1d2bc53955f122ae4127d5ab62d1668b26dc72a04e2cac2eb9bc6ea1a4b70b8"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\run\\timings.json": {
+      "before": null,
+      "after": "a56d9fc230a80ed497f1f4b9703ef0f556b69ed9cbe61c70cf95fb7b9be9af8e"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\run\\validation.json": {
+      "before": null,
+      "after": "da178aa57223670a29b6765203afb2979ec024b3daca4e56d07ab0969d0bf597"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\smoke\\attempt.json": {
+      "before": null,
+      "after": "ccc8c43dfa078f5bfd40cafbc078dd4a6d12cf14f4dc65e6dd1205677b57e4f6"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\smoke\\frozen_before.json": {
+      "before": null,
+      "after": "b1d97f2dfca4804f0fc12b214251f5edee7df7a075067d29a8cae757f38fe8b8"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\smoke\\integrity.json": {
+      "before": null,
+      "after": "e68ddf48bb0f0dee90501b4772a76f2b802bc24291bb83bdf5e672ffcade7766"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\smoke\\q3_actual_schedule.csv": {
+      "before": null,
+      "after": "216275e7d22848c040d41e8af7ee321e1e23d0ee8812993269c65b179eb60d8b"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\smoke\\q3_confidence.csv": {
+      "before": null,
+      "after": "57b5ca635c4b098804276da1abb6932c1c6d71d8576d121f0656a05db4e7b812"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\smoke\\q3_daily_metrics.csv": {
+      "before": null,
+      "after": "627dcf9ca24da2276cbc2993a997558b9430746178bccd461b865eab11c6b847"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\smoke\\q3_forecast_updates.csv": {
+      "before": null,
+      "after": "240d37fe9997e66d6795c4a474fac290ee83aa1d5eff78697cc1615e8559ce98"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\smoke\\q3_plan_updates.csv": {
+      "before": null,
+      "after": "4fe882d9dd0d79b586ae08d2cf0f33ebf85ea7da6d6cb9a4fcb8877385d17dae"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\smoke\\q3_scenarios_summary.csv": {
+      "before": null,
+      "after": "2e190220133401e29ee94494f1d21d253dde8bbb7944b68c30954dd7df2cedc2"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\smoke\\timings.json": {
+      "before": null,
+      "after": "6b57cdd04dc1e3b095386ff8b50a8936695609fbdd8ede1b293895a1f96972e1"
+    },
+    "outputs\\model_validation\\q3_confidence_ablation\\smoke\\validation.json": {
+      "before": null,
+      "after": "ae6de2c3bb678c0735a782da2fa987dfcfcdfe0da2f22c451fb2155b0ba41748"
+    },
+    "outputs\\model_validation\\q4_reference_acceptance.json": {
+      "before": null,
+      "after": "04872ec922c6736574d096bd976245256e829949c973262f16d33b40da9d98b8"
+    },
+    "outputs\\model_validation\\q4_reference_acceptance.md": {
+      "before": null,
+      "after": "77ebd305c06493fd3f48349c33161decce9a9f82aefa4554bfbafbc82c380b6e"
+    },
+    "outputs\\model_validation\\q4_reference_price_charge_slots.csv": {
+      "before": null,
+      "after": "776d21f77c8c43fc74f8c4c4ede86ca4a0de8b186465060fc0da420c533af43d"
+    },
+    "outputs\\model_validation\\reference_integrity\\frozen_before.json": {
+      "before": null,
+      "after": "b1d97f2dfca4804f0fc12b214251f5edee7df7a075067d29a8cae757f38fe8b8"
+    },
+    "outputs\\model_validation\\reference_integrity\\integrity.json": {
+      "before": null,
+      "after": "e68ddf48bb0f0dee90501b4772a76f2b802bc24291bb83bdf5e672ffcade7766"
+    },
+    "outputs\\model_validation\\summary\\model_validation_summary.csv": {
+      "before": null,
+      "after": "04296e547b535a8cf3910f8e60c9791a6dc28e9906f454d2aeb7984287b5874e"
+    },
+    "outputs\\model_validation\\summary\\model_validation_summary.md": {
+      "before": null,
+      "after": "de2fe2926db514e0d20855a1d703139fa669d05344f62279909b0058229600e6"
+    },
+    "outputs\\model_validation\\summary\\model_validation_validation.json": {
+      "before": null,
+      "after": "173960485b3cf52308a753d8454dece0a9d6ba7563fa9e75f015877b722a3e68"
+    },
+    "outputs\\model_validation\\tests\\frozen_before.json": {
+      "before": null,
+      "after": "b1d97f2dfca4804f0fc12b214251f5edee7df7a075067d29a8cae757f38fe8b8"
+    },
+    "outputs\\model_validation\\tests\\integrity.json": {
+      "before": null,
+      "after": "0814bcc938094fdf21d0f12e545920ad188c3c2d405f05fcaeae3a186b921658"
+    },
+    "outputs\\model_validation\\tests\\regression.log": {
+      "before": null,
+      "after": "7f70cecc294d2d3812b8dd2f75dfbecd555f4e875fb1c73be3aeb21d8c1ef44a"
+    }
+  },
+  "non_experiment_differences": [],
+  "manifest_modified": false
+}

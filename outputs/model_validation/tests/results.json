@@ -1,0 +1,18 @@
+{
+  "initial_run": {
+    "tests": 96,
+    "failures": 5,
+    "errors": 0
+  },
+  "recheck": {
+    "tests": 13,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  "remaining_failed_tests": [
+    "test_q4_adapters.AdapterTests.test_saved_smoke_three_days_and_integrity"
+  ],
+  "error_tests": [],
+  "frozen_sha256_unchanged": true
+}

@@ -1,0 +1,2 @@
+﻿date,chosen_price_window_weeks,price_backtest_days,price_backtest_first,price_backtest_last,price_backtest_dates,price_nmae_w1,price_nmae_w2,price_nmae_w3,price_nmae_w4,price_information_treatment,causal_baseline_mean
+2025-02-01,4,3,2025-01-29,2025-01-31,2025-01-29|2025-01-30|2025-01-31,0.05215841169639285,0.04611609717121177,0.045299960863584926,0.044894113740657424,目标日0:00因果预测曲线的均值；日内保留原因果gamma，未来预测无时序形状；按真实动态价格结算,0.7229677083333335

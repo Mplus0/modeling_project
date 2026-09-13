@@ -451,4 +451,55 @@ conda run --no-capture-output -n modeling_project python -X utf8 scripts/15_writ
 conda run --no-capture-output -n modeling_project python -X utf8 scripts/15_write_q4_results.py --variant 3 --human-approved
 ```
 
-reference或smoke不能提交。冻结数据、Q1/Q2/Q3源码及既有结果在所有入口前后核对SHA-256。本阶段未解决的建模确认事项：无；正式Q4结果状态待用户全年运行及人工验收。
+reference或smoke不能提交。冻结数据、Q1/Q2/Q3源码及既有结果在所有入口前后核对SHA-256。以上为既有Q4入口说明；当前reference模型检验阶段停止Q4参数搜索和SCIP故障调试，不重新计算正式/参考结果。
+
+## reference 分支模型检验
+
+入口为 `scripts/16_run_model_validation.py`，仅允许在 `reference` 分支运行。`src/analysis/ablation_adapters.py` 通过局部依赖注入复用正式代码；`src/analysis/model_validation.py` 负责只读验收、冻结SHA保护、实验运行和论文表格。正式数据、Q1–Q4源码及原有输出均只读，全部新输出进入 `outputs/model_validation/`。
+
+| 阶段 | 命令参数 | 内容与输出 |
+|---|---|---|
+| 只读验收 | `accept` | `q4_reference_acceptance.json/.md`；固定0.85/0.25的334天reference独立复算，无重新求解 |
+| Q2-A轻量验证 | `q2 --smoke` | 首日144slot，保存于 `q2_risk_ablation/smoke/` |
+| Q2-A全年消融 | `q2` | 仅风险修正归零；`q2_risk_ablation/run/`保存完整明细；对比冻结Q2-B |
+| Q3-C轻量验证 | `q3 --smoke` | 首日四轮更新，保存于 `q3_confidence_ablation/smoke/` |
+| Q3-C全年消融 | `q3` | 固定0.85/0.25，06/12/18新预测直接替换剩余时域；历史回放同步生成本实验残差；对比冻结Q3-D FINAL |
+| Q4-A轻量验证 | `q4 --smoke` | 首日因果预测均价、逐时真实价格揭示及真实结算 |
+| Q4-A全年消融 | `q4` | 固定0.85/0.25，原0:00价格预测只保留均值；保存于 `q4_price_blind/`，对比冻结Q4-B |
+| 汇总 | `summary` | `summary/model_validation_summary.csv/.md`、`model_validation_validation.json` |
+
+从项目根目录执行，例如：
+
+```powershell
+conda run --no-capture-output -n modeling_project python -X utf8 scripts/16_run_model_validation.py accept
+conda run --no-capture-output -n modeling_project python -X utf8 -m unittest discover -s tests -p "test_model_validation.py" -v
+```
+
+全年实验严格串行，仅对消融模型各运行一次。入口用 `attempt.json` 记录运行状态，已有记录时拒绝自动重算；失败不重试、不改容差。日状态、成本及约束由磁盘明细复核。`integrity.json` 保存前后SHA及差异，任意冻结文件变化均报错。
+
+本次运行状态：Q4只读验收通过；Q2-A在2025-07-02 slot119实际第三级LP出现SCIP数值错误并停止，未完成全年比较，不可把首日smoke或部分运行当作全年消融结果。失败原文及定位保存在 `q2_risk_ablation/run/attempt.json`，正式文件SHA未变。
+
+Q3-C已完成334天、48096slot，独立复核最大违约1.519702e-7、跨日SOC误差0，冻结SHA不变。Q3-C全年实际费用14341250.59元；Q3-D为14156428.00元，差值-184822.59元（-1.28875%）。正式融合模型的调整费用较消融降低188189.78元，但紧急购电量增加1939.02kWh；完整十项指标和三次更新时间分解见下列文件，不将其概括为所有指标均改善。
+
+论文手优先查看：
+
+- `outputs/model_validation/q2_risk_ablation/q2_risk_ablation_metrics.csv`、`q2_risk_ablation_paper_summary.md`。
+- `outputs/model_validation/q3_confidence_ablation/q3_confidence_ablation_metrics.csv`、`q3_confidence_ablation_by_update.csv`、`q3_confidence_ablation_paper_summary.md`。
+- 各目录同名JSON与 `_validation.json` 记录结果和验收；只有全年状态为 `validated` 时才使用其数值。
+- 差值定义为正式模型减消融模型，百分比以消融模型为分母；分母绝对值不超过1e-6时记null。每日费用标准差为334天总体标准差（ddof=0），不自动把变化称为改善。
+
+Q4参考在新验收报告中标记 `Q4-3 fixed-parameter final candidate`，描述为“第四问固定沿用第三问风险参数进行动态电价分析”；历史文件原标签保持不变，不能解释为Q4重新搜索得到最优参数。仓库尚无固定沿用参数的明确团队记录，该采用口径保留 `TODO: 需建模手确认`。
+
+Q4价格盲口径已确认：均价取目标日0:00可获得的因果价格预测曲线均值，日内未来价格不使用时序形状，最终按真实动态价格结算。`src/analysis/q4_price_blind.py`仅局部替换原价格预测返回曲线，保留原因果gamma更新、Q3正式融合历史、优化器、SOC和结算规则；不修改正式Q4源码。首日smoke和4项专用测试通过。全年状态见 `q4_price_blind/run/attempt.json`，已有尝试不可自动重跑。论文使用 `q4_price_blind_metrics.csv`、`q4_price_blind_paper_summary.md` 和 `_validation.json`；求解或验收失败时只有停止报告，不提供虚假全年比较。
+
+本次唯一Q4-A全年尝试在2025-03-22 slot142的实际层 `solve_actual_step()` 出现SCIP LP错误，已停止，耗时263.22秒，冻结SHA一致。`q4_price_blind.json`、`q4_price_blind_validation.json`、`q4_price_blind_paper_summary.md`记录失败；未生成全年指标CSV，不可把smoke当作全年效果。未重试、修改容差或开展故障调试。
+
+Q4-A 已按决定停止；其失败记录不进入正式量化比较。模型检验论文摘要只纳入完整验收的 Q3-C/D，Q2-A 仍待完整全年验收。
+
+停止后4项价格盲专用测试与9项实验层回归合计13项通过，记录位于 `q4_price_blind/tests/results.json`；冻结文件SHA一致。这不代表全年LP运行成功。
+
+`q4_reference_price_charge_slots.csv` 保存date、slot、real_price、charge_kwh、discharge_kwh，未计算低价充电/高价放电比例：`TODO: 需建模手确认低价/高价定义`。
+
+Q3 Vdk = EXTERNAL VALIDATED DIAGNOSTIC。Vdk已在另一已验证开发分支完成，最终仓库整理时补入；本次reference模型检验不重复运行。
+
+实验层9项测试通过；Q2/Q3数值回归及固定价格Q4→Q3逐值回归通过。当前仍有1项Q4旧冻结清单测试未通过，因为其要求整个outputs清单与历史完全相等，而本次新增了model_validation输出；差异清单见 `outputs/model_validation/tests/integrity_restoration_and_legacy_diff.json`，不存在实验目录之外的差异，未修改旧清单。既有Q2绘图测试会重写原PDF元数据，因此不建议在冻结结果阶段直接批量运行所有带绘图入口的测试；本次副作用已按测试前SHA逐字节恢复。测试日志、复核及SHA记录保存在 `outputs/model_validation/tests/`。

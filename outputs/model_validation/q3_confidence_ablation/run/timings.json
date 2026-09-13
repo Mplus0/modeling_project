@@ -1,0 +1,8 @@
+{
+  "precomputation_seconds": 3.8356892999145202,
+  "historical_preparation_seconds": 2.2440074998303317,
+  "forecast_scenario_seconds": 1.5916818000841886,
+  "first_seven_days_seconds": 29.00562280000304,
+  "engine_runtime_seconds": 1995.3947207000165,
+  "history_replayed_days": 364
+}

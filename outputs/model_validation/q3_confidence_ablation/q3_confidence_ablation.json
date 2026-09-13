@@ -1,0 +1,84 @@
+{
+  "status": "validated",
+  "labels": [
+    "Q3-C",
+    "Q3-D"
+  ],
+  "metrics": [
+    {
+      "metric": "total_actual_cost_yuan",
+      "Q3-C": 14341250.590852704,
+      "Q3-D": 14156427.999491744,
+      "difference": -184822.59136096016,
+      "relative_change_percent": -1.288748078071
+    },
+    {
+      "metric": "plan_cost_yuan",
+      "Q3-C": 13401558.75262501,
+      "Q3-D": 13401605.007781535,
+      "difference": 46.25515652447939,
+      "relative_change_percent": 0.000345147586026
+    },
+    {
+      "metric": "emergency_purchase_kwh",
+      "Q3-C": 123116.35331853734,
+      "Q3-D": 125055.37816386891,
+      "difference": 1939.0248453315726,
+      "relative_change_percent": 1.574953117978372
+    },
+    {
+      "metric": "emergency_cost_yuan",
+      "Q3-C": 502713.6431019929,
+      "Q3-D": 506034.5792017333,
+      "difference": 3320.9360997403855,
+      "relative_change_percent": 0.660601944130372
+    },
+    {
+      "metric": "emergency_slot_count",
+      "Q3-C": 2444.0,
+      "Q3-D": 2409.0,
+      "difference": -35.0,
+      "relative_change_percent": -1.432078559738134
+    },
+    {
+      "metric": "emergency_day_count",
+      "Q3-C": 252.0,
+      "Q3-D": 252.0,
+      "difference": 0.0,
+      "relative_change_percent": 0.0
+    },
+    {
+      "metric": "daily_cost_std_yuan",
+      "Q3-C": 15481.941761698154,
+      "Q3-D": 15303.09691701403,
+      "difference": -178.84484468412302,
+      "relative_change_percent": -1.155183551501141
+    },
+    {
+      "metric": "adjustment_cost_yuan",
+      "Q3-C": 436978.19512569834,
+      "Q3-D": 248788.41250847516,
+      "difference": -188189.7826172232,
+      "relative_change_percent": -43.06617234370006
+    },
+    {
+      "metric": "final_soc_kwh",
+      "Q3-C": 1200.0000000519697,
+      "Q3-D": 1200.0000000519697,
+      "difference": 0.0,
+      "relative_change_percent": 0.0
+    },
+    {
+      "metric": "simultaneous_slots",
+      "Q3-C": 0.0,
+      "Q3-D": 0.0,
+      "difference": 0.0,
+      "relative_change_percent": null
+    }
+  ],
+  "difference_definition": "Q3-D - Q3-C",
+  "relative_denominator": "Q3-C",
+  "zero_denominator": "abs(baseline)<=VALIDATION_TOL时百分比为null",
+  "ddof": 0,
+  "validation_tolerance": 1e-06
+}

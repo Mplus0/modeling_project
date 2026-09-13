@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "days": 1,
+  "slots": 144,
+  "cost": 138.177394351392,
+  "throughput": 30842.49959858875,
+  "violations": {
+    "nonnegative": 2.9566349368792543e-13,
+    "soc_bounds": 1.8189894035458565e-12,
+    "soc_recursion": 8.93507490218326e-13,
+    "soc_start_alignment": 0.0,
+    "pv_allocation": 0.0,
+    "charge_limit": 0.0,
+    "discharge_limit": 0.0,
+    "supply": 6.821210263296962e-13,
+    "fixed_grid_purchase": 0.0,
+    "planned_cost_column": 0.0,
+    "emergency_cost_column": 0.0,
+    "total_cost_column": 7.105427357601014e-15
+  },
+  "max_violation": 1.8189894035458565e-12,
+  "simultaneous_slots": 0,
+  "frozen_sha256_unchanged": true
+}

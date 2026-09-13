@@ -1,0 +1,27 @@
+test_saved_annual_validation_and_single_group_score_rejected (test_q3_annual.AnnualTests.test_saved_annual_validation_and_single_group_score_rejected) ... ok
+test_saved_final_when_user_has_run_it (test_q3_final.FinalTests.test_saved_final_when_user_has_run_it) ... ok
+test_three_day_outputs_independently (test_q3_simulation.SavedReferenceTests.test_three_day_outputs_independently) ... ok
+test_saved_smoke_three_days_and_integrity (test_q4_adapters.AdapterTests.test_saved_smoke_three_days_and_integrity) ... FAIL
+test_direct_remaining_and_executed_prefix (test_model_validation.ModelValidationTests.test_direct_remaining_and_executed_prefix) ... ok
+test_history_uses_own_direct_versions_and_residuals (test_model_validation.ModelValidationTests.test_history_uses_own_direct_versions_and_residuals) ... ok
+test_injection_reaches_target_and_history_without_global_patch (test_model_validation.ModelValidationTests.test_injection_reaches_target_and_history_without_global_patch) ... ok
+test_past_only_and_future_actual_invariance (test_model_validation.ModelValidationTests.test_past_only_and_future_actual_invariance) ... ok
+test_q2_keeps_forecast_and_solver_dependencies (test_model_validation.ModelValidationTests.test_q2_keeps_forecast_and_solver_dependencies) ... ok
+test_relative_change_zero_and_sign (test_model_validation.ModelValidationTests.test_relative_change_zero_and_sign) ... ok
+test_saved_comparison_matches_trajectories (test_model_validation.ModelValidationTests.test_saved_comparison_matches_trajectories) ... ok
+test_saved_experiments_and_integrity_when_present (test_model_validation.ModelValidationTests.test_saved_experiments_and_integrity_when_present) ... ok
+test_zero_risk_does_not_consume_quantile_result (test_model_validation.ModelValidationTests.test_zero_risk_does_not_consume_quantile_result) ... ok
+
+======================================================================
+FAIL: test_saved_smoke_three_days_and_integrity (test_q4_adapters.AdapterTests.test_saved_smoke_three_days_and_integrity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\Desktop\数学建模\modeling _project\tests\test_q4_adapters.py", line 93, in test_saved_smoke_three_days_and_integrity
+    self.assertEqual(frozen_hashes(ROOT),before)
+AssertionError: {'dat[10227 chars]uts\\model_validation\\q4_reference_acceptance[22591 chars]68d'} != {'dat[10227 chars]uts\\q2\\q2_actual_schedule.csv': '7607a29ff22[14032 chars]68d'}
+Diff is 33666 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 13 tests in 38.101s
+
+FAILED (failures=1)

@@ -1,0 +1,31 @@
+{
+  "passed": false,
+  "frozen_sha256_unchanged": true,
+  "status": "failed",
+  "smoke": false,
+  "error": "2025-07-02 slot 119 tertiary 数值求解失败",
+  "context": [
+    {
+      "function": "run_experiment"
+    },
+    {
+      "function": "run_q2",
+      "day": "2025-07-02"
+    },
+    {
+      "function": "solve_actual_rolling_day",
+      "date": "2025-07-02",
+      "slot": "119"
+    },
+    {
+      "function": "solve_actual_rolling_step",
+      "date": "2025-07-02"
+    },
+    {
+      "function": "optimize",
+      "date": "2025-07-02"
+    }
+  ],
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\Desktop\\数学建模\\modeling _project\\src\\q2\\rolling.py\", line 58, in optimize\n    model.optimize()\n  File \"src/pyscipopt/scip.pxi\", line 8815, in pyscipopt.scip.Model.optimize\n  File \"src/pyscipopt/scip.pxi\", line 336, in pyscipopt.scip.PY_SCIP_CALL\nException: SCIP: error in LP solver!\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"D:\\Desktop\\数学建模\\modeling _project\\src\\analysis\\model_validation.py\", line 230, in run_experiment\n    for row in rows:\n                ^^^^^\n  File \"D:\\Desktop\\数学建模\\modeling _project\\scripts\\05_run_q2.py\", line 40, in run_q2\n    \"maximum_plan_constraint_violation\": float(daily.max_plan_constraint_violation.max()),\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\Desktop\\数学建模\\modeling _project\\src\\q2\\rolling.py\", line 117, in solve_actual_rolling_day\n    horizon, check = solve_actual_rolling_step(slot, current_load, current_pv, *frozen,\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\Desktop\\数学建模\\modeling _project\\src\\q2\\rolling.py\", line 76, in solve_actual_rolling_step\n    h_star, tertiary_status = optimize(throughput, \"tertiary\")\n                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\Desktop\\数学建模\\modeling _project\\src\\q2\\rolling.py\", line 60, in optimize\n    raise RuntimeError(f\"{date} slot {current_slot} {stage} 数值求解失败\") from exc\nRuntimeError: 2025-07-02 slot 119 tertiary 数值求解失败\n",
+  "runtime_seconds": 472.37131119999685
+}

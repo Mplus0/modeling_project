@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "days": 1,
+  "slots": 144,
+  "max_constraint_violation": 1.0000167344514921e-07,
+  "same_forecasts_and_windows": true,
+  "risk_correction_zero": true,
+  "past_only": true,
+  "frozen_sha256_unchanged": true
+}

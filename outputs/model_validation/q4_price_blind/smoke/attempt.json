@@ -1,0 +1,6 @@
+{
+  "status": "validated",
+  "smoke": true,
+  "runtime_seconds": 5.0281413000193425,
+  "treatment": "目标日0:00因果预测曲线的均值；日内保留原因果gamma，未来预测无时序形状；按真实动态价格结算"
+}

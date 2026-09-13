@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "days": 1,
+  "slots": 144,
+  "max_constraint_violation": 1.000043994281441e-07,
+  "cross_day_soc_max_difference": 0.0,
+  "causal_mean_verified": true,
+  "future_price_shape_removed": true,
+  "real_price_settlement_verified": true,
+  "treatment": "目标日0:00因果预测曲线的均值；日内保留原因果gamma，未来预测无时序形状；按真实动态价格结算",
+  "frozen_sha256_unchanged": true
+}

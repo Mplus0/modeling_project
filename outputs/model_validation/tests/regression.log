@@ -1,0 +1,143 @@
+test_candidate_scores_use_identical_evaluation_dates (test_q2_forecasting.ForecastingTests.test_candidate_scores_use_identical_evaluation_dates) ... ok
+test_common_dates_and_no_future (test_q2_forecasting.ForecastingTests.test_common_dates_and_no_future) ... ok
+test_formal_shape_and_candidates (test_q2_forecasting.ForecastingTests.test_formal_shape_and_candidates) ... ok
+test_nmae_and_ties (test_q2_forecasting.ForecastingTests.test_nmae_and_ties) ... ok
+test_warmup_and_candidate_past_only (test_q2_forecasting.ForecastingTests.test_warmup_and_candidate_past_only) ... ok
+test_calendar_completeness_and_rollover (test_q2_lag_similarity.LagSimilarityTests.test_calendar_completeness_and_rollover) ... ok
+test_entrypoint_outputs_and_protected_hashes (test_q2_lag_similarity.LagSimilarityTests.test_entrypoint_outputs_and_protected_hashes) ... ok
+test_hand_calculated_valid_day_denominators (test_q2_lag_similarity.LagSimilarityTests.test_hand_calculated_valid_day_denominators) ... ok
+test_actual_cost_priority_and_no_terminal_reset (test_q2_optimizer.OptimizerTests.test_actual_cost_priority_and_no_terminal_reset) ... ok
+test_full_year_csv_integration (test_q2_optimizer.OptimizerTests.test_full_year_csv_integration) ... ok
+test_negative_risk_and_constraints (test_q2_optimizer.OptimizerTests.test_negative_risk_and_constraints) ... ok
+test_plan_terminal_and_cost_lock (test_q2_optimizer.OptimizerTests.test_plan_terminal_and_cost_lock) ... ok
+test_emergency_grouping_and_no_cross_day (test_q2_result_writer.ResultWriterTests.test_emergency_grouping_and_no_cross_day) ... ok
+test_expanded_workbook_and_immutable_csvs (test_q2_result_writer.ResultWriterTests.test_expanded_workbook_and_immutable_csvs) ... ok
+test_missing_date_rejected (test_q2_result_writer.ResultWriterTests.test_missing_date_rejected) ... ok
+test_dates_and_empty (test_q2_risk.RiskTests.test_dates_and_empty) ... ok
+test_full_year_online_quantiles (test_q2_risk.RiskTests.test_full_year_online_quantiles) ... ok
+test_negative_remains_negative (test_q2_risk.RiskTests.test_negative_remains_negative) ... ok
+test_type1_index_no_interpolation (test_q2_risk.RiskTests.test_type1_index_no_interpolation) ... ok
+test_current_only_execution_and_real_soc_inheritance (test_q2_rolling.RollingTests.test_current_only_execution_and_real_soc_inheritance) ... ok
+test_executed_totals_do_not_sum_overlapping_objectives (test_q2_rolling.RollingTests.test_executed_totals_do_not_sum_overlapping_objectives) ... ok
+test_fixed_day_start_reference_and_all_locks (test_q2_rolling.RollingTests.test_fixed_day_start_reference_and_all_locks) ... ok
+test_forecast_is_frozen_before_first_observation (test_q2_rolling.RollingTests.test_forecast_is_frozen_before_first_observation) ... ok
+test_future_actual_changes_cannot_change_current_decision (test_q2_rolling.RollingTests.test_future_actual_changes_cannot_change_current_decision) ... ok
+test_primary_cost_precedes_soc_restoration (test_q2_rolling.RollingTests.test_primary_cost_precedes_soc_restoration) ... ok
+test_secondary_retains_soc_at_same_emergency_cost (test_q2_rolling.RollingTests.test_secondary_retains_soc_at_same_emergency_cost) ... ok
+test_step_information_set_and_past_removed (test_q2_rolling.RollingTests.test_step_information_set_and_past_removed) ... ok
+test_tertiary_avoids_unnecessary_throughput (test_q2_rolling.RollingTests.test_tertiary_avoids_unnecessary_throughput) ... ok
+test_forecasting_and_risk_outputs_unchanged (test_q2_rolling_integration.FullYearRollingTests.test_forecasting_and_risk_outputs_unchanged) ... ok
+test_full_run_frozen_files (test_q2_rolling_integration.FullYearRollingTests.test_full_run_frozen_files) ... ok
+test_metrics_and_comparison_recompute (test_q2_rolling_integration.FullYearRollingTests.test_metrics_and_comparison_recompute) ... ok
+test_benchmark_executed_constraints_and_totals (test_q2_rolling_integration.OneDayTests.test_benchmark_executed_constraints_and_totals) ... ok
+test_formal_entrypoint_is_causal (test_q2_rolling_integration.OneDayTests.test_formal_entrypoint_is_causal) ... ok
+test_integrity_and_expost_archive (test_q2_rolling_integration.OneDayTests.test_integrity_and_expost_archive) ... ok
+test_annual_path_future_actual_does_not_change_current_decision (test_q3_annual.AnnualTests.test_annual_path_future_actual_does_not_change_current_decision) ... ok
+test_cache_matches_replay_and_all_updates (test_q3_annual.AnnualTests.test_cache_matches_replay_and_all_updates) ... ok
+test_dates_and_early_scenario_counts (test_q3_annual.AnnualTests.test_dates_and_early_scenario_counts) ... ok
+test_saved_annual_validation_and_single_group_score_rejected (test_q3_annual.AnnualTests.test_saved_annual_validation_and_single_group_score_rejected) ... FAIL
+test_boundary_priority (test_q3_confidence.ConfidenceTests.test_boundary_priority) ... ok
+test_mask_errors_and_window (test_q3_confidence.ConfidenceTests.test_mask_errors_and_window) ... ok
+test_perfect_versions_neutral (test_q3_confidence.ConfidenceTests.test_perfect_versions_neutral) ... ok
+test_fixed_parameters_and_cli_override_rejected (test_q3_final.FinalTests.test_fixed_parameters_and_cli_override_rejected) ... ok
+test_paper_reports_from_saved_metrics (test_q3_final.FinalTests.test_paper_reports_from_saved_metrics) ... ok
+test_q2_comparison_recalculation (test_q3_final.FinalTests.test_q2_comparison_recalculation) ... ok
+test_readme_no_stale_search_status (test_q3_final.FinalTests.test_readme_no_stale_search_status) ... ok
+test_saved_final_when_user_has_run_it (test_q3_final.FinalTests.test_saved_final_when_user_has_run_it) ... FAIL
+test_submission_refuses_missing_final_results (test_q3_final.FinalTests.test_submission_refuses_missing_final_results) ... ok
+test_template_mapping_format_and_raw_hash (test_q3_final.FinalTests.test_template_mapping_format_and_raw_hash) ... ok
+test_winner_search_identity_and_rejection (test_q3_final.FinalTests.test_winner_search_identity_and_rejection) ... ok
+test_first_hour_observed_anchor_and_energy (test_q3_forecast.ForecastTests.test_first_hour_observed_anchor_and_energy) ... ok
+test_only_unexecuted_slots_change (test_q3_forecast.ForecastTests.test_only_unexecuted_slots_change) ... ok
+test_ordinary_hour_and_wrong_issue (test_q3_forecast.ForecastTests.test_ordinary_hour_and_wrong_issue) ... ok
+test_absolute_gap_both_directions_and_latest_target (test_q3_optimizer.ActualTests.test_absolute_gap_both_directions_and_latest_target) ... ok
+test_emergency_cost_has_priority_over_target (test_q3_optimizer.ActualTests.test_emergency_cost_has_priority_over_target) ... ok
+test_explicit_current_observation_future_forecasts_only (test_q3_optimizer.ActualTests.test_explicit_current_observation_future_forecasts_only) ... ok
+test_adjustment_and_fixed_shared_grid (test_q3_optimizer.PlanTests.test_adjustment_and_fixed_shared_grid) ... ok
+test_cvar_fractional_tail_and_invalid_alpha (test_q3_optimizer.PlanTests.test_cvar_fractional_tail_and_invalid_alpha) ... ok
+test_lambda_zero (test_q3_optimizer.PlanTests.test_lambda_zero) ... ok
+test_plan_no_terminal_restore (test_q3_optimizer.PlanTests.test_plan_no_terminal_restore) ... ok
+test_full_reference_revalidated (test_q3_parameter_search_runner.RunnerTests.test_full_reference_revalidated) ... ok
+test_incomplete_mock_grid_cannot_score (test_q3_parameter_search_runner.RunnerTests.test_incomplete_mock_grid_cannot_score) ... ok
+test_metrics_and_status_corruption_rejected (test_q3_parameter_search_runner.RunnerTests.test_metrics_and_status_corruption_rejected) ... ok
+test_mock_twenty_groups_resume_ranking_and_ties (test_q3_parameter_search_runner.RunnerTests.test_mock_twenty_groups_resume_ranking_and_ties) ... ok
+test_resume_rejects_corruption_and_wrong_signature (test_q3_parameter_search_runner.RunnerTests.test_resume_rejects_corruption_and_wrong_signature) ... ok
+test_two_available_dates_and_pairing (test_q3_scenarios.ScenarioTests.test_two_available_dates_and_pairing) ... ok
+test_window_fourteen_and_nonnegative_scenario_only (test_q3_scenarios.ScenarioTests.test_window_fourteen_and_nonnegative_scenario_only) ... ok
+test_all_twenty_global_bounds_and_population_std (test_q3_search.SearchTests.test_all_twenty_global_bounds_and_population_std) ... ok
+test_choices_and_fourteen_scenario_tail (test_q3_search.SearchTests.test_choices_and_fourteen_scenario_tail) ... ok
+test_constant_and_near_constant_metrics (test_q3_search.SearchTests.test_constant_and_near_constant_metrics) ... ok
+test_incomplete_duplicate_and_old_alpha_rejected (test_q3_search.SearchTests.test_incomplete_duplicate_and_old_alpha_rejected) ... ok
+test_three_day_outputs_independently (test_q3_simulation.SavedReferenceTests.test_three_day_outputs_independently) ... FAIL
+test_four_updates_and_observation_order (test_q3_simulation.SimulationTests.test_four_updates_and_observation_order) ... ok
+test_only_first_day_artificial_initialization (test_q3_simulation.SimulationTests.test_only_first_day_artificial_initialization) ... ok
+test_probability_weighted_target (test_q3_simulation.SimulationTests.test_probability_weighted_target) ... ok
+test_future_price_load_pv_cannot_change_current_decisions (test_q4_adapters.AdapterTests.test_future_price_load_pv_cannot_change_current_decisions) ... ok
+test_q2_fixed_price_reproduces_original (test_q4_adapters.AdapterTests.test_q2_fixed_price_reproduces_original) ... ok
+test_q3_fixed_price_reproduces_original (test_q4_adapters.AdapterTests.test_q3_fixed_price_reproduces_original) ... ok
+test_saved_smoke_three_days_and_integrity (test_q4_adapters.AdapterTests.test_saved_smoke_three_days_and_integrity) ... FAIL
+test_both_templates_copy_style_and_real_fee (test_q4_outputs.OutputTests.test_both_templates_copy_style_and_real_fee) ... ok
+test_cli_rejects_long_smoke_and_reference_overrides (test_q4_outputs.OutputTests.test_cli_rejects_long_smoke_and_reference_overrides) ... ok
+test_search_twenty_groups_resume_and_original_score (test_q4_outputs.OutputTests.test_search_twenty_groups_resume_and_original_score) ... ok
+test_submission_requires_human_review_and_final_data (test_q4_outputs.OutputTests.test_submission_requires_human_review_and_final_data) ... ok
+test_epsilon_numerical_only_and_nonnegative (test_q4_price.PriceTests.test_epsilon_numerical_only_and_nonnegative) ... ok
+test_gamma_and_contract_boundary (test_q4_price.PriceTests.test_gamma_and_contract_boundary) ... ok
+test_public_dates_stride_nmae_and_candidates (test_q4_price.PriceTests.test_public_dates_stride_nmae_and_candidates) ... ok
+test_target_and_future_cannot_change_selection (test_q4_price.PriceTests.test_target_and_future_cannot_change_selection) ... ok
+test_tie_selects_smaller_and_insufficient_stops (test_q4_price.PriceTests.test_tie_selects_smaller_and_insufficient_stops) ... ok
+test_window_is_selected_again_each_day (test_q4_price.PriceTests.test_window_is_selected_again_each_day) ... ok
+test_direct_remaining_and_executed_prefix (test_model_validation.ModelValidationTests.test_direct_remaining_and_executed_prefix) ... ok
+test_history_uses_own_direct_versions_and_residuals (test_model_validation.ModelValidationTests.test_history_uses_own_direct_versions_and_residuals) ... ok
+test_injection_reaches_target_and_history_without_global_patch (test_model_validation.ModelValidationTests.test_injection_reaches_target_and_history_without_global_patch) ... ok
+test_past_only_and_future_actual_invariance (test_model_validation.ModelValidationTests.test_past_only_and_future_actual_invariance) ... ok
+test_q2_keeps_forecast_and_solver_dependencies (test_model_validation.ModelValidationTests.test_q2_keeps_forecast_and_solver_dependencies) ... ok
+test_relative_change_zero_and_sign (test_model_validation.ModelValidationTests.test_relative_change_zero_and_sign) ... ok
+test_saved_experiments_and_integrity_when_present (test_model_validation.ModelValidationTests.test_saved_experiments_and_integrity_when_present) ... FAIL
+test_zero_risk_does_not_consume_quantile_result (test_model_validation.ModelValidationTests.test_zero_risk_does_not_consume_quantile_result) ... ok
+
+======================================================================
+FAIL: test_saved_annual_validation_and_single_group_score_rejected (test_q3_annual.AnnualTests.test_saved_annual_validation_and_single_group_score_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\Desktop\数学建模\modeling _project\tests\test_q3_annual.py", line 95, in test_saved_annual_validation_and_single_group_score_rejected
+    self.assertTrue(all(file_hash(ROOT/p)==h for p,h in metrics["integrity"]["sha256"].items()))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_saved_final_when_user_has_run_it (test_q3_final.FinalTests.test_saved_final_when_user_has_run_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\Desktop\数学建模\modeling _project\tests\test_q3_final.py", line 134, in test_saved_final_when_user_has_run_it
+    self.assertTrue(all(file_hash(ROOT/p)==h for p,h in validation["integrity"]["sha256"].items()))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_three_day_outputs_independently (test_q3_simulation.SavedReferenceTests.test_three_day_outputs_independently)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\Desktop\数学建模\modeling _project\tests\test_q3_simulation.py", line 97, in test_three_day_outputs_independently
+    self.assertTrue(all(file_hash(root/p)==h for p,h in metrics["integrity"]["sha256"].items()))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_saved_smoke_three_days_and_integrity (test_q4_adapters.AdapterTests.test_saved_smoke_three_days_and_integrity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\Desktop\数学建模\modeling _project\tests\test_q4_adapters.py", line 93, in test_saved_smoke_three_days_and_integrity
+    self.assertEqual(frozen_hashes(ROOT),before)
+AssertionError: {'dat[9523 chars]f': 'c2ae114d46df6eebd38d1cd95ab003d0a30ad891f[22767 chars]68d'} != {'dat[9523 chars]f': 'b39267a00ac49b38026227181ca2ebe225e30b5f0[14736 chars]68d'}
+Diff is 33244 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_saved_experiments_and_integrity_when_present (test_model_validation.ModelValidationTests.test_saved_experiments_and_integrity_when_present)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\Desktop\数学建模\modeling _project\tests\test_model_validation.py", line 135, in test_saved_experiments_and_integrity_when_present
+    self.assertEqual(integrity["before"], frozen_hashes(ROOT))
+AssertionError: {'dat[6442 chars]f': 'b39267a00ac49b38026227181ca2ebe225e30b5f0[23851 chars]3b8'} != {'dat[6442 chars]f': 'c2ae114d46df6eebd38d1cd95ab003d0a30ad891f[23851 chars]3b8'}
+Diff is 31262 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 96 tests in 137.996s
+
+FAILED (failures=5)

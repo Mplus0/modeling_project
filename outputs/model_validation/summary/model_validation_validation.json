@@ -1,0 +1,60 @@
+{
+  "experiments": [
+    {
+      "experiment": "Q2-A vs Q2-B",
+      "status": "failed",
+      "note": "2025-07-02 slot 119 tertiary 数值求解失败",
+      "path": "D:\\Desktop\\数学建模\\modeling _project\\outputs\\model_validation\\q2_risk_ablation"
+    },
+    {
+      "experiment": "Q3-C vs Q3-D",
+      "status": "validated",
+      "note": "",
+      "path": "D:\\Desktop\\数学建模\\modeling _project\\outputs\\model_validation\\q3_confidence_ablation",
+      "ablation_cost_yuan": 14341250.590852704,
+      "formal_cost_yuan": 14156427.999491744,
+      "cost_difference_yuan": -184822.59136096016,
+      "cost_change_percent": -1.288748078071
+    },
+    {
+      "experiment": "Q4-A vs Q4-B",
+      "status": "failed",
+      "note": "SCIP: error in LP solver!",
+      "path": "D:\\Desktop\\数学建模\\modeling _project\\outputs\\model_validation\\q4_price_blind"
+    },
+    {
+      "experiment": "Q3 Vdk",
+      "status": "EXTERNAL VALIDATED DIAGNOSTIC",
+      "note": "Vdk已在另一已验证开发分支完成，最终仓库整理时补入；本次reference模型检验不重复运行。",
+      "path": ""
+    },
+    {
+      "experiment": "Q4 low/high price ratios",
+      "status": "pending modeler confirmation",
+      "note": "TODO: 需建模手确认低价/高价定义",
+      "path": "D:\\Desktop\\数学建模\\modeling _project\\outputs\\model_validation\\q4_reference_price_charge_slots.csv"
+    }
+  ],
+  "all_requested_experiments_complete": false,
+  "q4_price_blind_definition_confirmed": true,
+  "formal_results_not_recomputed": true,
+  "frozen_sha256_unchanged": true,
+  "regression_tests": {
+    "initial_run": {
+      "tests": 96,
+      "failures": 5,
+      "errors": 0
+    },
+    "recheck": {
+      "tests": 13,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "remaining_failed_tests": [
+      "test_q4_adapters.AdapterTests.test_saved_smoke_three_days_and_integrity"
+    ],
+    "error_tests": [],
+    "frozen_sha256_unchanged": true
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "status": "failed",
+  "smoke": false,
+  "error": "SCIP: error in LP solver!",
+  "context": [
+    {
+      "function": "run_experiment"
+    },
+    {
+      "function": "run_dates",
+      "day": "2025-03-22"
+    },
+    {
+      "function": "run_day",
+      "day": "2025-03-22"
+    },
+    {
+      "function": "simulate_day",
+      "date": "2025-03-22",
+      "slot": "142",
+      "hour": "18"
+    },
+    {
+      "function": "solve_actual_step",
+      "date": "2025-03-22",
+      "current_slot": "142"
+    },
+    {
+      "function": "pyscipopt.scip.Model.optimize"
+    },
+    {
+      "function": "pyscipopt.scip.PY_SCIP_CALL"
+    }
+  ],
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\Desktop\\数学建模\\modeling _project\\src\\analysis\\q4_price_blind.py\", line 62, in run_experiment\n    outputs, runtime = run_blind_dates(history, prices, issues, 3,\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\Desktop\\数学建模\\modeling _project\\src\\q4\\annual.py\", line 35, in run_dates\n    result = run_three(day,observe,float(history[day-timedelta(days=1)][\"pv\"][-1])*6,\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\Desktop\\数学建模\\modeling _project\\src\\q4\\q4_3.py\", line 19, in run_day\n    result = simulate_day(day,reveal,midnight_pv_kw,load,stream,issues,records,residuals,\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\Desktop\\数学建模\\modeling _project\\src\\q3\\simulation.py\", line 95, in simulate_day\n    horizon, checked = solve_actual_step(slot, current_load, observed_pv, load_forecast,\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\Desktop\\数学建模\\modeling _project\\src\\q3\\optimizer.py\", line 179, in solve_actual_step\n    model.optimize()\n  File \"src/pyscipopt/scip.pxi\", line 8815, in pyscipopt.scip.Model.optimize\n  File \"src/pyscipopt/scip.pxi\", line 336, in pyscipopt.scip.PY_SCIP_CALL\nException: SCIP: error in LP solver!\n",
+  "runtime_seconds": 263.22403879999183
+}
