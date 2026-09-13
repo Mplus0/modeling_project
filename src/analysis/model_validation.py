@@ -319,6 +319,8 @@ def summary(root):
         path = base / stem / "run/attempt.json"
         attempt = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"status": "not_run"}
         row = dict(experiment=label, status=attempt["status"], note=attempt.get("error", ""), path=str(base / stem))
+        if stem == "q2_risk_ablation" and attempt.get("status") == "failed":
+            row.update(status="stopped", note="未完成334天全年验收；按团队决定停止，部分运行数据不进入论文定量比较")
         if stem == "q4_price_blind":
             row.update(status="not included in formal quantitative comparison due to solver numerical failure",
                        note="未形成有效全年实验结果，不纳入正式定量比较；沿用既有Q4-3 reference")
@@ -329,7 +331,7 @@ def summary(root):
                        cost_difference_yuan=float(cost.difference), cost_change_percent=float(cost.relative_change_percent))
             paper_tables.append((base / stem / f"{stem}_paper_summary.md").read_text(encoding="utf-8"))
         rows.append(row)
-    rows.extend([dict(experiment="Q3 Vdk", status="EXTERNAL VALIDATED DIAGNOSTIC", note="Vdk已在另一已验证开发分支完成，最终仓库整理时补入；本次reference模型检验不重复运行。", path=""),
+    rows.extend([dict(experiment="Q3 Vdk", status="validated", note="external validated diagnostic；已从提交 c5c5bf959c8ef54828ac1618ea1ee97f4a7443e8 核对补回；本分支不重新计算。", path=str(base / "q3_information_value")),
                  dict(experiment="Q4 low/high price ratios", status="pending modeler confirmation", note="TODO: 需建模手确认低价/高价定义", path=str(base / "q4_reference_price_charge_slots.csv"))])
     directory = base / "summary"
     directory.mkdir(parents=True, exist_ok=True)

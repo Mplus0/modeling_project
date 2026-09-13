@@ -1,6 +1,8 @@
-﻿experiment,status,note,path,ablation_cost_yuan,formal_cost_yuan,cost_difference_yuan,cost_change_percent
-Q2-A vs Q2-B,failed,2025-07-02 slot 119 tertiary 数值求解失败,D:\Desktop\数学建模\modeling _project\outputs\model_validation\q2_risk_ablation,,,,
-Q3-C vs Q3-D,validated,,D:\Desktop\数学建模\modeling _project\outputs\model_validation\q3_confidence_ablation,14341250.590852704,14156427.999491744,-184822.59136096016,-1.288748078071
-Q4-A vs Q4-B,not included in formal quantitative comparison due to solver numerical failure,未形成有效全年实验结果，不纳入正式定量比较；沿用既有Q4-3 reference,D:\Desktop\数学建模\modeling _project\outputs\model_validation\q4_price_blind,,,,
-Q3 Vdk,EXTERNAL VALIDATED DIAGNOSTIC,Vdk已在另一已验证开发分支完成，最终仓库整理时补入；本次reference模型检验不重复运行。,,,,,
-Q4 low/high price ratios,pending modeler confirmation,TODO: 需建模手确认低价/高价定义,D:\Desktop\数学建模\modeling _project\outputs\model_validation\q4_reference_price_charge_slots.csv,,,,
+experiment,purpose,status,main_evidence,paper_use
+Q3-C vs Q3-D,预测可信度消融,validated,"334天、48096时段；费用差值-184822.5914元（-1.2887%）；最大违约1.519702e-7；跨日SOC误差0",yes
+Q3 Vdk,新增预测经济信息价值,validated,"external validated diagnostic；1002次更新；Vdk总值743245.688697元；来源提交c5c5bf959c8ef54828ac1618ea1ee97f4a7443e8",yes
+Formal feasibility validation,Q1/Q2/Q3/Q4正式结果可行性与稳定性,validated,"冻结结果年度约束、SOC连续性、求解状态及SHA核对通过",yes
+Q4-3 reference,固定参数正式结果,validated,"alpha=0.85、lambda=0.25；334天验收通过；不再参数搜索",yes
+Q2-A risk ablation,风险修正消融,stopped,"未完成334天全年验收；按团队决定停止，部分运行数据隔离",no
+Q4-A price-blind,价格盲消融,stopped,"未形成有效全年实验结果；失败审计保留，按团队决定不纳入定量比较",no
+Q4 low/high price ratios,低价充电/高价放电描述指标,pending,"TODO: 需建模手确认低价/高价定义",no

@@ -1,0 +1,10 @@
+{
+  "status": "validated",
+  "scope": "Q1/Q2/Q3/Q4 frozen formal outputs",
+  "q1": {"status": "validated", "source": "outputs/metrics/q1_metrics.json"},
+  "q2": {"status": "validated", "source": "outputs/q2", "days": 334, "slots": 48096},
+  "q3": {"status": "validated", "source": "outputs/q3/final", "days": 334, "slots": 48096, "max_constraint_violation": 1.519701982033439e-07, "cross_day_soc_max_difference": 0.0},
+  "q4": {"status": "validated", "source": "outputs/q4/reference/q4_3_a0.85_l0.25", "days": 334, "slots": 48096, "max_constraint_violation": 1.6389094525948167e-07, "cross_day_soc_max_difference": 0.0, "alpha": 0.85, "lambda": 0.25},
+  "validation_tolerance": 1e-06,
+  "frozen_sha256_unchanged": true
+}

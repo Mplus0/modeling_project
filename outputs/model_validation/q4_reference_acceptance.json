@@ -41,7 +41,8 @@
       "optimal": 48096
     }
   },
-  "parameter_adoption": "TODO: 需建模手确认；仓库现有文档未发现固定沿用参数的明确确认",
+  "team_confirmed": true,
+  "parameter_adoption": "团队确认第四问固定沿用第三问确定的风险参数，不再进行Q4参数重新搜索。",
   "source": "outputs/q4/reference/q4_3_a0.85_l0.25",
   "validation_tolerance": 1e-06,
   "frozen_sha256_unchanged": true

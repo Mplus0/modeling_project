@@ -1,7 +1,10 @@
 # AI 工具使用记录
 
+| 2026-09-13 | OpenAI Codex（GPT-6） | 最终整理模型检验范围与固定参数状态 | `src/analysis/`、`outputs/model_validation/summary/`、README及README_AI | 按团队确认固定Q4-3参数为 alpha=0.85、lambda=0.25，停止Q2-A/Q4-A后续运行；核对并补回已验证提交 c5c5bf959c8ef54828ac1618ea1ee97f4a7443e8 的Q3 Vdk索引，整理Q3-C/D、Vdk及正式可行性验收的论文可用表。未启动全年任务、参数搜索或模型修改。 |
+
 | 日期 | 工具/模型 | 使用目的 | 涉及文件 | 辅助内容 |
 | --- | --- | --- | --- | --- |
+| 2026-09-13 | OpenAI Codex（GPT-6） | 补回已验证Q3 Vdk诊断及最终范围整理 | `src/analysis/q3_information_value.py`、`scripts/18_analyze_q3_information_value.py`、`outputs/model_validation/q3_information_value/`、最终汇总及README | 从只读历史提交 `c5c5bf9` 核对并补回1002次Vdk诊断及聚合结果，标记为external validated diagnostic，说明其为条件调整经济价值且不等于全年真实节省；Q2-A/Q4-A部分结果继续排除正式比较，Q4固定0.85/0.25采用状态按团队确认更新。未重新运行优化、参数搜索或修改模型。 |
 | 2026-09-13 | OpenAI Codex（GPT-6） | 停止Q4-A并整理最终模型检验范围 | `src/analysis/q4_price_blind.py`、`paper_validation.py`、`outputs/model_validation/summary/`、README | 根据用户决定永久停止Q4-A，不再运行或调试；保留attempt与完整审计，仅将其标记为未形成有效全年实验结果并排除正式量化表。新增论文摘要和验收表只纳入已完成Q3-C/D，Q2-A保留未完成状态，Q4继续采用0.85/0.25 reference，Vdk登记external validated diagnostic。 |
 | 2026-09-13 | OpenAI Codex（GPT-6） | Q4价格盲停止后的实验层复核 | `outputs/model_validation/q4_price_blind/tests/`、README | 运行4项价格盲专用测试和9项已有实验层测试，共13项通过，前后冻结SHA一致；日志与真实全年停止状态分开记录，不把测试通过解释为全年消融成功。未运行其他全年任务。 |
 | 2026-09-13 | OpenAI Codex（GPT-6） | Q4-A全年尝试停止与如实记录 | `outputs/model_validation/q4_price_blind/`、模型检验汇总、README | 按用户确认和既有授权运行一次价格盲全年消融，在2025-03-22 slot142实际层solve_actual_step出现SCIP LP错误后停止，耗时263.22秒。保存原异常栈、日期/slot和失败报告；正式源码、数据及结果SHA一致。未生成虚假全年比较，未重试、改变模型/容差、重算reference或进行SCIP故障调试。 |

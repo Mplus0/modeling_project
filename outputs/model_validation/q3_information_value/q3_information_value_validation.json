@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "source_commit": "c5c5bf959c8ef54828ac1618ea1ee97f4a7443e8",
+  "records": 1002,
+  "max_reconstruction_difference": 0.0,
+  "sha256_unchanged": true,
+  "scope": "1002 FINAL-TRAJECTORY DIAGNOSTICS",
+  "recomputed_on_reference": false
+}

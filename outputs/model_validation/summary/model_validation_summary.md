@@ -1,6 +1,6 @@
 # 模型检验汇总
 
-- Q2-A vs Q2-B: failed。2025-07-02 slot 119 tertiary 数值求解失败
+- Q2-A vs Q2-B: stopped。2025-07-02 slot 119 tertiary 数值求解失败；按团队决定不再运行，未形成完整全年比较
   D:\Desktop\数学建模\modeling _project\outputs\model_validation\q2_risk_ablation
 
 - Q3-C vs Q3-D: validated。
@@ -9,11 +9,13 @@
 - Q4-A vs Q4-B: not included in formal quantitative comparison due to solver numerical failure。未形成有效全年实验结果，不纳入正式定量比较；沿用既有Q4-3 reference
   D:\Desktop\数学建模\modeling _project\outputs\model_validation\q4_price_blind
 
-- Q3 Vdk: EXTERNAL VALIDATED DIAGNOSTIC。Vdk已在另一已验证开发分支完成，最终仓库整理时补入；本次reference模型检验不重复运行。
+- Q3 Vdk: validated external diagnostic。已从团队验证提交 `c5c5bf959c8ef54828ac1618ea1ee97f4a7443e8` 核对并补回，本分支不重新计算。
   
 
 - Q4 low/high price ratios: pending modeler confirmation。TODO: 需建模手确认低价/高价定义
   D:\Desktop\数学建模\modeling _project\outputs\model_validation\q4_reference_price_charge_slots.csv
+
+正式可行性验收：Q1、Q2、Q3及Q4 reference 的冻结结果已完成年度约束、SOC连续性、求解状态和SHA核对；详见 `formal_feasibility_validation.json`。Q4-3固定参数为 alpha=0.85、lambda=0.25。
 
 # Q3-C vs Q3-D
 

@@ -1,0 +1,18 @@
+{
+  "status": "validated",
+  "source_commit": "c5c5bf959c8ef54828ac1618ea1ee97f4a7443e8",
+  "total_update_count": 1002,
+  "positive_count": 965,
+  "positive_ratio": 0.9630738523,
+  "total_value_yuan": 743245.6886974932,
+  "mean_value_yuan_per_update": 741.7621643687556,
+  "median_value_yuan_per_update": 315.4091452482544,
+  "by_update": {
+    "06:00": {"count": 334, "mean_yuan": 924.0852361735938, "sum_yuan": 308644.46888198034, "positive": 333},
+    "12:00": {"count": 334, "mean_yuan": 423.92189106949655, "sum_yuan": 141589.91161721185, "positive": 330},
+    "18:00": {"count": 334, "mean_yuan": 877.2793658631766, "sum_yuan": 293011.308198301, "positive": 302}
+  },
+  "interpretation": "Vdk=J_fix-J_roll，表示新预测触发重新优化的条件调整经济价值；不同更新时间未来区间重叠，合计不等于全年真实节省。",
+  "recomputed_on_reference": false,
+  "sha256_unchanged": true
+}

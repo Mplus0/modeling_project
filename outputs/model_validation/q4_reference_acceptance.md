@@ -2,6 +2,8 @@
 
 Q4-3 fixed-parameter final candidate。第四问固定沿用第三问风险参数进行动态电价分析。
 
+团队已确认：alpha=0.85、lambda=0.25；不再进行Q4动态电价条件下的参数重新搜索。该结果不是Q4重新搜索得到的最优参数。
+
 未重新求解，未修改历史PROVISIONAL标签；不是Q4重新搜索得到的最优参数。
 
 - branch: reference
@@ -30,7 +32,7 @@ Q4-3 fixed-parameter final candidate。第四问固定沿用第三问风险参�
 - description: 第四问固定沿用第三问风险参数进行动态电价分析
 - original_label: Q4-3 PROVISIONAL / PAPER REFERENCE ONLY; NOT FINAL Q4-3 PARAMETER
 - solver_status_counts: {'plan_primary': {'optimal': 1336}, 'plan_secondary': {'optimal': 1336}, 'actual_primary': {'optimal': 48096}, 'actual_secondary': {'optimal': 48096}, 'actual_tertiary': {'optimal': 48096}}
-- parameter_adoption: TODO: 需建模手确认；仓库现有文档未发现固定沿用参数的明确确认
+- parameter_adoption: 团队已确认固定采用 alpha=0.85、lambda=0.25，不再进行Q4参数重新搜索
 - source: outputs/q4/reference/q4_3_a0.85_l0.25
 - validation_tolerance: 1e-06
 
